@@ -1,0 +1,33 @@
+{
+    "name": "@repo/database",
+    "version": "0.0.0",
+    "private": true,
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "scripts": {
+        "db:seed": "tsx scripts/seed.ts",
+        "db:migrate": "tsx scripts/migrate.ts",
+        "db:studio": "drizzle-kit studio",
+        "generate": "drizzle-kit generate"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "drizzle-orm": "0.43.1",
+        "mysql2": "^3.14.1"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "^22.15.3",
+        "drizzle-kit": "0.31.1",
+        "eslint": "9.27.0",
+        "tsup": "8.5.0",
+        "tsx": "4.19.4",
+        "typescript": "5.8.3"
+    }
+}

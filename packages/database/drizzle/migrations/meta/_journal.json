@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1747500768238,
+      "tag": "0000_mighty_moonstone",
+      "breakpoints": true
+    }
+  ]
+}

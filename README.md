@@ -1,66 +1,102 @@
-# Turborepo starter
+# OrigamiChat
 
-This Turborepo starter is maintained by the Turborepo core team.
+OrigamiChat is an open source chat support widget focused on the React ecosystem. This monorepo contains all the packages and applications that make up the OrigamiChat platform.
 
-## Using this example
+## Getting Started
 
-Run the following command:
+Run the following command to install dependencies:
 
 ```sh
-npx create-turbo@latest
+pnpm install
 ```
 
 ## What's inside?
 
-This Turborepo includes the following packages/apps:
+This monorepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `dashboard`: a [Next.js](https://nextjs.org/) app for the main admin dashboard with [Tailwind CSS](https://tailwindcss.com/)
+- `docs`: a [Next.js](https://nextjs.org/) app for documentation
+- `@repo/ui`: a React component library shared across applications
+- `@repo/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with MySQL
+- `@repo/eslint-config`: `eslint` configurations
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Utilities
 
-This Turborepo has some additional tools already setup for you:
+This monorepo has some additional tools already setup for you:
 
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Drizzle ORM](https://orm.drizzle.team/) for database operations
+
+## Database Setup
+
+### Setting up MySQL locally with DBngin
+
+1. Download and install [DBngin](https://dbngin.com/) for your platform
+2. Open DBngin and create a new MySQL database:
+   - Click "Create a Database Server"
+   - Select MySQL
+   - Set a name, version (8.0+ recommended), and port (default: 3306)
+   - Click "Create"
+3. Once your database server is running, create a new database for OrigamiChat
+
+### Running database migrations
+
+After setting up your MySQL database:
+
+1. Configure your database connection in the `.env` file:
+
+   ```
+   DATABASE_URL=mysql://root:@localhost:3306/origami
+   ```
+
+2. Run the database migrations:
+   ```
+   cd packages/database
+   pnpm db:migrate
+   ```
+
+### Database development
+
+To make changes to the database schema:
+
+1. Update the schema files in `packages/database/src/schema`
+2. Generate migrations:
+   ```
+   cd packages/database
+   pnpm db:generate
+   ```
+
+## Development
+
+To develop all apps and packages, run the following command:
+
+```
+pnpm dev
+```
 
 ### Build
 
 To build all apps and packages, run the following command:
 
 ```
-cd my-turborepo
 pnpm build
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
 ### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
 
 Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
 
 By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
 
 ```
-cd my-turborepo
 npx turbo login
 ```
 
@@ -72,13 +108,26 @@ Next, you can link your Turborepo to your Remote Cache by running the following 
 npx turbo link
 ```
 
+## Contributing
+
+We welcome contributions to OrigamiChat! If you'd like to contribute, please:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Open a Pull Request
+
+Please make sure to update tests as appropriate and follow the code style guidelines.
+
+## License
+
+OrigamiChat is open-sourced software licensed under the [MIT license](LICENSE).
+
 ## Useful Links
 
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- [OrigamiChat Documentation](https://docs.origamichat.com)
+- [Turborepo](https://turborepo.com/docs)
+- [Next.js](https://nextjs.org/docs)
+- [Drizzle ORM](https://orm.drizzle.team/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
