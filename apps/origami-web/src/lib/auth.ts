@@ -1,10 +1,26 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { createAuthClient } from "better-auth/react";
+// import { inferAdditionalFields } from "better-auth/client/plugins";
 
-import { db } from "@repo/database";
-
-export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "mysql",
-  }),
+export const authClient = createAuthClient({
+  plugins: [
+    // inferAdditionalFields({
+    //   user: {
+    //     roles: {
+    //       type: "string[]",
+    //     },
+    //   },
+    // }),
+  ],
 });
+
+export const {
+  useSession,
+  signIn,
+  signUp,
+  signOut,
+  forgetPassword,
+  resetPassword,
+} = authClient;
+
+export type Session = typeof authClient.$Infer.Session;
+export type User = typeof authClient.$Infer.Session.user;

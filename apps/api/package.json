@@ -1,0 +1,21 @@
+{
+  "name": "api",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --hot src/index.ts"
+  },
+  "exports": {
+    ".": "./src/client/index.ts"
+  },
+  "dependencies": {
+    "hono": "^4.7.10",
+    "@hono/node-server": "^1.7.0",
+    "@hono/zod-validator": "^0.5.0",
+    "@repo/database": "workspace:*",
+    "zod": "^3.24.4",
+    "better-auth": "^1.2.8"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

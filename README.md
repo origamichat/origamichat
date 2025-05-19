@@ -18,6 +18,8 @@ This monorepo includes the following packages/apps:
 
 - `dashboard`: a [Next.js](https://nextjs.org/) app for the main admin dashboard with [Tailwind CSS](https://tailwindcss.com/)
 - `docs`: a [Next.js](https://nextjs.org/) app for documentation
+- `origami-web`: a Next.js application for the web frontend
+- `api`: a [Hono](https://hono.dev/) API server providing backend services
 - `@repo/ui`: a React component library shared across applications
 - `@repo/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with MySQL
 - `@repo/eslint-config`: `eslint` configurations
@@ -73,6 +75,41 @@ To make changes to the database schema:
    cd packages/database
    pnpm db:generate
    ```
+
+## API Server
+
+The `api` app provides HTTP endpoints and is built with [Hono](https://hono.dev/).
+
+### Setup
+
+1. Create a `.env` file in the `apps/api` directory:
+
+   ```
+   PORT=3001
+   DATABASE_URL=mysql://root:@localhost:3306/origami
+   ```
+
+2. Start the API server:
+   ```
+   cd apps/api
+   pnpm dev
+   ```
+
+### Endpoints
+
+- `GET /healthcheck` - Check if the API is running
+
+### Using from the Web App
+
+The API exports TypeScript types that can be used by the web app for type-safe API calls:
+
+```typescript
+import { apiClient } from "@/lib/api-client";
+
+// Make a type-safe API call
+const healthResponse = await apiClient.healthcheck.$get();
+const healthData = await healthResponse.json();
+```
 
 ## Development
 
@@ -131,3 +168,4 @@ OrigamiChat is open-sourced software licensed under the [MIT license](LICENSE).
 - [Next.js](https://nextjs.org/docs)
 - [Drizzle ORM](https://orm.drizzle.team/docs)
 - [Tailwind CSS](https://tailwindcss.com/docs)
+- [Hono](https://hono.dev)

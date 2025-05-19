@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@repo/database": "workspace:*",
+    "api": "workspace:*",
     "better-auth": "^1.2.8",
+    "hono": "^4.0.0",
     "next": "15.3.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "@repo/database": "workspace:*"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
