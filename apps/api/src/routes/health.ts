@@ -1,28 +1,25 @@
-import { zValidator } from "@hono/zod-validator";
-import { z } from "zod";
+import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 
-import { Hono } from "hono";
-import { auth } from "@/lib/auth";
-
-const app = new Hono<{
-  Variables: {
-    user: typeof auth.$Infer.Session.user | null;
-    session: typeof auth.$Infer.Session.session | null;
-  };
-}>();
-
-app.get(
-  "/hello",
-  zValidator(
-    "query",
-    z.object({
-      name: z.string(),
-    })
-  ),
+const app = new OpenAPIHono().openapi(
+  createRoute({
+    method: "get",
+    path: "/hello",
+    responses: {
+      200: {
+        description: "Respond a message",
+        content: {
+          "application/json": {
+            schema: z.object({
+              message: z.string(),
+            }),
+          },
+        },
+      },
+    },
+  }),
   (c) => {
-    const { name } = c.req.valid("query");
     return c.json({
-      message: `Hello! ${name}`,
+      message: "hello",
     });
   }
 );

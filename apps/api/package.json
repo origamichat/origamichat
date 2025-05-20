@@ -8,12 +8,14 @@
     ".": "./src/client/index.ts"
   },
   "dependencies": {
-    "hono": "^4.7.10",
     "@hono/node-server": "^1.7.0",
+    "@hono/swagger-ui": "^0.5.1",
+    "@hono/zod-openapi": "^0.19.6",
     "@hono/zod-validator": "^0.5.0",
     "@repo/database": "workspace:*",
-    "zod": "^3.24.4",
-    "better-auth": "^1.2.8"
+    "better-auth": "^1.2.8",
+    "hono": "^4.7.10",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@types/bun": "latest"
