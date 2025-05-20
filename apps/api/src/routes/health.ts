@@ -1,11 +1,30 @@
-import { createRouter } from "@/lib/create-app";
+import { zValidator } from "@hono/zod-validator";
+import { z } from "zod";
 
-const router = createRouter();
+import { Hono } from "hono";
+import { auth } from "@/lib/auth";
 
-router.get("/health", (c) => {
-  return c.json({
-    status: "ok",
-  });
-});
+const app = new Hono<{
+  Variables: {
+    user: typeof auth.$Infer.Session.user | null;
+    session: typeof auth.$Infer.Session.session | null;
+  };
+}>();
 
-export default router;
+app.get(
+  "/hello",
+  zValidator(
+    "query",
+    z.object({
+      name: z.string(),
+    })
+  ),
+  (c) => {
+    const { name } = c.req.valid("query");
+    return c.json({
+      message: `Hello! ${name}`,
+    });
+  }
+);
+
+export default app;

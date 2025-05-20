@@ -9,7 +9,7 @@ export type AuthType = {
 };
 
 export function createRouter() {
-  return new Hono<{ Bindings: AuthType }>({
+  return new Hono<AuthType>({
     strict: false,
   });
 }

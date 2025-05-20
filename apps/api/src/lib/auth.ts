@@ -5,6 +5,8 @@ import { env } from "bun";
 import { db } from "@repo/database";
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8558",
+  secret: process.env.BETTER_AUTH_SECRET || undefined,
   database: drizzleAdapter(db, {
     provider: "mysql",
   }),
@@ -18,6 +20,11 @@ export const auth = betterAuth({
     google: {
       clientId: env.GOOGLE_CLIENT_ID!,
       clientSecret: env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
     },
   },
 });
