@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { drizzle } from "drizzle-orm/mysql2";
+import * as schema from "./schema";
 
 const getEnvVariable = (name: string): string => {
   const value = process.env[name];
@@ -10,6 +11,7 @@ const getEnvVariable = (name: string): string => {
   return value;
 };
 
-export const db = drizzle({
-  connection: { uri: getEnvVariable("DATABASE_URL") },
+export const db = drizzle(getEnvVariable("DATABASE_URL"), {
+  schema,
+  mode: "default",
 });

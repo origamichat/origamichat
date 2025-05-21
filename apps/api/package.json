@@ -10,11 +10,14 @@
   "dependencies": {
     "@hono/node-server": "^1.7.0",
     "@hono/swagger-ui": "^0.5.1",
+    "@hono/trpc-server": "^0.3.4",
     "@hono/zod-openapi": "^0.19.6",
     "@hono/zod-validator": "^0.5.0",
     "@repo/database": "workspace:*",
+    "@trpc/server": "^11.1.2",
     "better-auth": "^1.2.8",
     "hono": "^4.7.10",
+    "trpc-to-openapi": "^2.3.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {

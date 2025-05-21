@@ -1,35 +1,40 @@
-import { OpenAPIHono } from "@hono/zod-openapi";
+import { Hono } from "hono";
 import { cors } from "hono/cors";
 
+import { trpcServer } from "@hono/trpc-server";
+import { logger } from "hono/logger";
+
 import { auth } from "@/lib/auth";
+import { origamiTRPCRouter } from "./routes";
 
-// Routers
-import authRouter from "@/routes/auth";
-import healthRouter from "@/routes/health";
-import { swaggerUI } from "@hono/swagger-ui";
-
-const app = new OpenAPIHono<{
+const app = new Hono<{
   Variables: {
     user: typeof auth.$Infer.Session.user | null;
     session: typeof auth.$Infer.Session.session | null;
   };
-}>()
-  .doc("/doc", {
-    info: {
-      title: "An API",
-      version: "v1",
-    },
-    openapi: "3.1.0",
+}>({ strict: false });
+
+// Logger middleware
+app.use(logger());
+
+app.use(
+  "/api/auth/*",
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://origami.chat",
+      "https://origamichat.com",
+    ],
+    credentials: true,
+    maxAge: 86400,
   })
+);
+
+app
   .use(
-    "*",
+    "/trpc/*",
     cors({
       origin: "*",
-      allowHeaders: ["Content-Type", "Authorization"],
-      allowMethods: ["POST", "GET", "OPTIONS", "PUT", "DELETE"],
-      exposeHeaders: ["Content-Length"],
-      maxAge: 600,
-      credentials: true,
     })
   )
   .use("*", async (c, next) => {
@@ -44,20 +49,22 @@ const app = new OpenAPIHono<{
     c.set("user", session.user);
     c.set("session", session.session);
     return next();
+  });
+
+// Better-Auth - Handle all auth routes
+app.all("/api/auth/*", async (c) => {
+  return await auth.handler(c.req.raw);
+});
+
+// TRPC endpoint
+app.use(
+  "/trpc/*",
+  trpcServer({
+    router: origamiTRPCRouter,
   })
-  .route("/api/auth", authRouter)
-  .route("/api/health", healthRouter)
-  .get(
-    "/ui",
-    swaggerUI({
-      url: "/doc",
-    })
-  );
+);
 
 export default {
   port: 8787,
   fetch: app.fetch,
 };
-
-// Export the typed API RPC
-export type OrigamiAPIType = typeof app;

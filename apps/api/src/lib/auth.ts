@@ -1,11 +1,10 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { env } from "bun";
 
 import { db } from "@repo/database";
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8558",
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8787",
   secret: process.env.BETTER_AUTH_SECRET || undefined,
   database: drizzleAdapter(db, {
     provider: "mysql",
@@ -18,13 +17,21 @@ export const auth = betterAuth({
   ],
   socialProviders: {
     google: {
-      clientId: env.GOOGLE_CLIENT_ID!,
-      clientSecret: env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
   advanced: {
     crossSubDomainCookies: {
       enabled: true,
+    },
+  },
+  session: {
+    // Cache the session in the cookie for 5 minutes
+    // This is to avoid hitting the database for each request
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
     },
   },
 });
