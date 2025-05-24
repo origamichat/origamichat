@@ -30,26 +30,27 @@ app.use(
   })
 );
 
-app
-  .use(
-    "/trpc/*",
-    cors({
-      origin: "*",
-    })
-  )
-  .use("*", async (c, next) => {
-    const session = await auth.api.getSession({ headers: c.req.raw.headers });
+app.use(
+  "/trpc/*",
+  cors({
+    origin: "*",
+  })
+);
 
-    if (!session) {
-      c.set("user", null);
-      c.set("session", null);
-      return next();
-    }
+app.use("*", async (c, next) => {
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
-    c.set("user", session.user);
-    c.set("session", session.session);
+  if (!session) {
+    c.set("user", null);
+    c.set("session", null);
     return next();
-  });
+  }
+
+  c.set("user", session.user);
+  c.set("session", session.session);
+
+  return next();
+});
 
 // Better-Auth - Handle all auth routes
 app.all("/api/auth/*", async (c) => {

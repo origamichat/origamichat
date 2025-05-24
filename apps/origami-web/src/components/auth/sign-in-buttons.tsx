@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { signIn } from "@/lib/auth";
+import { signIn } from "@/lib/auth/client";
 
 export function SignInButtons() {
   const handleSignIn = async () => {
