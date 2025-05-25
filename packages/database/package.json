@@ -13,9 +13,11 @@
         "db:seed": "tsx scripts/seed.ts",
         "db:migrate": "tsx scripts/migrate.ts",
         "db:studio": "drizzle-kit studio",
+        "better-auth:generate-schema": "npx @better-auth/cli@latest generate --output ./src/schema/auth.ts",
         "generate": "drizzle-kit generate"
     },
     "dependencies": {
+        "better-auth": "^1.2.8",
         "dotenv": "^16.4.5",
         "drizzle-orm": "0.43.1",
         "mysql2": "^3.14.1"

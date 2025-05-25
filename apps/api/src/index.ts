@@ -4,7 +4,7 @@ import { cors } from "hono/cors";
 import { trpcServer } from "@hono/trpc-server";
 import { logger } from "hono/logger";
 
-import { auth } from "@/lib/auth";
+import { auth } from "@repo/database";
 import { origamiTRPCRouter } from "./routes";
 
 const app = new Hono<{

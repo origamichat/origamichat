@@ -1,8 +1,8 @@
+import { db } from "@/database";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
-import { db } from "@repo/database";
-// import { nextCookies } from "better-auth/next-js";
+import { admin, organization } from "better-auth/plugins";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8787",
@@ -10,6 +10,7 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "mysql",
   }),
+  plugins: [organization(), admin()],
   // Allow requests from the frontend development server
   trustedOrigins: [
     "http://localhost:3000",
@@ -43,3 +44,6 @@ export type AuthType = {
     session: typeof auth.$Infer.Session.session | null;
   };
 };
+
+export type OrigamiUser = typeof auth.$Infer.Session.user;
+export type OrigamiSession = typeof auth.$Infer.Session.session;

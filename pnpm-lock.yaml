@@ -44,9 +44,6 @@ importers:
       '@trpc/server':
         specifier: ^11.1.2
         version: 11.1.2(typescript@5.8.3)
-      better-auth:
-        specifier: ^1.2.8
-        version: 1.2.8
       hono:
         specifier: ^4.7.10
         version: 4.7.10
@@ -59,7 +56,7 @@ importers:
     devDependencies:
       '@types/bun':
         specifier: latest
-        version: 1.2.13
+        version: 1.2.14
 
   apps/origami-web:
     dependencies:
@@ -133,12 +130,15 @@ importers:
 
   packages/database:
     dependencies:
+      better-auth:
+        specifier: ^1.2.8
+        version: 1.2.8
       dotenv:
         specifier: ^16.4.5
         version: 16.5.0
       drizzle-orm:
         specifier: 0.43.1
-        version: 0.43.1(bun-types@1.2.13)(kysely@0.28.2)(mysql2@3.14.1)
+        version: 0.43.1(bun-types@1.2.14)(kysely@0.28.2)(mysql2@3.14.1)
       mysql2:
         specifier: ^3.14.1
         version: 3.14.1
@@ -1078,8 +1078,8 @@ packages:
     peerDependencies:
       typescript: '>=5.7.2'
 
-  '@types/bun@1.2.13':
-    resolution: {integrity: sha512-u6vXep/i9VBxoJl3GjZsl/BFIsvML8DfVDO0RYLEwtSZSp981kEO1V5NwRcO1CPJ7AmvpbnDCiMKo3JvbDEjAg==}
+  '@types/bun@1.2.14':
+    resolution: {integrity: sha512-VsFZKs8oKHzI7zwvECiAJ5oSorWndIWEVhfbYqZd4HI/45kzW7PN2Rr5biAzvGvRuNmYLSANY+H59ubHq8xw7Q==}
 
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
@@ -1249,8 +1249,8 @@ packages:
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
-  bun-types@1.2.13:
-    resolution: {integrity: sha512-rRjA1T6n7wto4gxhAO/ErZEtOXyEZEmnIHQfl0Dt1QQSB4QV0iP6BZ9/YB5fZaHFQ2dwHFrmPaRQ9GGMX01k9Q==}
+  bun-types@1.2.14:
+    resolution: {integrity: sha512-Kuh4Ub28ucMRWeiUUWMHsT9Wcbr4H3kLIO72RZZElSDxSu7vpetRvxIUDUaW6QtaIeixIpm7OXtNnZPf82EzwA==}
 
   bundle-require@5.1.0:
     resolution: {integrity: sha512-3WrrOuZiyaaZPWiEt4G3+IffISVC9HYlWueJEBWED4ZH4aIAC2PnkdnuRrR94M+w6yGWn4AglWtJtBI8YqvgoA==}
@@ -3475,9 +3475,9 @@ snapshots:
     dependencies:
       typescript: 5.8.3
 
-  '@types/bun@1.2.13':
+  '@types/bun@1.2.14':
     dependencies:
-      bun-types: 1.2.13
+      bun-types: 1.2.14
 
   '@types/estree@1.0.7': {}
 
@@ -3711,7 +3711,7 @@ snapshots:
 
   buffer-from@1.1.2: {}
 
-  bun-types@1.2.13:
+  bun-types@1.2.14:
     dependencies:
       '@types/node': 22.15.18
 
@@ -3879,9 +3879,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.43.1(bun-types@1.2.13)(kysely@0.28.2)(mysql2@3.14.1):
+  drizzle-orm@0.43.1(bun-types@1.2.14)(kysely@0.28.2)(mysql2@3.14.1):
     optionalDependencies:
-      bun-types: 1.2.13
+      bun-types: 1.2.14
       kysely: 0.28.2
       mysql2: 3.14.1
 

@@ -127,24 +127,6 @@ To build all apps and packages, run the following command:
 pnpm build
 ```
 
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
 ## Contributing
 
 We welcome contributions to OrigamiChat! If you'd like to contribute, please:
@@ -160,12 +142,3 @@ Please make sure to update tests as appropriate and follow the code style guidel
 ## License
 
 OrigamiChat is open-sourced software licensed under the [MIT license](LICENSE).
-
-## Useful Links
-
-- [OrigamiChat Documentation](https://docs.origamichat.com)
-- [Turborepo](https://turborepo.com/docs)
-- [Next.js](https://nextjs.org/docs)
-- [Drizzle ORM](https://orm.drizzle.team/docs)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [Hono](https://hono.dev)
