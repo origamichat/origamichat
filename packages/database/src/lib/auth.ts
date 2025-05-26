@@ -8,7 +8,7 @@ export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8787",
   secret: process.env.BETTER_AUTH_SECRET || undefined,
   database: drizzleAdapter(db, {
-    provider: "mysql",
+    provider: "pg",
   }),
   plugins: [organization(), admin()],
   // Allow requests from the frontend development server

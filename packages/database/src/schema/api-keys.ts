@@ -1,16 +1,19 @@
-import {
-  mysqlTable,
-  varchar,
-  timestamp,
-  boolean,
-  mysqlEnum,
-} from "drizzle-orm/mysql-core";
 import { user, organization } from "./auth";
 import { generatePrimaryId } from "../utils/uuid";
+import {
+  pgTable,
+  pgEnum,
+  boolean,
+  timestamp,
+  text,
+  varchar,
+} from "drizzle-orm/pg-core";
 
-export const apiKey = mysqlTable("api_key", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
-  keyType: mysqlEnum("key_type", ["private", "public"]).notNull(),
+export const keyTypeEnum = pgEnum("key_type", ["private", "public"]);
+
+export const apiKey = pgTable("api_key", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+  keyType: keyTypeEnum("key_type").notNull(),
   key: varchar("key", { length: 255 }).notNull().unique(),
   organizationId: varchar("organization_id", { length: 36 })
     .notNull()

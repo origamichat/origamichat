@@ -18,10 +18,10 @@
     },
     "dependencies": {
         "@kripod/uuidv7": "^0.1.0",
+        "@neondatabase/serverless": "^1.0.0",
         "better-auth": "^1.2.8",
         "dotenv": "^16.4.5",
         "drizzle-orm": "0.43.1",
-        "mysql2": "^3.14.1",
         "nanoid": "^5.1.5",
         "ulid": "^3.0.0"
     },

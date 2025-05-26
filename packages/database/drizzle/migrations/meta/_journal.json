@@ -1,19 +1,12 @@
 {
   "version": "7",
-  "dialect": "mysql",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1747500768238,
-      "tag": "0000_mighty_moonstone",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1748164707643,
-      "tag": "0001_lethal_starhawk",
+      "version": "7",
+      "when": 1748288892676,
+      "tag": "0000_yielding_lady_mastermind",
       "breakpoints": true
     }
   ]

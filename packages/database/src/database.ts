@@ -1,6 +1,8 @@
 import "dotenv/config";
 
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+
 import * as schema from "./schema";
 
 const getEnvVariable = (name: string): string => {
@@ -11,9 +13,11 @@ const getEnvVariable = (name: string): string => {
   return value;
 };
 
-export const db = drizzle(getEnvVariable("DATABASE_URL"), {
+const sql = neon(getEnvVariable("DATABASE_URL"));
+
+export const db = drizzle({
+  client: sql,
   schema,
-  mode: "default",
 });
 
 export type Database = typeof db;

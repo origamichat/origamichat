@@ -1,16 +1,10 @@
-import {
-  mysqlTable,
-  varchar,
-  text,
-  timestamp,
-  boolean,
-} from "drizzle-orm/mysql-core";
-import { generatePrimaryId } from "../utils/uuid";
+import { generatePrimaryId } from "@/utils/uuid";
+import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
 
-export const user = mysqlTable("user", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
+export const user = pgTable("user", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
   name: text("name").notNull(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+  email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified")
     .$defaultFn(() => false)
     .notNull(),
@@ -27,26 +21,26 @@ export const user = mysqlTable("user", {
   banExpires: timestamp("ban_expires"),
 });
 
-export const session = mysqlTable("session", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
+export const session = pgTable("session", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
   expiresAt: timestamp("expires_at").notNull(),
-  token: varchar("token", { length: 255 }).notNull().unique(),
+  token: text("token").notNull().unique(),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
-  userId: varchar("user_id", { length: 36 })
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   activeOrganizationId: text("active_organization_id"),
   impersonatedBy: text("impersonated_by"),
 });
 
-export const account = mysqlTable("account", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
+export const account = pgTable("account", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
-  userId: varchar("user_id", { length: 36 })
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
@@ -60,8 +54,8 @@ export const account = mysqlTable("account", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const verification = mysqlTable("verification", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
+export const verification = pgTable("verification", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -73,37 +67,37 @@ export const verification = mysqlTable("verification", {
   ),
 });
 
-export const organization = mysqlTable("organization", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
+export const organization = pgTable("organization", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
   name: text("name").notNull(),
-  slug: varchar("slug", { length: 255 }).unique(),
+  slug: text("slug").unique(),
   logo: text("logo"),
   createdAt: timestamp("created_at").notNull(),
   metadata: text("metadata"),
 });
 
-export const member = mysqlTable("member", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
-  organizationId: varchar("organization_id", { length: 36 })
+export const member = pgTable("member", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+  organizationId: text("organization_id")
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
-  userId: varchar("user_id", { length: 36 })
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   role: text("role").default("member").notNull(),
   createdAt: timestamp("created_at").notNull(),
 });
 
-export const invitation = mysqlTable("invitation", {
-  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
-  organizationId: varchar("organization_id", { length: 36 })
+export const invitation = pgTable("invitation", {
+  id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+  organizationId: text("organization_id")
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
   email: text("email").notNull(),
   role: text("role"),
   status: text("status").default("pending").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
-  inviterId: varchar("inviter_id", { length: 36 })
+  inviterId: text("inviter_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });

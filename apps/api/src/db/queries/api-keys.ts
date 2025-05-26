@@ -6,8 +6,7 @@ export async function getApiKeyByKey(db: Database, key: string) {
   const [result] = await db
     .select()
     .from(apiKey)
-    .where(and(eq(apiKey.key, key), eq(apiKey.isActive, true)))
-    .limit(1);
+    .where(and(eq(apiKey.key, key), eq(apiKey.isActive, true)));
 
   return result;
 }
@@ -24,16 +23,18 @@ export async function createApiKey(
     expiresAt?: Date;
   }
 ) {
-  const [result] = await db.insert(apiKey).values({
-    id: "",
-    key: data.key,
-    organizationId: data.organizationId,
-    keyType: data.keyType,
-    createdBy: data.createdBy,
-    isActive: true,
-    isTest: data.isTest,
-    expiresAt: data.expiresAt,
-  });
+  const [result] = await db
+    .insert(apiKey)
+    .values({
+      key: data.key,
+      organizationId: data.organizationId,
+      keyType: data.keyType,
+      createdBy: data.createdBy,
+      isActive: true,
+      isTest: data.isTest,
+      expiresAt: data.expiresAt,
+    })
+    .returning();
 
   return result;
 }

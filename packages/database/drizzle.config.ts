@@ -11,7 +11,7 @@ const getEnvVariable = (name: string) => {
 export default {
   schema: "./src/schema/index.ts",
   out: "./drizzle/migrations",
-  dialect: "mysql",
+  dialect: "postgresql",
   dbCredentials: {
     url: getEnvVariable("DATABASE_URL"),
   },

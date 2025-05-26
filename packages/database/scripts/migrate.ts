@@ -1,15 +1,20 @@
 import "dotenv/config";
 
-import { migrate } from "drizzle-orm/mysql2/migrator";
+import { migrate } from "drizzle-orm/neon-http/migrator";
 import { db } from "@/database";
 
 const main = async () => {
-  await migrate(db, {
-    migrationsFolder: `${__dirname}/../drizzle/migrations`,
-  });
+  try {
+    await migrate(db, {
+      migrationsFolder: `${__dirname}/../drizzle/migrations`,
+    });
 
-  await db.$client.end();
-  process.exit(0);
+    console.log("Migration completed");
+    process.exit(0);
+  } catch (error) {
+    console.error("Error during migration:", error);
+    process.exit(1);
+  }
 };
 
 void main();
