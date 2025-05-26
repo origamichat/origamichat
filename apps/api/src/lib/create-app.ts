@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { auth } from "./auth";
+import { auth } from "@repo/database";
 
 export type AuthType = {
   Variables: {

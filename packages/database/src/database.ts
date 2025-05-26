@@ -15,3 +15,5 @@ export const db = drizzle(getEnvVariable("DATABASE_URL"), {
   schema,
   mode: "default",
 });
+
+export type Database = typeof db;

@@ -6,6 +6,7 @@ import { logger } from "hono/logger";
 
 import { auth } from "@repo/database";
 import { origamiTRPCRouter } from "./routes";
+import { secureHeaders } from "hono/secure-headers";
 
 const app = new Hono<{
   Variables: {
@@ -16,6 +17,8 @@ const app = new Hono<{
 
 // Logger middleware
 app.use(logger());
+
+app.use(secureHeaders());
 
 app.use(
   "/api/auth/*",
@@ -34,6 +37,19 @@ app.use(
   "/trpc/*",
   cors({
     origin: "*",
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowHeaders: [
+      "Authorization",
+      "Content-Type",
+      "accept-language",
+      "x-trpc-source",
+      "x-user-locale",
+      "x-user-timezone",
+      "x-user-country",
+    ],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 86400,
+    credentials: true,
   })
 );
 

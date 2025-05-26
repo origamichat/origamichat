@@ -5,9 +5,10 @@ import {
   timestamp,
   boolean,
 } from "drizzle-orm/mysql-core";
+import { generatePrimaryId } from "../utils/uuid";
 
 export const user = mysqlTable("user", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
   name: text("name").notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified")
@@ -27,7 +28,7 @@ export const user = mysqlTable("user", {
 });
 
 export const session = mysqlTable("session", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
   expiresAt: timestamp("expires_at").notNull(),
   token: varchar("token", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").notNull(),
@@ -42,7 +43,7 @@ export const session = mysqlTable("session", {
 });
 
 export const account = mysqlTable("account", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
   userId: varchar("user_id", { length: 36 })
@@ -60,7 +61,7 @@ export const account = mysqlTable("account", {
 });
 
 export const verification = mysqlTable("verification", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -73,7 +74,7 @@ export const verification = mysqlTable("verification", {
 });
 
 export const organization = mysqlTable("organization", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
   name: text("name").notNull(),
   slug: varchar("slug", { length: 255 }).unique(),
   logo: text("logo"),
@@ -82,7 +83,7 @@ export const organization = mysqlTable("organization", {
 });
 
 export const member = mysqlTable("member", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
   organizationId: varchar("organization_id", { length: 36 })
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
@@ -94,7 +95,7 @@ export const member = mysqlTable("member", {
 });
 
 export const invitation = mysqlTable("invitation", {
-  id: varchar("id", { length: 36 }).primaryKey(),
+  id: varchar("id", { length: 26 }).primaryKey().$defaultFn(generatePrimaryId),
   organizationId: varchar("organization_id", { length: 36 })
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
