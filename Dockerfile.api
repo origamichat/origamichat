@@ -22,7 +22,7 @@ COPY . .
 RUN pnpm build --filter=api
 
 # Copy the built server to the root directory
-RUN cp ./apps/api/dist/server ./server
+RUN cp ./apps/api/server ./server
 
 # Expose the port Railway expects
 ENV PORT=3000
