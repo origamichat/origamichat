@@ -21,7 +21,7 @@ This monorepo includes the following packages/apps:
 - `origami-web`: a Next.js application for the web frontend
 - `api`: a [Hono](https://hono.dev/) API server providing backend services
 - `@repo/ui`: a React component library shared across applications
-- `@repo/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with MySQL
+- `@repo/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL
 - `@repo/eslint-config`: `eslint` configurations
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
@@ -39,24 +39,23 @@ This monorepo has some additional tools already setup for you:
 
 ## Database Setup
 
-### Setting up MySQL locally with DBngin
+### Setting up PostgreSQL with Neon.tech
 
-1. Download and install [DBngin](https://dbngin.com/) for your platform
-2. Open DBngin and create a new MySQL database:
-   - Click "Create a Database Server"
-   - Select MySQL
-   - Set a name, version (8.0+ recommended), and port (default: 3306)
-   - Click "Create"
-3. Once your database server is running, create a new database for OrigamiChat
+1. Create a free account on [Neon.tech](https://neon.tech)
+2. Create a new project in the Neon dashboard
+3. Once your project is created, you'll get a connection string that looks like:
+   ```
+   postgresql://[user]:[password]@[endpoint]/[dbname]
+   ```
 
 ### Running database migrations
 
-After setting up your MySQL database:
+After setting up your Neon.tech database:
 
 1. Configure your database connection in the `.env` file:
 
    ```
-   DATABASE_URL=mysql://root:@localhost:3306/origami
+   DATABASE_URL=postgresql://[user]:[password]@[endpoint]/[dbname]
    ```
 
 2. Run the database migrations:
@@ -86,7 +85,7 @@ The `api` app provides HTTP endpoints and is built with [Hono](https://hono.dev/
 
    ```
    PORT=3001
-   DATABASE_URL=mysql://root:@localhost:3306/origami
+   DATABASE_URL=postgresql://
    ```
 
 2. Start the API server:
@@ -94,22 +93,6 @@ The `api` app provides HTTP endpoints and is built with [Hono](https://hono.dev/
    cd apps/api
    pnpm dev
    ```
-
-### Endpoints
-
-- `GET /healthcheck` - Check if the API is running
-
-### Using from the Web App
-
-The API exports TypeScript types that can be used by the web app for type-safe API calls:
-
-```typescript
-import { apiClient } from "@/lib/api-client";
-
-// Make a type-safe API call
-const healthResponse = await apiClient.healthcheck.$get();
-const healthData = await healthResponse.json();
-```
 
 ## Development
 
@@ -127,18 +110,13 @@ To build all apps and packages, run the following command:
 pnpm build
 ```
 
-## Contributing
-
-We welcome contributions to OrigamiChat! If you'd like to contribute, please:
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature-name`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin feature/your-feature-name`
-5. Open a Pull Request
-
-Please make sure to update tests as appropriate and follow the code style guidelines.
-
 ## License
 
-OrigamiChat is open-sourced software licensed under the [MIT license](LICENSE).
+This project is licensed under the **[AGPL-3.0](https://opensource.org/licenses/AGPL-3.0)** for non-commercial use.
+
+### Commercial Use
+
+For commercial use or deployments requiring a setup fee, please contact us
+for a commercial license at [anthony@origami.chat](mailto:anthony@origami.chat).
+
+By using this software, you agree to the terms of the license.
