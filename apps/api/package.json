@@ -2,7 +2,9 @@
   "name": "api",
   "private": true,
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build src/index.ts --compile --outfile server",
+    "start": "bun run src/index.ts"
   },
   "exports": {
     ".": "./src/client/index.ts"

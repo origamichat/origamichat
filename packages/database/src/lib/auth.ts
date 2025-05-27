@@ -10,7 +10,19 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
-  plugins: [organization(), admin()],
+  plugins: [
+    organization({
+      organizationCreation: {
+        disabled: false,
+        afterCreate: async ({ organization, member, user }, request) => {
+          console.log("organization created", organization);
+          console.log("member", member);
+          console.log("user", user);
+        },
+      },
+    }),
+    admin(),
+  ],
   // Allow requests from the frontend development server
   trustedOrigins: [
     "http://localhost:3000",
