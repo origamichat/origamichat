@@ -1,0 +1,28 @@
+name: Apply schema migrations
+
+# 👉 Only run this workflow when a change is made to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  apply_migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.6.7
+
+      - name: Install dependencies & tooling
+        run: |
+          pnpm install
+          pnpm add -g drizzle-orm drizzle-kit pg
+      - name: Apply migrations
+        run: cd packages/database && pnpm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
