@@ -22,7 +22,7 @@ jobs:
         run: |
           pnpm install
           pnpm add -g drizzle-orm drizzle-kit pg
-      - name: Apply migrations
+      - name: Apply migrations using drizzle-kit
         run: cd packages/database && pnpm run db:migrate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
