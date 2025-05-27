@@ -1,19 +1,18 @@
-# Build stage
-FROM node:20-slim AS builder
+FROM node:20-slim
 
 WORKDIR /app
 
-# Copy root workspace files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+# Install pnpm
+RUN npm install -g pnpm
 
-# Copy package.json files for all workspaces
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/database/package.json ./packages/database/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 
 # Install dependencies
-RUN npm install -g pnpm
 RUN pnpm install
 
 # Copy source files
@@ -22,26 +21,9 @@ COPY . .
 # Build the application
 RUN pnpm build --filter=api
 
-# Final stage
-FROM debian:bookworm-slim
-
-# Create a non-root user
-RUN useradd -m -u 1000 appuser
-
-WORKDIR /app
-
-# Copy only the compiled binary
-COPY --from=builder /app/apps/api/dist/server ./server
-
-# Set ownership to non-root user
-RUN chown appuser:appuser /app/server
-
-# Switch to non-root user
-USER appuser
-
 # Expose the port Railway expects
 ENV PORT=3000
 EXPOSE ${PORT}
 
-# Run the binary
-CMD ["./server"]
+# Run the server
+CMD ["./apps/api/dist/server"]
