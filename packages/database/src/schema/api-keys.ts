@@ -8,6 +8,7 @@ import {
   text,
   varchar,
 } from "drizzle-orm/pg-core";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export const keyTypeEnum = pgEnum("key_type", ["private", "public"]);
 
@@ -40,3 +41,6 @@ export const apiKey = pgTable("api_key", {
     .$defaultFn(() => new Date())
     .notNull(),
 });
+
+export type ApiKeySelect = InferSelectModel<typeof apiKey>;
+export type ApiKeyInsert = InferInsertModel<typeof apiKey>;

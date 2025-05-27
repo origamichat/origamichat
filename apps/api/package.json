@@ -17,6 +17,7 @@
     "@trpc/server": "^11.1.2",
     "drizzle-orm": "0.43.1",
     "hono": "^4.7.10",
+    "lru-cache": "^11.1.0",
     "trpc-to-openapi": "^2.3.0",
     "ulid": "^3.0.0",
     "zod": "^3.24.4"

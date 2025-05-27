@@ -1,4 +1,6 @@
 import { generatePrimaryId } from "@/utils/uuid";
+import { InferSelectModel } from "drizzle-orm";
+import { InferInsertModel } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -101,3 +103,6 @@ export const invitation = pgTable("invitation", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });
+
+export type OrganizationSelect = InferSelectModel<typeof organization>;
+export type OrganizationInsert = InferInsertModel<typeof organization>;

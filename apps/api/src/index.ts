@@ -1,19 +1,16 @@
-import { Hono } from "hono";
 import { cors } from "hono/cors";
-
-import { trpcServer } from "@hono/trpc-server";
 import { logger } from "hono/logger";
+import { trpcServer } from "@hono/trpc-server";
+import { secureHeaders } from "hono/secure-headers";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { swaggerUI } from "@hono/swagger-ui";
 
 import { auth } from "@repo/database";
-import { origamiTRPCRouter } from "./routes";
-import { secureHeaders } from "hono/secure-headers";
 
-const app = new Hono<{
-  Variables: {
-    user: typeof auth.$Infer.Session.user | null;
-    session: typeof auth.$Infer.Session.session | null;
-  };
-}>({ strict: false });
+import { origamiTRPCRouter } from "./routes";
+import { routers } from "./rest/routers";
+
+const app = new OpenAPIHono();
 
 // Logger middleware
 app.use(logger());
@@ -53,20 +50,20 @@ app.use(
   })
 );
 
-app.use("*", async (c, next) => {
-  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+// app.use("*", async (c, next) => {
+//   const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
-  if (!session) {
-    c.set("user", null);
-    c.set("session", null);
-    return next();
-  }
+//   if (!session) {
+//     c.set("user", null);
+//     c.set("session", null);
+//     return next();
+//   }
 
-  c.set("user", session.user);
-  c.set("session", session.session);
+//   c.set("user", session.user);
+//   c.set("session", session.session);
 
-  return next();
-});
+//   return next();
+// });
 
 // Better-Auth - Handle all auth routes
 app.all("/api/auth/*", async (c) => {
@@ -81,7 +78,30 @@ app.use(
   })
 );
 
+app.route("/v1", routers);
+
+app.doc("/openapi", {
+  openapi: "3.1.0",
+  info: {
+    version: "0.0.1",
+    title: "Origami Chat API",
+  },
+  servers: [
+    {
+      url: "https://api.origami.chat",
+      description: "Production server",
+    },
+  ],
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+});
+
+app.get("/ui", swaggerUI({ url: "/openapi" }));
+
 export default {
-  port: 8787,
+  port: process.env.PORT ? Number.parseInt(process.env.PORT) : 8787,
   fetch: app.fetch,
 };
