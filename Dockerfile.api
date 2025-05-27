@@ -3,9 +3,7 @@ FROM node:20-slim
 WORKDIR /app
 
 # Install pnpm and bun
-RUN npm install -g pnpm
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:${PATH}"
+RUN npm install -g pnpm bun
 
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
