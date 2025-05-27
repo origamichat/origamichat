@@ -3,10 +3,14 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Copy root package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy root workspace files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+
+# Copy package.json files for all workspaces
 COPY apps/api/package.json ./apps/api/
 COPY packages/database/package.json ./packages/database/
+COPY packages/eslint-config/package.json ./packages/eslint-config/
+COPY packages/typescript-config/package.json ./packages/typescript-config/
 
 # Install dependencies
 RUN npm install -g pnpm
