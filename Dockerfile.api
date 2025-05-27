@@ -2,8 +2,9 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Install pnpm
+# Install pnpm and bun
 RUN npm install -g pnpm
+RUN curl -fsSL https://bun.sh/install | bash
 
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
