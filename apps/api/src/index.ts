@@ -9,6 +9,7 @@ import { auth } from "@repo/database";
 
 import { origamiTRPCRouter } from "./routes";
 import { routers } from "./rest/routers";
+import { checkHealth } from "./utils/health";
 
 const app = new OpenAPIHono();
 
@@ -97,6 +98,16 @@ app.doc("/openapi", {
       bearerAuth: [],
     },
   ],
+});
+
+app.get("/health", async (c) => {
+  try {
+    await checkHealth();
+
+    return c.json({ status: "ok" }, 200);
+  } catch (error) {
+    return c.json({ status: "error" }, 500);
+  }
 });
 
 app.get("/ui", swaggerUI({ url: "/openapi" }));
