@@ -22,6 +22,7 @@ import {
   SenderType,
 } from "@/schema/enums";
 import { enumToPgEnum } from "@/utils/db";
+import { InferSelectModel, InferInsertModel } from "drizzle-orm";
 
 export const messageTypeEnum = pgEnum(
   "message_type",
@@ -298,3 +299,18 @@ export const messageRelations = relations(message, ({ one }) => ({
     references: [message.id],
   }),
 }));
+
+export type WebsiteSelect = InferSelectModel<typeof website>;
+export type WebsiteInsert = InferInsertModel<typeof website>;
+
+export type VisitorSelect = InferSelectModel<typeof visitor>;
+export type VisitorInsert = InferInsertModel<typeof visitor>;
+
+export type AiAgentSelect = InferSelectModel<typeof aiAgent>;
+export type AiAgentInsert = InferInsertModel<typeof aiAgent>;
+
+export type ConversationSelect = InferSelectModel<typeof conversation>;
+export type ConversationInsert = InferInsertModel<typeof conversation>;
+
+export type MessageSelect = InferSelectModel<typeof message>;
+export type MessageInsert = InferInsertModel<typeof message>;

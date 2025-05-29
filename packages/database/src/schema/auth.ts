@@ -220,3 +220,21 @@ export const invitationRelations = relations(invitation, ({ one }) => ({
 
 export type OrganizationSelect = InferSelectModel<typeof organization>;
 export type OrganizationInsert = InferInsertModel<typeof organization>;
+
+export type UserSelect = InferSelectModel<typeof user>;
+export type UserInsert = InferInsertModel<typeof user>;
+
+export type SessionSelect = InferSelectModel<typeof session>;
+export type SessionInsert = InferInsertModel<typeof session>;
+
+export type AccountSelect = InferSelectModel<typeof account>;
+export type AccountInsert = InferInsertModel<typeof account>;
+
+export type VerificationSelect = InferSelectModel<typeof verification>;
+export type VerificationInsert = InferInsertModel<typeof verification>;
+
+export type MemberSelect = InferSelectModel<typeof member>;
+export type MemberInsert = InferInsertModel<typeof member>;
+
+export type InvitationSelect = InferSelectModel<typeof invitation>;
+export type InvitationInsert = InferInsertModel<typeof invitation>;
