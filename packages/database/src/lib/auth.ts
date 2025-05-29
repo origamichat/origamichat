@@ -2,7 +2,7 @@ import { db } from "@/database";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
-import { admin, organization } from "better-auth/plugins";
+import { admin, anonymous, organization } from "better-auth/plugins";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8787",
@@ -21,6 +21,7 @@ export const auth = betterAuth({
         },
       },
     }),
+    anonymous(),
     admin(),
   ],
   // Allow requests from the frontend development server
