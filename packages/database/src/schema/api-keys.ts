@@ -14,6 +14,7 @@ import { relations } from "drizzle-orm";
 
 import { enumToPgEnum } from "@/utils/db";
 import { APIKeyType } from "@/schema/enums";
+import { website } from "./chat";
 
 export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
 
@@ -72,6 +73,10 @@ export const apiKeyRelations = relations(apiKey, ({ one }) => ({
   organization: one(organization, {
     fields: [apiKey.organizationId],
     references: [organization.id],
+  }),
+  website: one(website, {
+    fields: [apiKey.websiteId],
+    references: [website.id],
   }),
   creator: one(user, {
     fields: [apiKey.createdBy],

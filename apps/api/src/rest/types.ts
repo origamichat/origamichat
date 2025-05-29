@@ -1,9 +1,15 @@
-import { Database, OrganizationSelect } from "@repo/database";
+import {
+  ApiKeySelect,
+  Database,
+  OrganizationSelect,
+  WebsiteSelect,
+} from "@repo/database";
 
 export type RestContext = {
   Variables: {
     db: Database;
+    apiKey: ApiKeySelect;
     organization: OrganizationSelect;
-    organizationId: string;
+    website: WebsiteSelect;
   };
 };
