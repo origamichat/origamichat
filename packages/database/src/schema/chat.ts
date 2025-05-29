@@ -14,31 +14,31 @@ import { generatePrimaryId } from "@/utils/uuid";
 import { organization } from "./auth";
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
+import { apiKey } from "./api-keys";
+import {
+  ConversationPriority,
+  ConversationStatus,
+  MessageType,
+  SenderType,
+} from "@/schema/enums";
+import { enumToPgEnum } from "@/utils/db";
 
-export const messageTypeEnum = pgEnum("message_type", [
-  "text",
-  "image",
-  "file",
-]);
+export const messageTypeEnum = pgEnum(
+  "message_type",
+  enumToPgEnum(MessageType)
+);
 
-export const senderTypeEnum = pgEnum("sender_type", [
-  "visitor",
-  "team_member",
-  "ai",
-]);
+export const senderTypeEnum = pgEnum("sender_type", enumToPgEnum(SenderType));
 
-export const conversationStatusEnum = pgEnum("conversation_status", [
-  "open",
-  "resolved",
-  "pending",
-]);
+export const conversationStatusEnum = pgEnum(
+  "conversation_status",
+  enumToPgEnum(ConversationStatus)
+);
 
-export const conversationPriorityEnum = pgEnum("conversation_priority", [
-  "low",
-  "normal",
-  "high",
-  "urgent",
-]);
+export const conversationPriorityEnum = pgEnum(
+  "conversation_priority",
+  enumToPgEnum(ConversationPriority)
+);
 
 export const website = pgTable(
   "website",
@@ -149,8 +149,12 @@ export const conversation = pgTable(
   "conversation",
   {
     id: text("id").primaryKey().$defaultFn(generatePrimaryId),
-    status: conversationStatusEnum("status").default("open").notNull(),
-    priority: conversationPriorityEnum("priority").default("normal").notNull(),
+    status: conversationStatusEnum("status")
+      .default(ConversationStatus.OPEN)
+      .notNull(),
+    priority: conversationPriorityEnum("priority")
+      .default(ConversationPriority.NORMAL)
+      .notNull(),
     assignedTeamMemberId: text("assigned_team_member_id").references(
       () => user.id
     ),
@@ -192,7 +196,7 @@ export const message = pgTable(
   {
     id: text("id").primaryKey().$defaultFn(generatePrimaryId),
     content: text("content").notNull(),
-    type: messageTypeEnum("type").default("text").notNull(),
+    type: messageTypeEnum("type").default(MessageType.TEXT).notNull(),
     senderType: senderTypeEnum("sender_type").notNull(),
     senderId: text("sender_id").notNull(),
     conversationId: text("conversation_id")
@@ -234,6 +238,7 @@ export const websiteRelations = relations(website, ({ many, one }) => ({
   visitors: many(visitor),
   aiAgents: many(aiAgent),
   conversations: many(conversation),
+  apiKeys: many(apiKey),
 }));
 
 export const visitorRelations = relations(visitor, ({ one, many }) => ({
