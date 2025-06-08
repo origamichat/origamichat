@@ -2,6 +2,7 @@
   "name": "origami-web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -11,6 +12,10 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
     "@repo/database": "workspace:*",
+    "@tanstack/react-query": "^5.80.6",
+    "@trpc/client": "^11.0.0",
+    "@trpc/server": "^11.0.0",
+    "@trpc/tanstack-react-query": "^11.3.1",
     "api": "workspace:*",
     "better-auth": "^1.2.8",
     "class-variance-authority": "^0.7.1",
@@ -19,8 +24,10 @@
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "superjson": "^2.2.2",
     "tailwind-merge": "^3.3.0",
-    "tw-animate-css": "^1.3.0"
+    "tw-animate-css": "^1.3.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

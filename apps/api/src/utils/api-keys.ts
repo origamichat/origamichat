@@ -1,17 +1,19 @@
+import { APIKeyType } from "@repo/database";
 import { randomBytes } from "node:crypto";
+import { createHmac } from "crypto";
 
 export function generateApiKey({
   type,
   isTest,
 }: {
-  type: "private" | "public";
+  type: APIKeyType;
   isTest: boolean;
 }): string {
   let prefix = "";
 
-  if (type === "private") {
+  if (type === APIKeyType.PRIVATE) {
     prefix = "sk_";
-  } else if (type === "public") {
+  } else if (type === APIKeyType.PUBLIC) {
     prefix = "pk_";
   }
 
@@ -30,4 +32,8 @@ export function isValidSecretApiKeyFormat(key: string): boolean {
 
 export function isValidPublicApiKeyFormat(key: string): boolean {
   return key.startsWith("pk_") && (key.length === 67 || key.length === 72);
+}
+
+export function hashApiKey(rawKey: string, secret: string): string {
+  return createHmac("sha256", secret).update(rawKey).digest("hex");
 }

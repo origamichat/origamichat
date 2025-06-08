@@ -1,11 +1,12 @@
+import { organizationClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-// import { inferAdditionalFields } from "better-auth/client/plugins";
 
 const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   fetchOptions: {
     credentials: "include",
   },
+  plugins: [organizationClient()],
 });
 
 export const {

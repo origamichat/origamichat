@@ -1,6 +1,9 @@
-import type { Database } from "@repo/database";
-import { apiKey } from "@repo/database";
+import { generateApiKey, hashApiKey } from "@/utils/api-keys";
+import type { ApiKeySelect, Database } from "@repo/database";
+import { apiKey, APIKeyType } from "@repo/database";
 import { and, eq } from "drizzle-orm";
+
+export type CreateApiKeyResult = ApiKeySelect;
 
 export async function getApiKeyByKey(db: Database, key: string) {
   const result = await db.query.apiKey.findFirst({
@@ -17,29 +20,93 @@ export async function getApiKeyByKey(db: Database, key: string) {
 export async function createApiKey(
   db: Database,
   data: {
-    key: string;
-    name?: string;
+    name: string;
     organizationId: string;
     websiteId: string;
-    keyType: "private" | "public";
+    keyType: APIKeyType;
     createdBy: string;
     isTest: boolean;
-    expiresAt?: Date;
   }
-) {
+): Promise<CreateApiKeyResult> {
+  let storedKey = "";
+
+  // Generate key
+  const rawKey = generateApiKey({
+    type: data.keyType,
+    isTest: data.isTest,
+  });
+
+  // Hash the key using a secret from the environment
+  if (data.keyType === APIKeyType.PRIVATE) {
+    storedKey = hashApiKey(rawKey, process.env.API_KEY_SECRET!);
+  } else {
+    storedKey = rawKey;
+  }
+
+  // Save hashed key in database
   const [result] = await db
     .insert(apiKey)
     .values({
-      key: data.key,
+      name: data.name,
+      key: storedKey,
       organizationId: data.organizationId,
       keyType: data.keyType,
       createdBy: data.createdBy,
       websiteId: data.websiteId,
       isActive: true,
       isTest: data.isTest,
-      expiresAt: data.expiresAt,
     })
     .returning();
+
+  // Return the raw key to the caller (not stored)
+  return { ...result, key: rawKey };
+}
+
+export async function createDefaultWebsiteKeys(
+  db: Database,
+  data: {
+    websiteId: string;
+    websiteName: string;
+    organizationId: string;
+    createdBy: string;
+  }
+) {
+  // Generate production / test private and public keys
+  const keys = [
+    {
+      name: `${data.websiteName} - Private API Key`,
+      keyType: APIKeyType.PRIVATE,
+      isActive: true,
+      isTest: false,
+    },
+    {
+      name: `${data.websiteName} - Public API Key`,
+      keyType: APIKeyType.PUBLIC,
+      isActive: true,
+      isTest: false,
+    },
+    {
+      name: `${data.websiteName} - Test Private API Key`,
+      keyType: APIKeyType.PRIVATE,
+      isActive: true,
+      isTest: true,
+    },
+    {
+      name: `${data.websiteName} - Test Public API Key`,
+      keyType: APIKeyType.PUBLIC,
+      isActive: true,
+      isTest: true,
+    },
+  ];
+
+  const result = await Promise.all(
+    keys.map((key) =>
+      createApiKey(db, {
+        ...key,
+        ...data,
+      })
+    )
+  );
 
   return result;
 }

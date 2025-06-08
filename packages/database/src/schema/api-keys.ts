@@ -24,6 +24,7 @@ export const apiKey = pgTable(
     id: text("id").primaryKey().$defaultFn(generatePrimaryId),
     keyType: keyTypeEnum("key_type").notNull(),
     key: varchar("key", { length: 255 }).notNull().unique(),
+    name: text("name").notNull(),
     organizationId: varchar("organization_id", { length: 36 })
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),

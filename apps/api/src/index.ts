@@ -7,11 +7,16 @@ import { swaggerUI } from "@hono/swagger-ui";
 
 import { auth } from "@repo/database";
 
-import { origamiTRPCRouter } from "./routes";
-import { routers } from "./rest/routers";
+import { origamiTRPCRouter } from "@/trpc/routers/_app";
 import { checkHealth } from "./utils/health";
+import { routers } from "./rest/routers";
 
-const app = new OpenAPIHono();
+const app = new OpenAPIHono<{
+  Variables: {
+    user: typeof auth.$Infer.Session.user | null;
+    session: typeof auth.$Infer.Session.session | null;
+  };
+}>();
 
 // Logger middleware
 app.use(logger());
@@ -51,20 +56,21 @@ app.use(
   })
 );
 
-// app.use("*", async (c, next) => {
-//   const session = await auth.api.getSession({ headers: c.req.raw.headers });
+app.use("/trpc/*", async (c, next) => {
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
-//   if (!session) {
-//     c.set("user", null);
-//     c.set("session", null);
-//     return next();
-//   }
+  if (!session) {
+    c.set("user", null);
+    c.set("session", null);
 
-//   c.set("user", session.user);
-//   c.set("session", session.session);
+    return next();
+  }
 
-//   return next();
-// });
+  c.set("user", session.user);
+  c.set("session", session.session);
+
+  return next();
+});
 
 // Better-Auth - Handle all auth routes
 app.all("/api/auth/*", async (c) => {
@@ -86,6 +92,11 @@ app.doc("/openapi", {
   info: {
     version: "0.0.1",
     title: "Origami Chat API",
+    description: "Origami chat API",
+    license: {
+      name: "AGPL-3.0 license",
+      url: "https://github.com/origamichat/monorepo/blob/main/LICENSE",
+    },
   },
   servers: [
     {

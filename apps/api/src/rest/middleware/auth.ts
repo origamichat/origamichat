@@ -1,5 +1,4 @@
 import { getApiKeyByKey } from "@/db/queries/api-keys";
-import { getOrganizationById } from "@/db/queries/organization";
 import { isValidSecretApiKeyFormat } from "@/utils/api-keys";
 import {
   ApiKeySelect,
