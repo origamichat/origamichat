@@ -19,7 +19,9 @@ import { getTRPCUrl } from "../url";
 //            will return the same client during the same request.
 export const getQueryClient = cache(makeQueryClient);
 
-export const trpc = createTRPCOptionsProxy<OrigamiTRPCRouter>({
+export const trpc: ReturnType<
+  typeof createTRPCOptionsProxy<OrigamiTRPCRouter>
+> = createTRPCOptionsProxy<OrigamiTRPCRouter>({
   queryClient: getQueryClient,
   client: createTRPCClient<OrigamiTRPCRouter>({
     links: [

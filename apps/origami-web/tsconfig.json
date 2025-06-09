@@ -7,8 +7,10 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+      "api/*": ["../api/src/*"]
+    },
+    "skipLibCheck": true
   },
   "include": [
     "next-env.d.ts",
@@ -17,5 +19,10 @@
     ".next/types/**/*.ts",
     "../../packages/database/src/schema/auth-schema.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "../api"
+    }
+  ]
 }

@@ -11,7 +11,11 @@ import superjson from "superjson";
 import { makeQueryClient } from "./query-client";
 import { getTRPCUrl } from "../url";
 
-export const { TRPCProvider, useTRPC } = createTRPCContext<OrigamiTRPCRouter>();
+// Workaround for TRPC type portability warning
+const trpcContext = createTRPCContext<OrigamiTRPCRouter>();
+
+export const TRPCProvider = trpcContext.TRPCProvider;
+export const useTRPC = trpcContext.useTRPC;
 
 let browserQueryClient: QueryClient;
 

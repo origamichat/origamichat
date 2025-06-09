@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "apps/api"
+    },
+    {
+      "path": "apps/origami-web"
+    }
+  ]
+}

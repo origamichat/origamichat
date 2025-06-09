@@ -5,12 +5,20 @@
     "jsxImportSource": "hono/jsx",
     "moduleResolution": "bundler",
     "module": "ESNext",
+    "target": "ESNext",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
-  }
+    },
+    "declaration": true,
+    "composite": true,
+    "declarationMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

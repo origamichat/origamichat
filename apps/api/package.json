@@ -5,10 +5,15 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "build": "bun build src/index.ts --compile --outfile server",
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "build:types": "tsc --build",
+    "dev:types": "tsc --build --watch"
   },
   "exports": {
-    ".": "./src/client/index.ts"
+    ".": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./src/client/index.ts"
+    }
   },
   "dependencies": {
     "@hono/node-server": "^1.7.0",
