@@ -10,6 +10,7 @@ import { auth } from "@repo/database";
 import { origamiTRPCRouter } from "@/trpc/routers/_app";
 import { checkHealth } from "./utils/health";
 import { routers } from "./rest/routers";
+import { createTRPCContext } from "./trpc/init";
 
 const app = new OpenAPIHono<{
   Variables: {
@@ -39,18 +40,11 @@ app.use(
 app.use(
   "/trpc/*",
   cors({
-    origin: "*",
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowHeaders: [
-      "Authorization",
-      "Content-Type",
-      "accept-language",
-      "x-trpc-source",
-      "x-user-locale",
-      "x-user-timezone",
-      "x-user-country",
+    origin: [
+      "http://localhost:3000",
+      "https://origami.chat",
+      "https://origamichat.com",
     ],
-    exposeHeaders: ["Content-Length"],
     maxAge: 86400,
     credentials: true,
   })
@@ -58,6 +52,8 @@ app.use(
 
 app.use("/trpc/*", async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
+
+  console.log({ session });
 
   if (!session) {
     c.set("user", null);
@@ -82,6 +78,7 @@ app.use(
   "/trpc/*",
   trpcServer({
     router: origamiTRPCRouter,
+    createContext: createTRPCContext,
   })
 );
 

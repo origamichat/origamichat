@@ -13,7 +13,7 @@ import {
 import { cache } from "react";
 import superjson from "superjson";
 import { makeQueryClient } from "./query-client";
-import { getAPIBaseUrl } from "../url";
+import { getTRPCUrl } from "../url";
 
 // IMPORTANT: Create a stable getter for the query client that
 //            will return the same client during the same request.
@@ -24,7 +24,7 @@ export const trpc = createTRPCOptionsProxy<OrigamiTRPCRouter>({
   client: createTRPCClient({
     links: [
       httpBatchLink({
-        url: getAPIBaseUrl("/trpc"),
+        url: getTRPCUrl(),
         transformer: superjson,
         async headers() {
           return {
@@ -32,6 +32,12 @@ export const trpc = createTRPCOptionsProxy<OrigamiTRPCRouter>({
             "x-user-locale": await getLocale(),
             "x-user-country": await getCountryCode(),
           };
+        },
+        fetch(url, options) {
+          return fetch(url, {
+            ...options,
+            credentials: "include",
+          });
         },
       }),
       loggerLink({

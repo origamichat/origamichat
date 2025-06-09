@@ -9,7 +9,7 @@ import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { useState } from "react";
 import superjson from "superjson";
 import { makeQueryClient } from "./query-client";
-import { getAPIBaseUrl } from "../url";
+import { getTRPCUrl } from "../url";
 
 export const { TRPCProvider, useTRPC } = createTRPCContext<OrigamiTRPCRouter>();
 
@@ -40,8 +40,14 @@ export function TRPCReactProvider(
     createTRPCClient<OrigamiTRPCRouter>({
       links: [
         httpBatchLink({
-          url: getAPIBaseUrl("/trpc"),
+          url: getTRPCUrl(),
           transformer: superjson,
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: "include",
+            });
+          },
         }),
         loggerLink({
           enabled: (opts) =>
