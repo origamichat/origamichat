@@ -21,7 +21,7 @@ export const getQueryClient = cache(makeQueryClient);
 
 export const trpc = createTRPCOptionsProxy<OrigamiTRPCRouter>({
   queryClient: getQueryClient,
-  client: createTRPCClient({
+  client: createTRPCClient<OrigamiTRPCRouter>({
     links: [
       httpBatchLink({
         url: getTRPCUrl(),
