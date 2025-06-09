@@ -1,6 +1,7 @@
 // TRPC
 export {
   origamiTRPCRouter,
-  type OrigamiTRPCRouterOutputs,
-  type OrigamiTRPCRouterInputs,
+  OrigamiTRPCRouterOutputs,
+  OrigamiTRPCRouterInputs,
+  OrigamiTRPCRouter,
 } from "@/trpc/routers/_app";
