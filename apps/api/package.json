@@ -17,7 +17,7 @@
     "@hono/zod-openapi": "^0.19.6",
     "@hono/zod-validator": "^0.5.0",
     "@repo/database": "workspace:*",
-    "@trpc/server": "^11.1.2",
+    "@trpc/server": "^11.3.1",
     "drizzle-orm": "0.44.0",
     "hono": "^4.7.10",
     "lru-cache": "^11.1.0",

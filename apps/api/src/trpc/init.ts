@@ -4,8 +4,8 @@ import { Context } from "hono";
 import { db } from "@repo/database";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
-import { withPermission } from "@/trpc/middleware/auth";
-import { withPrimaryDbMiddleware } from "@/trpc/middleware/db";
+import { withPermission } from "./middleware/auth";
+import { withPrimaryDbMiddleware } from "./middleware/db";
 
 export type TRPCContext = {
   user: typeof auth.$Infer.Session.user | null;
