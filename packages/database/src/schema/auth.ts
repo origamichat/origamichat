@@ -1,4 +1,4 @@
-import { generatePrimaryId } from "@/utils/uuid";
+import { generatePrimaryId } from "@database/utils/uuid";
 import { InferSelectModel } from "drizzle-orm";
 import { InferInsertModel } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";

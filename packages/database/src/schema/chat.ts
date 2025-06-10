@@ -10,19 +10,21 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-import { generatePrimaryId } from "@/utils/uuid";
-import { organization } from "./auth";
-import { user } from "./auth";
+import { generatePrimaryId } from "@database/utils/uuid";
+import {
+  organization,
+  user,
+} from "@database/schema/auth";
 import { relations } from "drizzle-orm";
-import { apiKey } from "./api-keys";
 import {
   ConversationPriority,
   ConversationStatus,
   MessageType,
   SenderType,
-} from "@/schema/enums";
-import { enumToPgEnum } from "@/utils/db";
+} from "@database/schema/enums";
+import { enumToPgEnum } from "@database/utils/db";
 import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { apiKey } from "@database/schema/api-keys";
 
 export const messageTypeEnum = pgEnum(
   "message_type",

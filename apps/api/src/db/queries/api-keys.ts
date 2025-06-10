@@ -1,4 +1,4 @@
-import { generateApiKey, hashApiKey } from "@/utils/api-keys";
+import { generateApiKey, hashApiKey } from "@api/utils/api-keys";
 import type { ApiKeySelect, Database } from "@repo/database";
 import { apiKey, APIKeyType } from "@repo/database";
 import { and, eq } from "drizzle-orm";

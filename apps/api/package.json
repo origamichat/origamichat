@@ -9,12 +9,7 @@
     "build:types": "tsc --build",
     "dev:types": "tsc --build --watch"
   },
-  "exports": {
-    ".": {
-      "types": "./dist/client/index.d.ts",
-      "default": "./src/client/index.ts"
-    }
-  },
+  "exports": "./src/client/index.ts",
   "dependencies": {
     "@hono/node-server": "^1.7.0",
     "@hono/swagger-ui": "^0.5.1",

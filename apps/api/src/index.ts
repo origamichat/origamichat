@@ -7,10 +7,10 @@ import { swaggerUI } from "@hono/swagger-ui";
 
 import { auth } from "@repo/database";
 
-import { origamiTRPCRouter } from "@/trpc/routers/_app";
-import { checkHealth } from "./utils/health";
-import { routers } from "./rest/routers";
-import { createTRPCContext } from "./trpc/init";
+import { checkHealth } from "@api/utils/health";
+import { routers } from "@api/rest/routers";
+import { createTRPCContext } from "@api/trpc/init";
+import { origamiTRPCRouter } from "@api/trpc/routers/_app";
 
 const app = new OpenAPIHono<{
   Variables: {

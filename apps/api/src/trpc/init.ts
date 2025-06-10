@@ -1,4 +1,4 @@
-import { getGeoContext } from "@/utils/geo";
+import { getGeoContext } from "@api/utils/geo";
 import { auth, AuthType, Database } from "@repo/database";
 import { Context } from "hono";
 import { db } from "@repo/database";

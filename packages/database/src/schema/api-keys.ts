@@ -1,5 +1,5 @@
-import { user, organization } from "./auth";
-import { generatePrimaryId } from "../utils/uuid";
+import { user, organization } from "@database/schema/auth";
+import { generatePrimaryId } from "@database/utils/uuid";
 import {
   pgTable,
   pgEnum,
@@ -12,8 +12,8 @@ import {
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 
-import { enumToPgEnum } from "@/utils/db";
-import { APIKeyType } from "@/schema/enums";
+import { enumToPgEnum } from "@database/utils/db";
+import { APIKeyType } from "@database/schema/enums";
 import { website } from "./chat";
 
 export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
