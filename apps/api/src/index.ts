@@ -12,12 +12,17 @@ import { routers } from "@api/rest/routers";
 import { createTRPCContext } from "@api/trpc/init";
 import { origamiTRPCRouter } from "@api/trpc/routers/_app";
 
+import { createBunWebSocket } from "hono/bun";
+import type { ServerWebSocket } from "bun";
+
 const app = new OpenAPIHono<{
   Variables: {
     user: typeof auth.$Infer.Session.user | null;
     session: typeof auth.$Infer.Session.session | null;
   };
 }>();
+
+const { upgradeWebSocket, websocket } = createBunWebSocket<ServerWebSocket>();
 
 // Logger middleware
 app.use(logger());
@@ -120,7 +125,23 @@ app.get("/health", async (c) => {
 
 app.get("/ui", swaggerUI({ url: "/openapi" }));
 
+app.use(
+  "/ws",
+  upgradeWebSocket((c) => {
+    return {
+      onMessage(event, ws) {
+        console.log(`Message from client: ${event.data}`);
+        ws.send("Hello from server!");
+      },
+      onClose: () => {
+        console.log("Connection closed");
+      },
+    };
+  })
+);
+
 export default {
   port: process.env.PORT ? Number.parseInt(process.env.PORT) : 8787,
   fetch: app.fetch,
+  websocket,
 };
