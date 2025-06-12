@@ -1,3 +1,4 @@
+import { env } from "@api/env";
 import { generateApiKey, hashApiKey } from "@api/utils/api-keys";
 import type {
   ApiKeySelect,
@@ -51,7 +52,7 @@ export async function createApiKey(
 
   // Hash the key using a secret from the environment
   if (data.keyType === APIKeyType.PRIVATE) {
-    storedKey = hashApiKey(rawKey, process.env.API_KEY_SECRET!);
+    storedKey = hashApiKey(rawKey, env.API_KEY_SECRET);
   } else {
     storedKey = rawKey;
   }

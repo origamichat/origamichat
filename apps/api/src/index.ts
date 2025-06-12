@@ -14,6 +14,7 @@ import { origamiTRPCRouter } from "@api/trpc/routers/_app";
 
 import { createBunWebSocket } from "hono/bun";
 import type { ServerWebSocket } from "bun";
+import { env } from "@api/env";
 
 const app = new OpenAPIHono<{
   Variables: {
@@ -144,7 +145,7 @@ app.use(
 );
 
 export default {
-  port: process.env.PORT ? Number.parseInt(process.env.PORT) : 8787,
+  port: env.PORT,
   fetch: app.fetch,
   websocket,
 };

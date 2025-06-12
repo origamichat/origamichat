@@ -20,10 +20,8 @@ export const db = drizzle({
   client: sql,
   schema,
   cache: upstashCache({
-    // 👇 Redis credentials (optional — can also be pulled from env vars)
-    url: getEnvVariable("UPSTASH_URL"),
-    token: getEnvVariable("UPSTASH_TOKEN"),
-    // 👇 Default cache behavior (optional)
+    url: getEnvVariable("UPSTASH_REDIS_REST_URL"),
+    token: getEnvVariable("UPSTASH_REDIS_REST_TOKEN"),
     config: { ex: 60 },
   }),
 });
