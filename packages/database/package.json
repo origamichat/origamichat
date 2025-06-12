@@ -20,7 +20,7 @@
         "@kripod/uuidv7": "^0.1.0",
         "@neondatabase/serverless": "^1.0.0",
         "@upstash/redis": "^1.34.7",
-        "better-auth": "^1.2.8",
+        "better-auth": "^1.2.9",
         "dotenv": "^16.4.5",
         "drizzle-orm": "0.44.0",
         "nanoid": "^5.1.5",
