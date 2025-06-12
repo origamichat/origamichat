@@ -1,6 +1,20 @@
-import { sql } from "drizzle-orm";
-import { db } from "@repo/database";
+import { db, user } from "@repo/database";
 
 export async function checkHealth() {
-  await db.execute(sql`SELECT 1`);
+  // This is a simple health check that will return true if the database is
+  // This query should be cached by our multi region redis setup and improve latency worldwide
+
+  await db
+    .select()
+    .from(user)
+    .orderBy(user.createdAt)
+    .limit(1)
+    .$withCache({
+      tag: "health-check",
+      config: {
+        ex: 600, // 10 minutes
+      },
+    });
+
+  return true;
 }
