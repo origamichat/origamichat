@@ -21,8 +21,8 @@ export const db = drizzle({
   schema,
   cache: upstashCache({
     // 👇 Redis credentials (optional — can also be pulled from env vars)
-    url: "<UPSTASH_URL>",
-    token: "<UPSTASH_TOKEN>",
+    url: getEnvVariable("UPSTASH_URL"),
+    token: getEnvVariable("UPSTASH_TOKEN"),
     // 👇 Default cache behavior (optional)
     config: { ex: 60 },
   }),
