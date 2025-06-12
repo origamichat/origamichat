@@ -1,18 +1,12 @@
-import { getApiKeyByKey } from "@api/db/queries/api-keys";
-import { isValidSecretApiKeyFormat } from "@api/utils/api-keys";
 import {
-  ApiKeySelect,
-  OrganizationSelect,
-  WebsiteSelect,
-} from "@repo/database";
+  ApiKeyWithWebsiteAndOrganization,
+  getApiKeyByKey,
+} from "@api/db/queries/api-keys";
+import { isValidSecretApiKeyFormat } from "@api/utils/api-keys";
+
 import type { MiddlewareHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { LRUCache } from "lru-cache";
-
-type ApiKeyWithWebsiteAndOrganization = ApiKeySelect & {
-  website: WebsiteSelect;
-  organization: OrganizationSelect;
-};
 
 // In-memory cache for API keys and users
 // Note: This cache is per server instance, and we typically run 1 instance per region.

@@ -1,5 +1,3 @@
-import { user, organization } from "@database/schema/auth";
-import { generatePrimaryId } from "@database/utils/uuid";
 import {
   pgTable,
   pgEnum,
@@ -12,9 +10,11 @@ import {
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 
-import { enumToPgEnum } from "@database/utils/db";
-import { APIKeyType } from "@database/schema/enums";
+import { enumToPgEnum } from "../utils/db";
+import { APIKeyType } from "./enums";
 import { website } from "./chat";
+import { user, organization } from "./auth";
+import { generatePrimaryId } from "../utils/uuid";
 
 export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
 
@@ -74,6 +74,7 @@ export const apiKeyRelations = relations(apiKey, ({ one }) => ({
   organization: one(organization, {
     fields: [apiKey.organizationId],
     references: [organization.id],
+    relationName: "ApiKeyOrganization",
   }),
   website: one(website, {
     fields: [apiKey.websiteId],

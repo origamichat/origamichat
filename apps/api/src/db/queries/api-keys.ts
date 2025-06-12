@@ -18,7 +18,7 @@ export type ApiKeyWithWebsiteAndOrganization = ApiKeySelect & {
 export async function getApiKeyByKey(
   db: Database,
   key: string
-): Promise<ApiKeyWithWebsiteAndOrganization | null> {
+): Promise<ApiKeyWithWebsiteAndOrganization | undefined> {
   const result = await db.query.apiKey.findFirst({
     where: and(eq(apiKey.key, key), eq(apiKey.isActive, true)),
     with: {
@@ -26,10 +26,6 @@ export async function getApiKeyByKey(
       website: true,
     },
   });
-
-  if (!result) {
-    return null;
-  }
 
   return result;
 }
