@@ -1,11 +1,24 @@
 import { generateApiKey, hashApiKey } from "@api/utils/api-keys";
-import type { ApiKeySelect, Database } from "@repo/database";
+import type {
+  ApiKeySelect,
+  Database,
+  OrganizationSelect,
+  WebsiteSelect,
+} from "@repo/database";
 import { apiKey, APIKeyType } from "@repo/database";
 import { and, eq } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;
 
-export async function getApiKeyByKey(db: Database, key: string) {
+export type ApiKeyWithWebsiteAndOrganization = ApiKeySelect & {
+  website: WebsiteSelect;
+  organization: OrganizationSelect;
+};
+
+export async function getApiKeyByKey(
+  db: Database,
+  key: string
+): Promise<ApiKeyWithWebsiteAndOrganization | null> {
   const result = await db.query.apiKey.findFirst({
     where: and(eq(apiKey.key, key), eq(apiKey.isActive, true)),
     with: {
@@ -13,6 +26,10 @@ export async function getApiKeyByKey(db: Database, key: string) {
       website: true,
     },
   });
+
+  if (!result) {
+    return null;
+  }
 
   return result;
 }

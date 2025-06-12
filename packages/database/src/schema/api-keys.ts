@@ -30,7 +30,7 @@ export const apiKey = pgTable(
       .references(() => organization.id, { onDelete: "cascade" }),
     websiteId: varchar("website_id", { length: 36 })
       .notNull()
-      .references(() => organization.id, { onDelete: "cascade" }),
+      .references(() => website.id, { onDelete: "cascade" }),
     createdBy: varchar("created_by", { length: 36 })
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),

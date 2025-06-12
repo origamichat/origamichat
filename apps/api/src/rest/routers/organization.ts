@@ -1,8 +1,8 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { RestContext } from "../types";
-import { getOrganizationById } from "@/db/queries/organization";
-import { organizationResponseSchema } from "@/schemas/organization";
-import { validateResponse } from "@/utils/validate-response";
+import { getOrganizationById } from "@api/db/queries/organization";
+import { organizationResponseSchema } from "@api/schemas/organization";
+import { validateResponse } from "@api/utils/validate-response";
 
 const app = new OpenAPIHono<RestContext>();
 

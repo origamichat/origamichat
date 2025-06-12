@@ -3,6 +3,8 @@ import { InferSelectModel } from "drizzle-orm";
 import { InferInsertModel } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { apiKey } from "@database/schema/api-keys";
+import { website } from "./chat";
 
 export const user = pgTable(
   "user",
@@ -194,6 +196,8 @@ export const userRelations = relations(user, ({ many }) => ({
 export const organizationRelations = relations(organization, ({ many }) => ({
   members: many(member),
   invitations: many(invitation),
+  apiKeys: many(apiKey),
+  websites: many(website),
 }));
 
 export const memberRelations = relations(member, ({ one }) => ({
