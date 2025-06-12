@@ -48,6 +48,13 @@ export const auth = betterAuth({
       enabled: true,
       maxAge: 5 * 60,
     },
+    // Configure cookies for cross-origin requests
+    cookieOptions: {
+      sameSite: "none", // Required for cross-origin requests
+      secure: true, // Required when sameSite is "none"
+      httpOnly: true,
+      path: "/",
+    },
   },
 });
 
