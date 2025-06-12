@@ -17,6 +17,7 @@ export async function getAuth(): Promise<{
         "Content-Type": "application/json",
         cookie: cookie ?? "",
       },
+      credentials: "include",
     }).then((res) => res.json());
 
     return session ?? { user: null, session: null };
@@ -31,7 +32,7 @@ type EnsurePageAuthProps = {
 };
 
 export const ensurePageAuth = async (
-  props: EnsurePageAuthProps = { redirectTo: "/sign-in" }
+  props: EnsurePageAuthProps = { redirectTo: "/" }
 ) => {
   const { session, user } = await getAuth();
 
