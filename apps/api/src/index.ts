@@ -38,7 +38,10 @@ app.use(
       "https://origamichat.com",
     ],
     credentials: true,
-    maxAge: 86400,
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
   })
 );
 
