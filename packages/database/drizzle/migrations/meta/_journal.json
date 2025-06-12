@@ -15,6 +15,13 @@
       "when": 1748540075738,
       "tag": "0001_violet_mojo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749728311925,
+      "tag": "0002_silly_chat",
+      "breakpoints": true
     }
   ]
 }
