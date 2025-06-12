@@ -29,6 +29,8 @@ export const auth = betterAuth({
     "http://localhost:3000",
     "https://origami.chat",
     "https://origamichat.com",
+    "https://www.origami.chat",
+    "https://www.origamichat.com",
   ],
   socialProviders: {
     google: {
@@ -36,24 +38,26 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
-  advanced: {
-    crossSubDomainCookies: {
-      enabled: true,
-    },
-  },
+  advanced:
+    process.env.NODE_ENV === "production"
+      ? {
+          defaultCookieAttributes: {
+            sameSite: "none",
+            secure: true,
+            partitioned: true,
+          },
+        }
+      : {
+          crossSubDomainCookies: {
+            enabled: true,
+          },
+        },
   session: {
     // Cache the session in the cookie for 5 minutes
     // This is to avoid hitting the database for each request
     cookieCache: {
       enabled: true,
       maxAge: 5 * 60,
-    },
-    // Configure cookies for cross-origin requests
-    cookieOptions: {
-      sameSite: "none", // Required for cross-origin requests
-      secure: true, // Required when sameSite is "none"
-      httpOnly: true,
-      path: "/",
     },
   },
 });
