@@ -20,6 +20,8 @@ export async function getAuth(): Promise<{
       credentials: "include",
     }).then((res) => res.json());
 
+    console.log("session", session);
+
     return session ?? { user: null, session: null };
   } catch (error) {
     console.error(error);
