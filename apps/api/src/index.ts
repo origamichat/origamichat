@@ -22,6 +22,14 @@ const app = new OpenAPIHono<{
   };
 }>();
 
+const acceptedOrigins = [
+  "http://localhost:3000",
+  "https://origami.chat",
+  "https://www.origami.chat",
+  "https://origamichat.com",
+  "https://www.origamichat.com",
+];
+
 const { upgradeWebSocket, websocket } = createBunWebSocket<ServerWebSocket>();
 
 // Logger middleware
@@ -32,11 +40,7 @@ app.use(secureHeaders());
 app.use(
   "/api/auth/*",
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://origami.chat",
-      "https://origamichat.com",
-    ],
+    origin: acceptedOrigins,
     credentials: true,
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["POST", "GET", "OPTIONS"],
@@ -48,11 +52,7 @@ app.use(
 app.use(
   "/trpc/*",
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://origami.chat",
-      "https://origamichat.com",
-    ],
+    origin: acceptedOrigins,
     maxAge: 86400,
     credentials: true,
   })
