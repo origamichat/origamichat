@@ -4,10 +4,15 @@ import { signIn } from "@/lib/auth/client";
 
 export function SignInButtons() {
   const handleSignIn = async () => {
-    const data = await signIn.social({
-      provider: "google",
-      callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/auth`,
-    });
+    const data = await signIn.social(
+      {
+        provider: "google",
+        callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/auth`,
+      },
+      {
+        credentials: "include",
+      }
+    );
 
     console.log(data);
   };
