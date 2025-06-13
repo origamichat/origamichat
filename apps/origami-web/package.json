@@ -7,7 +7,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
@@ -18,10 +19,14 @@
     "@trpc/client": "^11.3.1",
     "@trpc/server": "^11.3.1",
     "@trpc/tanstack-react-query": "^11.3.1",
+    "@types/mdx": "^2.0.13",
     "api": "workspace:*",
     "better-auth": "^1.2.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "fumadocs-core": "^15.5.1",
+    "fumadocs-mdx": "^11.6.7",
+    "fumadocs-ui": "^15.5.1",
     "hono": "^4.0.0",
     "next": "15.3.2",
     "next-themes": "^0.4.6",

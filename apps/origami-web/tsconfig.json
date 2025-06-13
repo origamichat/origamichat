@@ -8,6 +8,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@/docs/*": ["./src/app/(docs)/*"],
+      "@/docs-source/*": ["./.source/*"],
       "@api/*": ["../api/src/*"],
       "@database/*": ["../../packages/database/src/*"]
     },

@@ -1,9 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { ThemeProvider } from "next-themes";
 
 import { TRPCReactProvider } from "@/lib/trpc/client";
+import { RootProvider } from "fumadocs-ui/provider";
 
 type ProviderProps = {
   //   locale: string;
@@ -12,17 +12,15 @@ type ProviderProps = {
 
 export function Providers({ children }: ProviderProps) {
   return (
-    <TRPCReactProvider>
-      {/* <I18nProviderClient locale={locale}> */}
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
-      {/* </I18nProviderClient> */}
-    </TRPCReactProvider>
+    <RootProvider
+      theme={{
+        attribute: "class",
+        defaultTheme: "system",
+        enableSystem: true,
+        disableTransitionOnChange: true,
+      }}
+    >
+      <TRPCReactProvider>{children}</TRPCReactProvider>
+    </RootProvider>
   );
 }
