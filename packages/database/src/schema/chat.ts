@@ -11,10 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generatePrimaryId } from "@database/utils/uuid";
-import {
-  organization,
-  user,
-} from "@database/schema/auth";
+import { organization, user } from "@database/schema/auth";
 import { relations } from "drizzle-orm";
 import {
   ConversationPriority,
@@ -80,6 +77,9 @@ export const visitor = pgTable(
     email: text("email"),
     phone: text("phone"),
     metadata: jsonb("metadata"),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
     websiteId: text("website_id")
       .notNull()
       .references(() => website.id, { onDelete: "cascade" }),
@@ -94,12 +94,19 @@ export const visitor = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (table) => [
+    // Index for tenant-scoped queries (most important)
+    index("visitor_org_idx").on(table.organizationId),
+    // Composite index for organization + website queries
+    index("visitor_org_website_idx").on(table.organizationId, table.websiteId),
     // Index for looking up visitors by website
     index("visitor_website_idx").on(table.websiteId),
     // Index for looking up visitors by user
     index("visitor_user_idx").on(table.userId),
-    // Index for active visitors query
-    index("visitor_last_connected_idx").on(table.lastConnectedAt),
+    // Index for active visitors query within organization
+    index("visitor_org_connected_idx").on(
+      table.organizationId,
+      table.lastConnectedAt
+    ),
     // Index for soft delete queries
     index("visitor_deleted_at_idx").on(table.deletedAt),
     // Unique index for identifier per website
@@ -161,6 +168,9 @@ export const conversation = pgTable(
     assignedTeamMemberId: text("assigned_team_member_id").references(
       () => user.id
     ),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
     visitorId: text("visitor_id")
       .notNull()
       .references(() => visitor.id, { onDelete: "cascade" }),
@@ -181,14 +191,29 @@ export const conversation = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (table) => [
+    // Index for tenant-scoped queries (most important)
+    index("conversation_org_idx").on(table.organizationId),
+    // Composite index for organization + status queries
+    index("conversation_org_status_idx").on(table.organizationId, table.status),
+    // Composite index for organization + priority queries
+    index("conversation_org_priority_idx").on(
+      table.organizationId,
+      table.priority
+    ),
     // Index for filtering conversations by website and status
     index("conversation_website_status_idx").on(table.websiteId, table.status),
     // Index for filtering conversations by visitor
     index("conversation_visitor_idx").on(table.visitorId),
-    // Index for filtering conversations by assigned team member
-    index("conversation_team_member_idx").on(table.assignedTeamMemberId),
-    // Index for sorting by last message
-    index("conversation_last_message_idx").on(table.lastMessageAt),
+    // Index for filtering conversations by assigned team member within org
+    index("conversation_org_team_member_idx").on(
+      table.organizationId,
+      table.assignedTeamMemberId
+    ),
+    // Index for sorting by last message within organization
+    index("conversation_org_last_message_idx").on(
+      table.organizationId,
+      table.lastMessageAt
+    ),
     // Index for soft delete queries
     index("conversation_deleted_at_idx").on(table.deletedAt),
   ]
@@ -202,6 +227,9 @@ export const message = pgTable(
     type: messageTypeEnum("type").default(MessageType.TEXT).notNull(),
     senderType: senderTypeEnum("sender_type").notNull(),
     senderId: text("sender_id").notNull(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
     conversationId: text("conversation_id")
       .notNull()
       .references(() => conversation.id, { onDelete: "cascade" }),
@@ -219,14 +247,30 @@ export const message = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (table) => [
+    // Index for tenant-scoped queries (most important)
+    index("message_org_idx").on(table.organizationId),
     // Index for filtering messages by conversation
     index("message_conversation_idx").on(table.conversationId),
-    // Index for filtering messages by sender
-    index("message_sender_idx").on(table.senderId, table.senderType),
+    // Composite index for organization + conversation queries
+    index("message_org_conversation_idx").on(
+      table.organizationId,
+      table.conversationId
+    ),
+    // Index for filtering messages by sender within organization
+    index("message_org_sender_idx").on(
+      table.organizationId,
+      table.senderId,
+      table.senderType
+    ),
     // Index for filtering messages by AI agent
     index("message_ai_agent_idx").on(table.aiAgentId),
-    // Index for sorting messages by creation time
-    index("message_created_at_idx").on(table.createdAt),
+    // Index for sorting messages by creation time within organization
+    index("message_org_created_at_idx").on(
+      table.organizationId,
+      table.createdAt
+    ),
+    // Index for message threading (parent-child relationships)
+    index("message_parent_idx").on(table.parentMessageId),
     // Index for soft delete queries
     index("message_deleted_at_idx").on(table.deletedAt),
   ]
@@ -245,6 +289,10 @@ export const websiteRelations = relations(website, ({ many, one }) => ({
 }));
 
 export const visitorRelations = relations(visitor, ({ one, many }) => ({
+  organization: one(organization, {
+    fields: [visitor.organizationId],
+    references: [organization.id],
+  }),
   website: one(website, {
     fields: [visitor.websiteId],
     references: [website.id],
@@ -271,6 +319,10 @@ export const aiAgentRelations = relations(aiAgent, ({ one, many }) => ({
 export const conversationRelations = relations(
   conversation,
   ({ one, many }) => ({
+    organization: one(organization, {
+      fields: [conversation.organizationId],
+      references: [organization.id],
+    }),
     website: one(website, {
       fields: [conversation.websiteId],
       references: [website.id],
@@ -288,6 +340,10 @@ export const conversationRelations = relations(
 );
 
 export const messageRelations = relations(message, ({ one }) => ({
+  organization: one(organization, {
+    fields: [message.organizationId],
+    references: [organization.id],
+  }),
   conversation: one(conversation, {
     fields: [message.conversationId],
     references: [conversation.id],

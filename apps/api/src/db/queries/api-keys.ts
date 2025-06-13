@@ -7,7 +7,7 @@ import type {
   WebsiteSelect,
 } from "@repo/database";
 import { apiKey, APIKeyType } from "@repo/database";
-import { and, eq } from "drizzle-orm";
+import { and, eq, desc } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;
 
@@ -18,10 +18,12 @@ export type ApiKeyWithWebsiteAndOrganization = ApiKeySelect & {
 
 export async function getApiKeyByKey(
   db: Database,
-  key: string
+  params: {
+    key: string;
+  }
 ): Promise<ApiKeyWithWebsiteAndOrganization | undefined> {
   const result = await db.query.apiKey.findFirst({
-    where: and(eq(apiKey.key, key), eq(apiKey.isActive, true)),
+    where: and(eq(apiKey.key, params.key), eq(apiKey.isActive, true)),
     with: {
       organization: true,
       website: true,
@@ -29,6 +31,142 @@ export async function getApiKeyByKey(
   });
 
   return result;
+}
+
+// Get API key by ID with org check
+export async function getApiKeyById(
+  db: Database,
+  params: {
+    orgId: string;
+    apiKeyId: string;
+  }
+) {
+  const [key] = await db
+    .select()
+    .from(apiKey)
+    .where(
+      and(
+        eq(apiKey.id, params.apiKeyId),
+        eq(apiKey.organizationId, params.orgId)
+      )
+    )
+    .limit(1);
+
+  return key;
+}
+
+// Get API keys for organization
+export async function getApiKeysByOrganization(
+  db: Database,
+  params: {
+    orgId: string;
+    websiteId?: string;
+    keyType?: APIKeyType;
+    isActive?: boolean;
+    limit?: number;
+    offset?: number;
+  }
+) {
+  const keys = await db
+    .select()
+    .from(apiKey)
+    .where(
+      and(
+        eq(apiKey.organizationId, params.orgId),
+        params.websiteId ? eq(apiKey.websiteId, params.websiteId) : undefined,
+        params.keyType ? eq(apiKey.keyType, params.keyType) : undefined,
+        params.isActive !== undefined
+          ? eq(apiKey.isActive, params.isActive)
+          : undefined
+      )
+    )
+    .orderBy(desc(apiKey.createdAt))
+    .limit(params.limit ?? 50)
+    .offset(params.offset ?? 0);
+
+  return keys;
+}
+
+// Update API key
+export async function updateApiKey(
+  db: Database,
+  params: {
+    orgId: string;
+    apiKeyId: string;
+    data: Partial<{
+      name: string;
+      isActive: boolean;
+      expiresAt: Date | null;
+    }>;
+  }
+) {
+  const [updatedKey] = await db
+    .update(apiKey)
+    .set({
+      ...params.data,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(apiKey.id, params.apiKeyId),
+        eq(apiKey.organizationId, params.orgId)
+      )
+    )
+    .returning();
+
+  return updatedKey;
+}
+
+// Revoke API key
+export async function revokeApiKey(
+  db: Database,
+  params: {
+    orgId: string;
+    apiKeyId: string;
+    revokedBy: string;
+  }
+) {
+  const [revokedKey] = await db
+    .update(apiKey)
+    .set({
+      isActive: false,
+      revokedAt: new Date(),
+      revokedBy: params.revokedBy,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(apiKey.id, params.apiKeyId),
+        eq(apiKey.organizationId, params.orgId)
+      )
+    )
+    .returning();
+
+  return revokedKey;
+}
+
+// Update API key last used
+export async function updateApiKeyLastUsed(
+  db: Database,
+  params: {
+    orgId: string;
+    apiKeyId: string;
+  }
+) {
+  const [updatedKey] = await db
+    .update(apiKey)
+    .set({
+      lastUsedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(apiKey.id, params.apiKeyId),
+        eq(apiKey.organizationId, params.orgId)
+      )
+    )
+    .returning();
+
+  return updatedKey;
 }
 
 export async function createApiKey(
@@ -88,23 +226,12 @@ export async function createDefaultWebsiteKeys(
   // Generate production / test private and public keys
   const keys = [
     {
-      name: `${data.websiteName} - Private API Key`,
-      keyType: APIKeyType.PRIVATE,
-      isActive: true,
-      isTest: false,
-    },
-    {
       name: `${data.websiteName} - Public API Key`,
       keyType: APIKeyType.PUBLIC,
       isActive: true,
       isTest: false,
     },
-    {
-      name: `${data.websiteName} - Test Private API Key`,
-      keyType: APIKeyType.PRIVATE,
-      isActive: true,
-      isTest: true,
-    },
+
     {
       name: `${data.websiteName} - Test Public API Key`,
       keyType: APIKeyType.PUBLIC,
