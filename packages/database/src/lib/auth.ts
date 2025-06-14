@@ -5,7 +5,11 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin, anonymous, organization } from "better-auth/plugins";
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8787",
+  baseURL:
+    process.env.BETTER_AUTH_URL ||
+    (process.env.NODE_ENV === "production"
+      ? "https://api.origamichat.com"
+      : "http://localhost:8787"),
   secret: process.env.BETTER_AUTH_SECRET || undefined,
   database: drizzleAdapter(db, {
     provider: "pg",

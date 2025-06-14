@@ -1,10 +1,11 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/auth/client";
 
 export function SignInButtons() {
   const handleSignIn = async () => {
-    const data = await signIn.social(
+    await signIn.social(
       {
         provider: "google",
         callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/auth`,
@@ -13,8 +14,6 @@ export function SignInButtons() {
         credentials: "include",
       }
     );
-
-    console.log(data);
   };
 
   return (
