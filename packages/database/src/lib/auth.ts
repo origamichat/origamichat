@@ -38,23 +38,19 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
-  advanced:
-    process.env.NODE_ENV === "production"
-      ? {
-          defaultCookieAttributes: {
-            sameSite: "none",
-            secure: true,
-            partitioned: true,
-          },
-          crossSubDomainCookies: {
-            enabled: true,
-          },
-        }
-      : {
-          crossSubDomainCookies: {
-            enabled: true,
-          },
-        },
+  advanced: {
+    defaultCookieAttributes: {
+      secure: true,
+      httpOnly: true,
+      sameSite: "none",
+      partitioned: true,
+    },
+    crossSubDomainCookies: {
+      enabled: true,
+      domain:
+        process.env.NODE_ENV === "production" ? ".origamichat.com" : undefined,
+    },
+  },
   session: {
     // Cache the session in the cookie for 5 minutes
     // This is to avoid hitting the database for each request
