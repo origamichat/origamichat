@@ -1,3 +1,5 @@
+"use server";
+
 import { headers } from "next/headers";
 import { OrigamiUser, OrigamiSession, auth } from "@repo/database";
 
