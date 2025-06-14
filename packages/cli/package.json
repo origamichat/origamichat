@@ -1,0 +1,60 @@
+{
+    "name": "origamichat-cli",
+    "version": "0.1.0",
+    "description": "CLI tool for initializing OrigamiChat in your projects",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "bin": {
+        "origamichat": "./dist/cli.js"
+    },
+    "files": [
+        "dist/**",
+        "templates/**"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "lint": "eslint src --ext .ts",
+        "check-types": "tsc --noEmit",
+        "clean": "rm -rf dist"
+    },
+    "keywords": [
+        "cli",
+        "origamichat",
+        "init",
+        "setup",
+        "chat",
+        "support",
+        "ai"
+    ],
+    "author": "Anthony Riera",
+    "license": "MIT",
+    "homepage": "https://origamichat.com",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/anthonyriera/origami-monorepo",
+        "directory": "packages/cli"
+    },
+    "bugs": {
+        "url": "https://github.com/anthonyriera/origami-monorepo/issues"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "dependencies": {
+        "commander": "^12.1.0",
+        "inquirer": "^12.1.0",
+        "fs-extra": "^11.2.0",
+        "chalk": "^5.3.0",
+        "ora": "^8.1.1"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/fs-extra": "^11.0.4",
+        "@types/inquirer": "^9.0.7",
+        "eslint": "^8.57.1",
+        "tsup": "^8.3.5",
+        "typescript": "^5.8.2"
+    }
+}

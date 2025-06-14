@@ -1,0 +1,63 @@
+{
+    "name": "@origamichat/react",
+    "version": "0.1.0",
+    "description": "Headless React components for AI-human support chat integration",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist/**"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "lint": "eslint src --ext .ts,.tsx",
+        "check-types": "tsc --noEmit",
+        "clean": "rm -rf dist"
+    },
+    "keywords": [
+        "react",
+        "chat",
+        "support",
+        "ai",
+        "customer-support",
+        "headless",
+        "typescript"
+    ],
+    "author": "Anthony Riera",
+    "license": "MIT",
+    "homepage": "https://origamichat.com",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/anthonyriera/origami-monorepo",
+        "directory": "packages/react"
+    },
+    "bugs": {
+        "url": "https://github.com/anthonyriera/origami-monorepo/issues"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "peerDependencies": {
+        "react": ">=16.8.0",
+        "react-dom": ">=16.8.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/react": "^18.3.12",
+        "@types/react-dom": "^18.3.1",
+        "eslint": "^8.57.1",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "tsup": "^8.3.5",
+        "typescript": "^5.8.2"
+    }
+}
