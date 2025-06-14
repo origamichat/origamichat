@@ -24,13 +24,14 @@ export const auth = betterAuth({
     anonymous(),
     admin(),
   ],
-  // Allow requests from the frontend development server
+  // Allow requests from the frontend development server and production domains
   trustedOrigins: [
     "http://localhost:3000",
     "https://origami.chat",
     "https://origamichat.com",
     "https://www.origami.chat",
     "https://www.origamichat.com",
+    "https://api.origamichat.com", // Add your API domain
   ],
   socialProviders: {
     google: {
@@ -39,17 +40,25 @@ export const auth = betterAuth({
     },
   },
   advanced: {
+    // Force secure cookies in production
+    useSecureCookies: process.env.NODE_ENV === "production",
     defaultCookieAttributes: {
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "none",
-      partitioned: true,
+      // Use "none" for cross-origin subdomain setup
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      // Enable partitioned for cross-origin cookies in production
+      ...(process.env.NODE_ENV === "production" && {
+        partitioned: true,
+      }),
     },
     crossSubDomainCookies: {
       enabled: true,
       domain:
         process.env.NODE_ENV === "production" ? ".origamichat.com" : undefined,
     },
+    // Add cookie prefix for better organization
+    cookiePrefix: "origami-auth",
   },
   session: {
     // Cache the session in the cookie for 5 minutes
