@@ -114,6 +114,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      drizzle-orm:
+        specifier: 0.44.0
+        version: 0.44.0(@neondatabase/serverless@1.0.1)(@types/pg@8.15.4)(@upstash/redis@1.35.0)(bun-types@1.2.16)(kysely@0.28.2)
       fumadocs-core:
         specifier: ^15.5.1
         version: 15.5.1(@types/react@19.1.6)(next@15.3.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)

@@ -8,5 +8,5 @@ export default function TestTRPC() {
 
   const { data, isLoading } = useQuery(trpc.user.me.queryOptions());
 
-  return <div>{data?.email}</div>;
+  return <div>{data?.email} houla</div>;
 }

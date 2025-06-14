@@ -6,7 +6,9 @@ import {
   type OrganizationSelect,
   type OrganizationInsert,
   type Database,
+  auth,
 } from "@repo/database";
+import { generateSlugFromEmailDomain } from "@api/utils/organisation";
 
 // Create organization
 export async function createOrganization(
@@ -105,7 +107,46 @@ export async function getOrganizationsForUser(
     .from(organization)
     .innerJoin(member, eq(member.organizationId, organization.id))
     .where(eq(member.userId, params.userId))
-    .orderBy(desc(member.createdAt));
+    .orderBy(desc(member.createdAt))
+    .$withCache();
+
+  return organizations;
+}
+
+export async function getOrganizationsForUserOrCreateDefault(
+  db: Database,
+  params: {
+    userId: string;
+    userEmail: string;
+    userName: string;
+  }
+) {
+  const organizations = await getOrganizationsForUser(db, {
+    userId: params.userId,
+  });
+
+  // If the user has no organizations, create a default one
+  if (organizations.length === 0) {
+    const { slug, organizationName } = await generateSlugFromEmailDomain(db, {
+      email: params.userEmail,
+    });
+
+    const newOrganization = await auth.api.createOrganization({
+      body: {
+        name: organizationName,
+        slug,
+        userId: params.userId,
+      },
+    });
+
+    return [
+      {
+        organization: newOrganization,
+        role: "owner",
+        joinedAt: new Date(),
+      },
+    ];
+  }
 
   return organizations;
 }
