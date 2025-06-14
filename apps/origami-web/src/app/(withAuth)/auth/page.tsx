@@ -1,4 +1,5 @@
-import { ensurePageAuth } from "@/lib/auth/server";
+"use client";
+
 import TestTRPC from "./TestTRPC";
 import { useSession } from "@/lib/auth/client";
 
