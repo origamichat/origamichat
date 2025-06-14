@@ -1,13 +1,16 @@
 import { ensurePageAuth } from "@/lib/auth/server";
 import TestTRPC from "./TestTRPC";
+import { useSession } from "@/lib/auth/client";
 
-export default async function Auth() {
-  const { session, user } = await ensurePageAuth();
+export default function Auth() {
+  const { data } = useSession();
+
+  console.log({ data });
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-4xl font-bold">Origami</h1>
-      <p>You're signed-in as {user?.email}</p>
+      <p>You're signed-in as {data?.user?.email}</p>
       <TestTRPC />
     </div>
   );
