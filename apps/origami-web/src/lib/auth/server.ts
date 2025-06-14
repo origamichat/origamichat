@@ -1,7 +1,5 @@
-"use server";
-
 import { headers } from "next/headers";
-import { OrigamiUser, OrigamiSession, auth } from "@repo/database";
+import type { OrigamiUser, OrigamiSession } from "@repo/database";
 
 import { getAPIBaseUrl } from "@/lib/url";
 import { redirect } from "next/navigation";
@@ -12,54 +10,21 @@ export async function getAuth(): Promise<{
 }> {
   try {
     const headersList = await headers();
-
-    // First try the built-in Better Auth API
-    try {
-      const session = await auth.api.getSession({
-        headers: headersList,
-      });
-
-      if (session) {
-        console.log("session from auth.api.getSession", session);
-        return session ?? { user: null, session: null };
-      }
-    } catch (authApiError) {
-      console.warn(
-        "auth.api.getSession failed, falling back to manual fetch:",
-        authApiError
-      );
-    }
-
-    // Fallback to manual fetch for cross-origin API calls
     const cookie = headersList.get("cookie");
 
     const session = await fetch(getAPIBaseUrl("/auth/get-session"), {
-      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookie ?? "",
-        // Add origin header for cross-origin requests
-        Origin:
-          process.env.NODE_ENV === "production"
-            ? "https://www.origamichat.com"
-            : "http://localhost:3000",
+        cookie: cookie ?? "",
       },
       credentials: "include",
-      // Add cache control for SSR
       cache: "no-store",
-    }).then(async (res) => {
-      if (!res.ok) {
-        console.error("Session fetch failed:", res.status, res.statusText);
-        return null;
-      }
-      return res.json();
-    });
+    }).then((res) => res.json());
 
-    console.log("session from manual fetch", session);
-
+    console.log("session", session);
     return session ?? { user: null, session: null };
   } catch (error) {
-    console.error("Both auth methods failed:", error);
+    console.error(error);
     return { user: null, session: null };
   }
 }
