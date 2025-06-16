@@ -18,6 +18,7 @@ import {
   ConversationStatus,
   MessageType,
   SenderType,
+  WebsiteInstallationTarget,
 } from "@database/schema/enums";
 import { enumToPgEnum } from "@database/utils/db";
 import { InferSelectModel, InferInsertModel } from "drizzle-orm";
@@ -40,6 +41,11 @@ export const conversationPriorityEnum = pgEnum(
   enumToPgEnum(ConversationPriority)
 );
 
+export const websiteInstallationTargetEnum = pgEnum(
+  "website_installation_target",
+  enumToPgEnum(WebsiteInstallationTarget)
+);
+
 export const website = pgTable(
   "website",
   {
@@ -48,6 +54,9 @@ export const website = pgTable(
     description: text("description"),
     logoUrl: text("logo_url"),
     whitelistedDomains: text("whitelisted_domains").array().notNull(),
+    installationTarget: websiteInstallationTargetEnum("installation_target")
+      .$defaultFn(() => WebsiteInstallationTarget.NEXTJS)
+      .notNull(),
     organizationId: text("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),

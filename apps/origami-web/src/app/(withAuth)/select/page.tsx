@@ -16,7 +16,7 @@ export default async function Auth() {
   const orgToRedirectTo = orgs?.[0]?.organization;
 
   // This should never happen, but just in case
-  if (!orgToRedirectTo) {
+  if (!orgToRedirectTo || !orgToRedirectTo.slug) {
     console.error(`ERROR: User ${user?.id} has no organizations found`);
 
     notFound();
