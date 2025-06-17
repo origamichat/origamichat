@@ -1,9 +1,20 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 export const Spinner = ({ className }: { className?: string }) => {
+  const [rotation, setRotation] = useState(0);
+
+  // Start the animation loop
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRotation(240); // Start by rotating right with overshoot
+    }, 20);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Create 7 circles positioned in a circle
   const circles = Array.from({ length: 7 }, (_, i) => {
     const angle = (i * 360) / 7; // Distribute circles evenly
@@ -11,7 +22,7 @@ export const Spinner = ({ className }: { className?: string }) => {
     const x = Math.cos((angle * Math.PI) / 180) * radius;
     const y = Math.sin((angle * Math.PI) / 180) * radius;
 
-    return { x, y, delay: i * 0.1 };
+    return { x, y };
   });
 
   return (
@@ -23,31 +34,28 @@ export const Spinner = ({ className }: { className?: string }) => {
       <motion.div
         className="absolute inset-0 flex items-center justify-center"
         animate={{
-          rotate: [0, 360, 360, 0, 0], // Right, pause, left, pause
+          rotate: rotation,
         }}
         transition={{
+          type: "spring",
+          stiffness: 120,
+          damping: 15,
           duration: 3,
-          repeat: Infinity,
-          ease: "circInOut",
-          times: [0, 0.4, 0.5, 0.9, 1], // Timing for each keyframe
+        }}
+        onAnimationComplete={() => {
+          // After animation completes, switch to the opposite rotation with 60° overshoot
+          setTimeout(() => {
+            setRotation((prev) => (prev === 0 || prev === 240 ? -60 : 240));
+          }, 20);
         }}
       >
         {circles.map((circle, index) => (
-          <motion.div
+          <div
             key={index}
             className="absolute size-1 bg-current rounded-full"
             style={{
               left: 12 + circle.x - 2, // Center (12) + offset - half circle size (2)
               top: 12 + circle.y - 2,
-            }}
-            animate={{
-              scale: [1, 1, 1],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              delay: circle.delay,
-              ease: "easeInOut",
             }}
           />
         ))}
