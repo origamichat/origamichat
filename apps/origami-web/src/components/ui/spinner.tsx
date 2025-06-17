@@ -6,13 +6,24 @@ import { cn } from "@/lib/utils";
 
 export const Spinner = ({ className }: { className?: string }) => {
   const [rotation, setRotation] = useState(0);
+  const [isSpread, setIsSpread] = useState(false);
 
-  // Start the animation loop
+  // Start the spreading animation first, then rotation
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Start spreading animation after a short delay
+    const spreadTimer = setTimeout(() => {
+      setIsSpread(true);
+    }, 100);
+
+    // Start rotation animation after spreading is complete
+    const rotationTimer = setTimeout(() => {
       setRotation(240); // Start by rotating right with overshoot
-    }, 20);
-    return () => clearTimeout(timer);
+    }, 300); // Delay to allow spreading animation to complete
+
+    return () => {
+      clearTimeout(spreadTimer);
+      clearTimeout(rotationTimer);
+    };
   }, []);
 
   // Create 7 circles positioned in a circle
@@ -33,14 +44,16 @@ export const Spinner = ({ className }: { className?: string }) => {
       {/* Container that rotates */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center"
+        initial={{
+          rotate: 0,
+        }}
         animate={{
           rotate: rotation,
         }}
         transition={{
-          type: "spring",
-          stiffness: 120,
-          damping: 15,
-          duration: 3,
+          type: "tween",
+          duration: 2,
+          ease: "easeInOut",
         }}
         onAnimationComplete={() => {
           // After animation completes, switch to the opposite rotation with 60° overshoot
@@ -50,12 +63,23 @@ export const Spinner = ({ className }: { className?: string }) => {
         }}
       >
         {circles.map((circle, index) => (
-          <div
+          <motion.div
             key={index}
             className="absolute size-1 bg-current rounded-full"
-            style={{
-              left: 12 + circle.x - 2, // Center (12) + offset - half circle size (2)
-              top: 12 + circle.y - 2,
+            initial={{
+              left: 12 - 2, // Start at center
+              top: 12 - 2,
+            }}
+            animate={{
+              left: isSpread ? 12 + circle.x - 2 : 12 - 2, // Animate to target position or stay at center
+              top: isSpread ? 12 + circle.y - 2 : 12 - 2,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              duration: 0.6,
+              delay: index * 0.05, // Stagger the animation slightly for each circle
             }}
           />
         ))}
