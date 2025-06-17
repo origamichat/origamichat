@@ -10,7 +10,7 @@ export function Logo({ className }: Props) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 26 22"
-      className={cn("h-6 w-6", className)}
+      className={cn("h-5 w-5", className)}
     >
       <path
         fill="currentColor"
