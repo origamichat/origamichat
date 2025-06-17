@@ -19,6 +19,7 @@ const FORBIDDEN_SLUGS = [
   "help",
   "support",
   "contact",
+  "welcome",
   "about",
   "terms",
   "privacy",

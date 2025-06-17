@@ -1,94 +1,35 @@
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, isNull, inArray } from "drizzle-orm";
 import {
   organization,
   member,
-  invitation,
-  type OrganizationSelect,
-  type OrganizationInsert,
+  website,
   type Database,
   auth,
+  OrganizationSelect,
+  WebsiteSelect,
 } from "@repo/database";
-import { generateSlugFromEmailDomain } from "@api/utils/organisation";
+import { generateSlugFromEmailDomain } from "@api/utils/organization";
 
-// Create organization
-export async function createOrganization(
-  db: Database,
-  params: {
-    data: OrganizationInsert;
-  }
-) {
-  const [newOrganization] = await db
-    .insert(organization)
-    .values(params.data)
-    .returning();
-
-  return newOrganization;
-}
-
-// Get organization by ID
 export async function getOrganizationById(
   db: Database,
-  params: {
-    orgId: string;
-  }
-) {
-  const [org] = await db
-    .select()
-    .from(organization)
-    .where(eq(organization.id, params.orgId))
-    .limit(1);
+  id: string
+): Promise<OrganizationSelect | undefined> {
+  const result = await db.query.organization.findFirst({
+    where: eq(organization.id, id),
+  });
 
-  return org;
+  return result;
 }
 
-// Get organization by slug
 export async function getOrganizationBySlug(
   db: Database,
-  params: {
-    slug: string;
-  }
-) {
-  const [org] = await db
-    .select()
-    .from(organization)
-    .where(eq(organization.slug, params.slug))
-    .limit(1);
+  slug: string
+): Promise<OrganizationSelect | undefined> {
+  const result = await db.query.organization.findFirst({
+    where: eq(organization.slug, slug),
+  });
 
-  return org;
-}
-
-// Update organization
-export async function updateOrganization(
-  db: Database,
-  params: {
-    orgId: string;
-    data: Partial<OrganizationInsert>;
-  }
-) {
-  const [updatedOrg] = await db
-    .update(organization)
-    .set({
-      ...params.data,
-    })
-    .where(eq(organization.id, params.orgId))
-    .returning();
-
-  return updatedOrg;
-}
-
-// Delete organization
-export async function deleteOrganization(
-  db: Database,
-  params: {
-    orgId: string;
-  }
-) {
-  const [deletedOrg] = await db
-    .delete(organization)
-    .where(eq(organization.id, params.orgId))
-    .returning();
-
-  return deletedOrg;
+  return result;
 }
 
 // Get organizations for user
@@ -98,6 +39,7 @@ export async function getOrganizationsForUser(
     userId: string;
   }
 ) {
+  // First, get the organizations for the user
   const organizations = await db
     .select({
       organization,
@@ -110,7 +52,39 @@ export async function getOrganizationsForUser(
     .orderBy(desc(member.createdAt))
     .$withCache();
 
-  return organizations;
+  // If no organizations, return empty array
+  if (organizations.length === 0) {
+    return [];
+  }
+
+  // Get all organization IDs
+  const orgIds = organizations.map((org) => org.organization.id);
+
+  // Get all websites for these organizations
+  const allWebsites = await db
+    .select()
+    .from(website)
+    .where(
+      and(inArray(website.organizationId, orgIds), isNull(website.deletedAt))
+    );
+
+  // Group websites by organization ID
+  const websitesByOrg = allWebsites.reduce(
+    (acc, site) => {
+      if (!acc[site.organizationId]) {
+        acc[site.organizationId] = [];
+      }
+      acc[site.organizationId].push(site);
+      return acc;
+    },
+    {} as Record<string, typeof allWebsites>
+  );
+
+  // Combine organizations with their websites
+  return organizations.map((org) => ({
+    ...org,
+    websites: websitesByOrg[org.organization.id] || [],
+  }));
 }
 
 export async function getOrganizationsForUserOrCreateDefault(
@@ -120,7 +94,14 @@ export async function getOrganizationsForUserOrCreateDefault(
     userEmail: string;
     userName: string;
   }
-) {
+): Promise<
+  {
+    organization: OrganizationSelect;
+    role: string;
+    joinedAt: Date;
+    websites: WebsiteSelect[];
+  }[]
+> {
   const organizations = await getOrganizationsForUser(db, {
     userId: params.userId,
   });
@@ -139,102 +120,28 @@ export async function getOrganizationsForUserOrCreateDefault(
       },
     });
 
+    if (!newOrganization) {
+      throw new Error("Failed to create default organization");
+    }
+
     return [
       {
-        organization: newOrganization,
+        organization: {
+          id: newOrganization.id,
+          name: newOrganization.name,
+          createdAt: newOrganization.createdAt,
+          slug: newOrganization.slug,
+          logo: newOrganization.logo ?? null,
+          metadata: newOrganization.metadata
+            ? JSON.stringify(newOrganization.metadata)
+            : null,
+        },
         role: "owner",
         joinedAt: new Date(),
+        websites: [],
       },
     ];
   }
 
   return organizations;
-}
-
-// Get organization members
-export async function getOrganizationMembers(
-  db: Database,
-  params: {
-    orgId: string;
-    limit?: number;
-    offset?: number;
-  }
-) {
-  const members = await db
-    .select()
-    .from(member)
-    .where(eq(member.organizationId, params.orgId))
-    .orderBy(desc(member.createdAt))
-    .limit(params.limit ?? 50)
-    .offset(params.offset ?? 0);
-
-  return members;
-}
-
-// Get organization invitations
-export async function getOrganizationInvitations(
-  db: Database,
-  params: {
-    orgId: string;
-    status?: string;
-  }
-) {
-  const invitations = await db
-    .select()
-    .from(invitation)
-    .where(
-      params.status
-        ? and(
-            eq(invitation.organizationId, params.orgId),
-            eq(invitation.status, params.status)
-          )
-        : eq(invitation.organizationId, params.orgId)
-    )
-    .orderBy(desc(invitation.expiresAt));
-
-  return invitations;
-}
-
-// Check if user is member of organization
-export async function isUserMemberOfOrganization(
-  db: Database,
-  params: {
-    userId: string;
-    orgId: string;
-  }
-) {
-  const [membership] = await db
-    .select()
-    .from(member)
-    .where(
-      and(
-        eq(member.userId, params.userId),
-        eq(member.organizationId, params.orgId)
-      )
-    )
-    .limit(1);
-
-  return !!membership;
-}
-
-// Get user role in organization
-export async function getUserRoleInOrganization(
-  db: Database,
-  params: {
-    userId: string;
-    orgId: string;
-  }
-) {
-  const [membership] = await db
-    .select({ role: member.role })
-    .from(member)
-    .where(
-      and(
-        eq(member.userId, params.userId),
-        eq(member.organizationId, params.orgId)
-      )
-    )
-    .limit(1);
-
-  return membership?.role;
 }
