@@ -29,7 +29,6 @@ export default async function Page({
         <TextEffect className="text-center text-2xl font-medium" delay={1}>
           Welcome to Origami
         </TextEffect>
-        <Spinner />
       </div>
     </div>
   );

@@ -24,11 +24,6 @@ export enum ConversationPriority {
   URGENT = "urgent",
 }
 
-export enum APIKeyType {
-  PRIVATE = "private",
-  PUBLIC = "public",
-}
-
 export enum WebsiteInstallationTarget {
   NEXTJS = "nextjs",
   REACT = "react",

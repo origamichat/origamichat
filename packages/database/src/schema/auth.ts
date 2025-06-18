@@ -124,7 +124,7 @@ export const organization = pgTable(
   {
     id: text("id").primaryKey().$defaultFn(generatePrimaryId),
     name: text("name").notNull(),
-    slug: text("slug").unique(),
+    slug: text("slug").notNull().unique(),
     logo: text("logo"),
     createdAt: timestamp("created_at").notNull(),
     metadata: text("metadata"),

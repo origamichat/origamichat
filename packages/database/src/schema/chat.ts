@@ -51,6 +51,7 @@ export const website = pgTable(
   {
     id: text("id").primaryKey().$defaultFn(generatePrimaryId),
     name: text("name").notNull(),
+    slug: text("slug").notNull().unique(),
     description: text("description"),
     logoUrl: text("logo_url"),
     whitelistedDomains: text("whitelisted_domains").array().notNull(),
@@ -74,6 +75,7 @@ export const website = pgTable(
     index("website_org_status_idx").on(table.organizationId, table.status),
     // Index for soft delete queries
     index("website_deleted_at_idx").on(table.deletedAt),
+    index("website_slug_idx").on(table.slug),
   ]
 );
 

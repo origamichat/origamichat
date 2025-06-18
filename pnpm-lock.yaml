@@ -74,7 +74,7 @@ importers:
         version: 3.25.56
     devDependencies:
       '@types/bun':
-        specifier: latest
+        specifier: ^1.2.16
         version: 1.2.16
 
   apps/origami-web:

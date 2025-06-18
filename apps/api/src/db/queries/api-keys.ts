@@ -1,12 +1,12 @@
 import { env } from "@api/env";
-import { generateApiKey, hashApiKey } from "@api/utils/api-keys";
+import { APIKeyType, generateApiKey, hashApiKey } from "@api/utils/api-keys";
 import type {
   ApiKeySelect,
   Database,
   OrganizationSelect,
   WebsiteSelect,
 } from "@repo/database";
-import { apiKey, APIKeyType } from "@repo/database";
+import { apiKey } from "@repo/database";
 import { and, eq, desc } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;

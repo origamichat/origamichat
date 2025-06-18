@@ -56,9 +56,9 @@ export const Spinner = ({ className }: { className?: string }) => {
           ease: "easeInOut",
         }}
         onAnimationComplete={() => {
-          // After animation completes, switch to the opposite rotation with 60° overshoot
+          // After animation completes, switch to the opposite rotation with 80° overshoot
           setTimeout(() => {
-            setRotation((prev) => (prev === 0 || prev === 240 ? -60 : 240));
+            setRotation((prev) => (prev === 0 || prev === 240 ? -80 : 240));
           }, 20);
         }}
       >
@@ -79,7 +79,7 @@ export const Spinner = ({ className }: { className?: string }) => {
               stiffness: 200,
               damping: 20,
               duration: 0.6,
-              delay: index * 0.05, // Stagger the animation slightly for each circle
+              delay: index * 0.3,
             }}
           />
         ))}

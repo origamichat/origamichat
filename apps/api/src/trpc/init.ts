@@ -8,8 +8,8 @@ import { withPermission } from "./middleware/auth";
 import { withPrimaryDbMiddleware } from "./middleware/db";
 
 export type TRPCContext = {
-  user: typeof auth.$Infer.Session.user | null;
-  session: typeof auth.$Infer.Session.session | null;
+  user: typeof auth.$Infer.Session.user;
+  session: typeof auth.$Infer.Session.session;
   db: Database;
   geo: ReturnType<typeof getGeoContext>;
 };
@@ -18,8 +18,8 @@ export const createTRPCContext = async (
   _: unknown,
   c: Context<AuthType>
 ): Promise<TRPCContext> => {
-  const user = c.get("user");
-  const session = c.get("session");
+  const user = c.get("user")!;
+  const session = c.get("session")!;
 
   const geo = getGeoContext(c.req);
 

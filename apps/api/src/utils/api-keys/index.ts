@@ -1,6 +1,10 @@
-import { APIKeyType } from "@repo/database";
 import { randomBytes } from "node:crypto";
 import { createHmac } from "crypto";
+
+export enum APIKeyType {
+  PRIVATE = "private",
+  PUBLIC = "public",
+}
 
 export function generateApiKey({
   type,
