@@ -6,10 +6,13 @@ export const createWebsiteRequestSchema = z.object({
     description: "The website's name.",
     example: "Dub",
   }),
-  domain: z.string().url().openapi({
-    description: "The website's domain.",
-    example: "https://dub.co",
-  }),
+  domain: z
+    .string()
+    .regex(/^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/)
+    .openapi({
+      description: "The website's domain.",
+      example: "dub.co",
+    }),
   organizationId: z.string().ulid().openapi({
     description: "The organization's unique identifier.",
     example: "01JG000000000000000000000",

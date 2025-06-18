@@ -5,8 +5,9 @@ import {
   createWebsiteResponseSchema,
 } from "@api/schemas/website";
 import { createDefaultWebsiteKeys } from "@api/db/queries/api-keys";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { TRPCError } from "@trpc/server";
 
 export const websiteRouter = createTRPCRouter({
   create: protectedProcedure
@@ -16,14 +17,36 @@ export const websiteRouter = createTRPCRouter({
       let slug = input.name.trim().toLowerCase().replace(/ /g, "-");
 
       // Check if website with same slug already exists
-      const existingWebsite = await db.query.website.findFirst({
-        where: eq(website.slug, slug),
-      });
+      const [existingSlugWebsite, existingDomainWebsite] = await Promise.all([
+        db.query.website.findFirst({
+          where: eq(website.slug, slug),
+        }),
+        db.query.website.findFirst({
+          where: and(
+            eq(website.domain, input.domain),
+            eq(website.isDomainOwnershipVerified, true)
+          ),
+        }),
+      ]);
 
       // If website with same slug already exists, add a random suffix to the slug
-      if (existingWebsite) {
+      if (existingSlugWebsite) {
         slug = `${slug}-${nanoid(4)}`;
       }
+
+      // If website with same verified domain already exists, error, the user cannot use that domain
+      if (existingDomainWebsite) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Domain already in use by another website",
+        });
+      }
+
+      const userEmailDomain = user.email.split("@")[1];
+
+      // TODO: Add a better verification process for domain ownership
+      // If the user's email domain is the same as the website domain, we can assume that the user owns the domain for now
+      const isDomainOwnershipVerified = userEmailDomain === input.domain;
 
       const [createdWebsite] = await db
         .insert(website)
@@ -31,7 +54,12 @@ export const websiteRouter = createTRPCRouter({
           name: input.name,
           organizationId: input.organizationId,
           installationTarget: input.installationTarget,
-          whitelistedDomains: [input.domain, "http://localhost:3000"],
+          domain: input.domain,
+          isDomainOwnershipVerified,
+          whitelistedDomains: [
+            `https://${input.domain}`,
+            "http://localhost:3000",
+          ],
           slug,
         })
         .returning();
