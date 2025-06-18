@@ -12,7 +12,7 @@ export const websiteRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createWebsiteRequestSchema)
     .output(createWebsiteResponseSchema)
-    .mutation(async ({ ctx: { db, session, user }, input }) => {
+    .mutation(async ({ ctx: { db, user }, input }) => {
       let slug = input.name.trim().toLowerCase().replace(/ /g, "-");
 
       // Check if website with same slug already exists
@@ -31,7 +31,7 @@ export const websiteRouter = createTRPCRouter({
           name: input.name,
           organizationId: input.organizationId,
           installationTarget: input.installationTarget,
-          whitelistedDomains: [input.domain],
+          whitelistedDomains: [input.domain, "http://localhost:3000"],
           slug,
         })
         .returning();
