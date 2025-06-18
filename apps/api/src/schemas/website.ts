@@ -87,3 +87,17 @@ export const createWebsiteResponseSchema = z.object({
 });
 
 export type CreateWebsiteResponse = z.infer<typeof createWebsiteResponseSchema>;
+
+export const checkWebsiteDomainRequestSchema = z.object({
+  domain: z
+    .string()
+    .regex(/^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/)
+    .openapi({
+      description: "The website's domain.",
+      example: "dub.co",
+    }),
+});
+
+export type CheckWebsiteDomainRequest = z.infer<
+  typeof checkWebsiteDomainRequestSchema
+>;

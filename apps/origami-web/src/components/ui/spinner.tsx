@@ -4,7 +4,19 @@ import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
-export const Spinner = ({ className }: { className?: string }) => {
+interface SpinnerProps {
+  className?: string;
+  size?: number;
+  circleCount?: number;
+  circleDiameter?: number;
+}
+
+export const Spinner = ({
+  className,
+  size = 20,
+  circleCount = 7,
+  circleDiameter = 3,
+}: SpinnerProps) => {
   const [rotation, setRotation] = useState(0);
   const [isSpread, setIsSpread] = useState(false);
 
@@ -26,10 +38,12 @@ export const Spinner = ({ className }: { className?: string }) => {
     };
   }, []);
 
-  // Create 7 circles positioned in a circle
-  const circles = Array.from({ length: 7 }, (_, i) => {
-    const angle = (i * 360) / 7; // Distribute circles evenly
-    const radius = 7; // Distance from center
+  // Calculate radius based on size, leaving space for circle diameter
+  const radius = size / 2 - circleDiameter / 2 - 1;
+
+  // Create circles positioned in a circle
+  const circles = Array.from({ length: circleCount }, (_, i) => {
+    const angle = (i * 360) / circleCount; // Distribute circles evenly
     const x = Math.cos((angle * Math.PI) / 180) * radius;
     const y = Math.sin((angle * Math.PI) / 180) * radius;
 
@@ -39,7 +53,7 @@ export const Spinner = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn("relative", className)}
-      style={{ width: 24, height: 24 }}
+      style={{ width: size, height: size }}
     >
       {/* Container that rotates */}
       <motion.div
@@ -65,14 +79,22 @@ export const Spinner = ({ className }: { className?: string }) => {
         {circles.map((circle, index) => (
           <motion.div
             key={index}
-            className="absolute size-1 bg-current rounded-full"
+            className="absolute bg-current rounded-full"
+            style={{
+              width: circleDiameter,
+              height: circleDiameter,
+            }}
             initial={{
-              left: 12 - 2, // Start at center
-              top: 12 - 2,
+              left: size / 2 - circleDiameter / 2, // Start at center
+              top: size / 2 - circleDiameter / 2,
             }}
             animate={{
-              left: isSpread ? 12 + circle.x - 2 : 12 - 2, // Animate to target position or stay at center
-              top: isSpread ? 12 + circle.y - 2 : 12 - 2,
+              left: isSpread
+                ? size / 2 + circle.x - circleDiameter / 2
+                : size / 2 - circleDiameter / 2, // Animate to target position or stay at center
+              top: isSpread
+                ? size / 2 + circle.y - circleDiameter / 2
+                : size / 2 - circleDiameter / 2,
             }}
             transition={{
               type: "spring",

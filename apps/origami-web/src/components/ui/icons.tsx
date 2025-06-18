@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export type IconVariant = "default" | "filled";
 
-export type IconName = "sidebar" | "command";
+export type IconName = "sidebar" | "command" | "check" | "x";
 
 export interface IconProps {
   name: IconName;
@@ -23,6 +23,14 @@ const iconRegistry: Record<IconName, Record<IconVariant, string>> = {
       "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3",
     filled:
       "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3",
+  },
+  check: {
+    default: "M4 13L9 18L20 6",
+    filled: "M4 13L9 18L20 6",
+  },
+  x: {
+    default: "M6 18L18 6M6 6L18 18",
+    filled: "M6 18L18 6M6 6L18 18",
   },
 };
 

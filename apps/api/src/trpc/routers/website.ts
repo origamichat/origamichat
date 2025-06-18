@@ -1,6 +1,7 @@
 import { website } from "@repo/database";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import {
+  checkWebsiteDomainRequestSchema,
   createWebsiteRequestSchema,
   createWebsiteResponseSchema,
 } from "@api/schemas/website";
@@ -8,6 +9,7 @@ import { createDefaultWebsiteKeys } from "@api/db/queries/api-keys";
 import { and, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const websiteRouter = createTRPCRouter({
   create: protectedProcedure
@@ -75,5 +77,18 @@ export const websiteRouter = createTRPCRouter({
         ...createdWebsite,
         apiKeys,
       };
+    }),
+  checkDomain: protectedProcedure
+    .input(checkWebsiteDomainRequestSchema)
+    .output(z.boolean())
+    .query(async ({ ctx: { db }, input }) => {
+      const existingWebsite = await db.query.website.findFirst({
+        where: and(
+          eq(website.domain, input.domain),
+          eq(website.isDomainOwnershipVerified, true)
+        ),
+      });
+
+      return !!existingWebsite;
     }),
 });

@@ -1,7 +1,6 @@
 import { db } from "@database/database";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { nextCookies } from "better-auth/next-js";
 
 import { admin, anonymous, organization } from "better-auth/plugins";
 
@@ -28,8 +27,6 @@ export const auth = betterAuth({
     }),
     anonymous(),
     admin(),
-    // This is needs to be at the end of the plugins array
-    nextCookies(),
   ],
   // Allow requests from the frontend development server and production domains
   trustedOrigins: [
