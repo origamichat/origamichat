@@ -1,11 +1,11 @@
 import { eq, and, desc, isNull, like, count, inArray } from "drizzle-orm";
 import {
   conversation,
-  ConversationStatus,
-  ConversationPriority,
   type Database,
   type ConversationInsert,
 } from "@repo/database";
+
+import { ConversationStatus, ConversationPriority } from "@repo/database/enums";
 
 // Create conversation
 export async function createConversation(

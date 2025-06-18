@@ -1,3 +1,5 @@
+import { AppLayoutSkeleton } from "@/components/ui/skeletons/app-layout-skeleton";
+
 export default function Layout({
   children,
 }: Readonly<{
@@ -7,8 +9,11 @@ export default function Layout({
   }>;
 }>) {
   return (
-    <section className="flex h-screen w-screen items-center justify-center">
-      {children}
+    <section className="h-screen w-screen relative">
+      <AppLayoutSkeleton />
+      <div className="absolute inset-0 flex items-center justify-center">
+        {children}
+      </div>
     </section>
   );
 }

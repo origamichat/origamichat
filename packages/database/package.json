@@ -7,7 +7,8 @@
         "access": "public"
     },
     "exports": {
-        ".": "./src/index.ts"
+        ".": "./src/index.ts",
+        "./enums": "./src/enums.ts"
     },
     "scripts": {
         "db:seed": "tsx scripts/seed.ts",

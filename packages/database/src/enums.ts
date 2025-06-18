@@ -28,3 +28,8 @@ export enum WebsiteInstallationTarget {
   NEXTJS = "nextjs",
   REACT = "react",
 }
+
+export enum APIKeyType {
+  PRIVATE = "private",
+  PUBLIC = "public",
+}

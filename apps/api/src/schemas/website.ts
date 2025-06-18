@@ -1,7 +1,5 @@
 import { z } from "@hono/zod-openapi";
-import { WebsiteInstallationTarget } from "@repo/database";
-
-import { APIKeyType } from "@api/utils/api-keys";
+import { WebsiteInstallationTarget, APIKeyType } from "@repo/database/enums";
 
 export const createWebsiteRequestSchema = z.object({
   name: z.string().openapi({
@@ -21,6 +19,8 @@ export const createWebsiteRequestSchema = z.object({
     example: WebsiteInstallationTarget.NEXTJS,
   }),
 });
+
+export type CreateWebsiteRequest = z.infer<typeof createWebsiteRequestSchema>;
 
 export const createWebsiteResponseSchema = z.object({
   id: z.string().ulid().openapi({
@@ -82,3 +82,5 @@ export const createWebsiteResponseSchema = z.object({
       ],
     }),
 });
+
+export type CreateWebsiteResponse = z.infer<typeof createWebsiteResponseSchema>;

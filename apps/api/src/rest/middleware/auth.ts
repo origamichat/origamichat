@@ -35,7 +35,7 @@ export const withPublicApiKeyAuth: MiddlewareHandler = async (c, next) => {
 
   if (!apiKey) {
     // If not in cache, query database
-    apiKey = await getApiKeyByKey(db, token);
+    apiKey = await getApiKeyByKey(db, { key: token });
 
     if (apiKey) {
       // Store in cache for future requests

@@ -1,15 +1,4 @@
-import {
-  eq,
-  and,
-  desc,
-  asc,
-  isNull,
-  like,
-  or,
-  count,
-  gte,
-  lte,
-} from "drizzle-orm";
+import { eq, and, desc, isNull, like, or, count, gte } from "drizzle-orm";
 import { visitor, type Database, type VisitorInsert } from "@repo/database";
 
 // Create visitor

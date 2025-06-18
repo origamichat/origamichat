@@ -1,11 +1,12 @@
-import { describe, expect, it, mock } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import {
   generateApiKey,
   isValidSecretApiKeyFormat,
   isValidPublicApiKeyFormat,
   hashApiKey,
-  APIKeyType,
 } from "./index";
+
+import { APIKeyType } from "@repo/database/enums";
 
 describe("api-keys utils", () => {
   describe("generateApiKey", () => {

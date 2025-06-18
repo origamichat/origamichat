@@ -1,24 +1,7 @@
-import {
-  eq,
-  and,
-  desc,
-  asc,
-  isNull,
-  like,
-  or,
-  count,
-  gte,
-  lte,
-  inArray,
-} from "drizzle-orm";
-import {
-  message,
-  MessageType,
-  SenderType,
-  type Database,
-  type MessageSelect,
-  type MessageInsert,
-} from "@repo/database";
+import { eq, and, desc, asc, isNull, like } from "drizzle-orm";
+import { message, type Database, type MessageInsert } from "@repo/database";
+
+import { MessageType, SenderType } from "@repo/database/enums";
 
 // Create message
 export async function createMessage(

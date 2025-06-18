@@ -11,10 +11,10 @@ import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 
 import { enumToPgEnum } from "../utils/db";
-import { APIKeyType } from "./enums";
 import { website } from "./chat";
 import { user, organization } from "./auth";
 import { generatePrimaryId } from "../utils/uuid";
+import { APIKeyType } from "../enums";
 
 export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
 

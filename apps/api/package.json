@@ -12,7 +12,10 @@
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage"
   },
-  "exports": "./src/client/index.ts",
+  "exports": {
+    ".": "./src/client/index.ts",
+    "./schemas": "./src/schemas/index.ts"
+  },
   "dependencies": {
     "@hono/node-server": "^1.7.0",
     "@hono/swagger-ui": "^0.5.1",

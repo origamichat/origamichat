@@ -4,7 +4,7 @@ import { getOrganizationBySlug } from "@api/db/queries/organization";
 import { db } from "@database/database";
 
 import { notFound } from "next/navigation";
-import { Spinner } from "@/components/ui/spinner";
+import CreationFlowWrapper from "./creation-flow";
 
 export default async function Page({
   params,
@@ -30,6 +30,7 @@ export default async function Page({
           Welcome to Origami
         </TextEffect>
       </div>
+      <CreationFlowWrapper organizationId={organization.id} />
     </div>
   );
 }

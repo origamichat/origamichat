@@ -19,7 +19,7 @@ import {
   MessageType,
   SenderType,
   WebsiteInstallationTarget,
-} from "@database/schema/enums";
+} from "@database/enums";
 import { enumToPgEnum } from "@database/utils/db";
 import { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { apiKey } from "@database/schema/api-keys";
