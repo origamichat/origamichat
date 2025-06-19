@@ -10,7 +10,8 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-import { generatePrimaryId } from "@database/utils/uuid";
+import { ulid } from "@database/utils/uuid";
+
 import { organization, user } from "@database/schema/auth";
 import { relations } from "drizzle-orm";
 import {
@@ -49,7 +50,7 @@ export const websiteInstallationTargetEnum = pgEnum(
 export const website = pgTable(
   "website",
   {
-    id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+    id: ulid("id").primaryKey(),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(),
     domain: text("domain").notNull(),
@@ -62,7 +63,7 @@ export const website = pgTable(
     installationTarget: websiteInstallationTargetEnum("installation_target")
       .$defaultFn(() => WebsiteInstallationTarget.NEXTJS)
       .notNull(),
-    organizationId: text("organization_id")
+    organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
     status: text("status").default("active").notNull(),
@@ -91,19 +92,19 @@ export const website = pgTable(
 export const visitor = pgTable(
   "visitor",
   {
-    id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+    id: ulid("id").primaryKey(),
     identifier: text("identifier").notNull(),
     name: text("name"),
     email: text("email"),
     phone: text("phone"),
     metadata: jsonb("metadata"),
-    organizationId: text("organization_id")
+    organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
-    websiteId: text("website_id")
+    websiteId: ulid("website_id")
       .notNull()
       .references(() => website.id, { onDelete: "cascade" }),
-    userId: text("user_id").references(() => user.id, { onDelete: "set null" }),
+    userId: ulid("user_id").references(() => user.id, { onDelete: "set null" }),
     lastConnectedAt: timestamp("last_connected_at"),
     createdAt: timestamp("created_at")
       .$defaultFn(() => new Date())
@@ -140,17 +141,17 @@ export const visitor = pgTable(
 export const aiAgent = pgTable(
   "ai_agent",
   {
-    id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+    id: ulid("id").primaryKey(),
     name: text("name").notNull(),
     description: text("description"),
     basePrompt: text("base_prompt").notNull(),
     model: text("model").notNull(),
     temperature: integer("temperature"),
     maxTokens: integer("max_tokens"),
-    organizationId: text("organization_id")
+    organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
-    websiteId: text("website_id")
+    websiteId: ulid("website_id")
       .notNull()
       .references(() => website.id, { onDelete: "cascade" }),
     isActive: boolean("is_active").default(true).notNull(),
@@ -178,23 +179,23 @@ export const aiAgent = pgTable(
 export const conversation = pgTable(
   "conversation",
   {
-    id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+    id: ulid("id").primaryKey(),
     status: conversationStatusEnum("status")
       .default(ConversationStatus.OPEN)
       .notNull(),
     priority: conversationPriorityEnum("priority")
       .default(ConversationPriority.NORMAL)
       .notNull(),
-    assignedTeamMemberId: text("assigned_team_member_id").references(
+    assignedTeamMemberId: ulid("assigned_team_member_id").references(
       () => user.id
     ),
-    organizationId: text("organization_id")
+    organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
-    visitorId: text("visitor_id")
+    visitorId: ulid("visitor_id")
       .notNull()
       .references(() => visitor.id, { onDelete: "cascade" }),
-    websiteId: text("website_id")
+    websiteId: ulid("website_id")
       .notNull()
       .references(() => website.id, { onDelete: "cascade" }),
     title: text("title"),
@@ -242,19 +243,19 @@ export const conversation = pgTable(
 export const message = pgTable(
   "message",
   {
-    id: text("id").primaryKey().$defaultFn(generatePrimaryId),
-    content: text("content").notNull(),
+    id: ulid("id").primaryKey(),
+    content: jsonb("content").notNull(),
     type: messageTypeEnum("type").default(MessageType.TEXT).notNull(),
     senderType: senderTypeEnum("sender_type").notNull(),
-    senderId: text("sender_id").notNull(),
-    organizationId: text("organization_id")
+    senderId: ulid("sender_id").notNull(),
+    organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
-    conversationId: text("conversation_id")
+    conversationId: ulid("conversation_id")
       .notNull()
       .references(() => conversation.id, { onDelete: "cascade" }),
-    parentMessageId: text("parent_message_id"),
-    aiAgentId: text("ai_agent_id").references(() => aiAgent.id),
+    parentMessageId: ulid("parent_message_id"),
+    aiAgentId: ulid("ai_agent_id").references(() => aiAgent.id),
     modelUsed: text("model_used"),
     reactions: jsonb("reactions"), // Stores { userId: reaction }
     metadata: jsonb("metadata"),

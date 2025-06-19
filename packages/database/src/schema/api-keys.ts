@@ -10,28 +10,28 @@ import {
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 
-import { enumToPgEnum } from "../utils/db";
-import { website } from "./chat";
-import { user, organization } from "./auth";
-import { generatePrimaryId } from "../utils/uuid";
-import { APIKeyType } from "../enums";
+import { enumToPgEnum } from "@database/utils/db";
+import { website } from "@database/schema/chat";
+import { user, organization } from "@database/schema/auth";
+import { ulid } from "@database/utils/uuid";
+import { APIKeyType } from "@database/enums";
 
 export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
 
 export const apiKey = pgTable(
   "api_key",
   {
-    id: text("id").primaryKey().$defaultFn(generatePrimaryId),
+    id: ulid("id").primaryKey(),
     keyType: keyTypeEnum("key_type").notNull(),
     key: varchar("key", { length: 255 }).notNull().unique(),
     name: text("name").notNull(),
-    organizationId: varchar("organization_id", { length: 36 })
+    organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
-    websiteId: varchar("website_id", { length: 36 })
+    websiteId: ulid("website_id")
       .notNull()
       .references(() => website.id, { onDelete: "cascade" }),
-    createdBy: varchar("created_by", { length: 36 })
+    createdBy: ulid("created_by")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     isActive: boolean("is_active")
@@ -43,7 +43,7 @@ export const apiKey = pgTable(
     lastUsedAt: timestamp("last_used_at"),
     expiresAt: timestamp("expires_at"),
     revokedAt: timestamp("revoked_at"),
-    revokedBy: varchar("revoked_by", { length: 36 }).references(() => user.id, {
+    revokedBy: ulid("revoked_by").references(() => user.id, {
       onDelete: "set null",
     }),
     createdAt: timestamp("created_at")

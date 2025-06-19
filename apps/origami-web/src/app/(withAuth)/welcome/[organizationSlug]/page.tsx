@@ -5,6 +5,7 @@ import { db } from "@database/database";
 
 import { notFound } from "next/navigation";
 import CreationFlowWrapper from "./creation-flow";
+import { ensurePageAuth } from "@/lib/auth/server";
 
 export default async function Page({
   params,
@@ -15,7 +16,10 @@ export default async function Page({
 }) {
   const { organizationSlug } = await params;
 
-  const organization = await getOrganizationBySlug(db, organizationSlug);
+  const [organization] = await Promise.all([
+    getOrganizationBySlug(db, organizationSlug),
+    ensurePageAuth(),
+  ]);
 
   if (!organization) {
     notFound();
@@ -26,10 +30,11 @@ export default async function Page({
       <div className="flex items-center gap-4">
         <Logo className="size-6" />
         <span className="text-primary/30 text-sm">/</span>
-        <TextEffect className="text-center text-2xl font-medium" delay={1}>
+        <TextEffect className="text-center text-2xl font-medium" delay={0.5}>
           Welcome to Origami
         </TextEffect>
       </div>
+
       <CreationFlowWrapper organizationId={organization.id} />
     </div>
   );

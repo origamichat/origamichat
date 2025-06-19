@@ -1,4 +1,5 @@
 import { db } from "@database/database";
+import { generateULID } from "@database/utils/uuid";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
@@ -63,6 +64,12 @@ export const auth = betterAuth({
     },
     // Add cookie prefix for better organization
     cookiePrefix: "origami-auth",
+    // Generate ULID for the database
+    database: {
+      generateId() {
+        return generateULID();
+      },
+    },
   },
   session: {
     // Cache the session in the cookie for 5 minutes

@@ -2,10 +2,18 @@ import { z } from "@hono/zod-openapi";
 import { WebsiteInstallationTarget, APIKeyType } from "@repo/database/enums";
 
 export const createWebsiteRequestSchema = z.object({
-  name: z.string().openapi({
-    description: "The website's name.",
-    example: "Dub",
-  }),
+  name: z
+    .string()
+    .openapi({
+      description: "The website's name.",
+      example: "Dub",
+    })
+    .min(3, {
+      message: "Name must be at least 3 characters",
+    })
+    .max(30, {
+      message: "Name must be less than 30 characters",
+    }),
   domain: z
     .string()
     .regex(/^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/)

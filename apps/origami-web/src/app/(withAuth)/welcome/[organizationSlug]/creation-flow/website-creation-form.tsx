@@ -170,10 +170,16 @@ export default function WebsiteCreationForm({
 
           <BaseSubmitButton
             type="submit"
-            disabled={isSubmitting || isDomainTaken}
+            disabled={
+              isSubmitting ||
+              isDomainTaken ||
+              !form.formState.isValid ||
+              !isValidDomain(domainValue)
+            }
             isSubmitting={isSubmitting}
+            className="w-full"
           >
-            Create Website
+            Start your integration
           </BaseSubmitButton>
         </form>
       </Form>

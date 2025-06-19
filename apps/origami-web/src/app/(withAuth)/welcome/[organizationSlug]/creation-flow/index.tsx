@@ -5,6 +5,7 @@ import WebsiteCreationForm from "./website-creation-form";
 import { useMutation } from "@tanstack/react-query";
 import { useTRPC } from "@/lib/trpc/client";
 import { CreateWebsiteResponse } from "@api/schemas";
+import { motion } from "motion/react";
 
 type CreationFlowWrapperProps = {
   organizationId: string;
@@ -26,11 +27,17 @@ export default function CreationFlowWrapper({
 
   if (!website) {
     return (
-      <WebsiteCreationForm
-        onSubmit={createWebsite}
-        organizationId={organizationId}
-        isSubmitting={isSubmitting}
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 1 }}
+      >
+        <WebsiteCreationForm
+          onSubmit={createWebsite}
+          organizationId={organizationId}
+          isSubmitting={isSubmitting}
+        />
+      </motion.div>
     );
   }
 
