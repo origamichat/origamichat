@@ -18,13 +18,13 @@ const getDefaultWebsiteToRedirectTo = ({
     joinedAt: Date;
   }[];
 }): {
-  websiteId: string | undefined;
+  websiteSlug: string | undefined;
   organizationSlug: string | undefined;
 } => {
   // Should not happen, but just in case
   if (orgs.length === 0) {
     return {
-      websiteId: undefined,
+      websiteSlug: undefined,
       organizationSlug: undefined,
     };
   }
@@ -32,7 +32,7 @@ const getDefaultWebsiteToRedirectTo = ({
   // If the user has no selected website, we redirect to the first website in the first organization
   if (!selectedWebsiteId) {
     return {
-      websiteId: orgs[0]?.websites?.[0]?.id,
+      websiteSlug: orgs[0]?.websites?.[0]?.slug,
       organizationSlug: orgs[0]?.organization.slug ?? undefined,
     };
   }
@@ -42,7 +42,7 @@ const getDefaultWebsiteToRedirectTo = ({
   );
 
   return {
-    websiteId: website?.websites[0]?.id,
+    websiteSlug: website?.websites[0]?.slug,
     organizationSlug: website?.organization.slug ?? undefined,
   };
 };
@@ -63,7 +63,7 @@ export default async function Auth() {
     userName: user?.name,
   });
 
-  const { websiteId, organizationSlug } = getDefaultWebsiteToRedirectTo({
+  const { websiteSlug, organizationSlug } = getDefaultWebsiteToRedirectTo({
     selectedWebsiteId,
     orgs,
   });
@@ -76,10 +76,10 @@ export default async function Auth() {
   }
 
   // If the user has no website, we redirect to the onboarding "welcome"
-  if (!websiteId) {
+  if (!websiteSlug) {
     redirect(`/welcome/${organizationSlug}`);
   }
 
   // Redirect to the active organization
-  redirect(`/${websiteId}`);
+  redirect(`/${websiteSlug}`);
 }
