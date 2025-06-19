@@ -10,9 +10,9 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-import { generateULID, ulid } from "@database/utils/ids";
+import { generateULID, ulid } from "../utils/ids";
 
-import { organization, user } from "@database/schema/auth";
+import { organization, user } from "./auth";
 import { relations } from "drizzle-orm";
 import {
   ConversationPriority,
@@ -20,10 +20,10 @@ import {
   MessageType,
   SenderType,
   WebsiteInstallationTarget,
-} from "@database/enums";
-import { enumToPgEnum } from "@database/utils/db";
+} from "../enums";
+import { enumToPgEnum } from "../utils/db";
 import { InferSelectModel, InferInsertModel } from "drizzle-orm";
-import { apiKey } from "@database/schema/api-keys";
+import { apiKey } from "./api-keys";
 
 export const messageTypeEnum = pgEnum(
   "message_type",

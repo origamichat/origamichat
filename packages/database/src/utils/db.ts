@@ -1,7 +1,8 @@
-export function enumToPgEnum<T extends Record<string, any>>(
+export function enumToPgEnum<T extends Record<string, string | number>>(
   myEnum: T
 ): [T[keyof T], ...T[keyof T][]] {
-  return Object.values(myEnum).map((value: any) => `${value}`) as any;
+  const values = Object.values(myEnum);
+  return [values[0], ...values.slice(1)] as [T[keyof T], ...T[keyof T][]];
 }
 
 export function slugify(text: string) {

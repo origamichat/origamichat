@@ -42,7 +42,6 @@ export const websiteRouter = createTRPCRouter({
       const [createdWebsite] = await db
         .insert(website)
         .values({
-          id: generateULID(), // Explicitly generate ULID
           name: input.name,
           organizationId: input.organizationId,
           installationTarget: input.installationTarget,
