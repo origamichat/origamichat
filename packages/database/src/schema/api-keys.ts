@@ -13,7 +13,7 @@ import { relations } from "drizzle-orm";
 import { enumToPgEnum } from "@database/utils/db";
 import { website } from "@database/schema/chat";
 import { user, organization } from "@database/schema/auth";
-import { ulid } from "@database/utils/uuid";
+import { generateULID, ulid } from "@database/utils/ids";
 import { APIKeyType } from "@database/enums";
 
 export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
@@ -21,7 +21,7 @@ export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
 export const apiKey = pgTable(
   "api_key",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     keyType: keyTypeEnum("key_type").notNull(),
     key: varchar("key", { length: 255 }).notNull().unique(),
     name: text("name").notNull(),

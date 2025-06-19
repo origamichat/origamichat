@@ -10,7 +10,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
-import { ulid } from "@database/utils/uuid";
+import { generateULID, ulid } from "@database/utils/ids";
 
 import { organization, user } from "@database/schema/auth";
 import { relations } from "drizzle-orm";
@@ -50,7 +50,7 @@ export const websiteInstallationTargetEnum = pgEnum(
 export const website = pgTable(
   "website",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(),
     domain: text("domain").notNull(),
@@ -92,7 +92,7 @@ export const website = pgTable(
 export const visitor = pgTable(
   "visitor",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     identifier: text("identifier").notNull(),
     name: text("name"),
     email: text("email"),
@@ -141,7 +141,7 @@ export const visitor = pgTable(
 export const aiAgent = pgTable(
   "ai_agent",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     name: text("name").notNull(),
     description: text("description"),
     basePrompt: text("base_prompt").notNull(),
@@ -179,7 +179,7 @@ export const aiAgent = pgTable(
 export const conversation = pgTable(
   "conversation",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     status: conversationStatusEnum("status")
       .default(ConversationStatus.OPEN)
       .notNull(),
@@ -243,7 +243,7 @@ export const conversation = pgTable(
 export const message = pgTable(
   "message",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     content: jsonb("content").notNull(),
     type: messageTypeEnum("type").default(MessageType.TEXT).notNull(),
     senderType: senderTypeEnum("sender_type").notNull(),

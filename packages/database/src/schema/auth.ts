@@ -4,12 +4,12 @@ import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 import { website } from "./chat";
-import { ulid } from "../utils/uuid";
+import { generateULID, ulid } from "../utils/ids";
 
 export const user = pgTable(
   "user",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     name: text("name").notNull(),
     email: text("email").notNull().unique(),
     emailVerified: boolean("email_verified")
@@ -43,7 +43,7 @@ export const user = pgTable(
 export const session = pgTable(
   "session",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     expiresAt: timestamp("expires_at").notNull(),
     token: text("token").notNull().unique(),
     createdAt: timestamp("created_at").notNull(),
@@ -71,7 +71,7 @@ export const session = pgTable(
 export const account = pgTable(
   "account",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     accountId: text("account_id").notNull(),
     providerId: text("provider_id").notNull(),
     userId: ulid("user_id")
@@ -100,7 +100,7 @@ export const account = pgTable(
 export const verification = pgTable(
   "verification",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     identifier: text("identifier").notNull(),
     value: text("value").notNull(),
     expiresAt: timestamp("expires_at").notNull(),
@@ -122,7 +122,7 @@ export const verification = pgTable(
 export const organization = pgTable(
   "organization",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(),
     logo: text("logo"),
@@ -138,7 +138,7 @@ export const organization = pgTable(
 export const member = pgTable(
   "member",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
@@ -161,7 +161,7 @@ export const member = pgTable(
 export const invitation = pgTable(
   "invitation",
   {
-    id: ulid("id").primaryKey(),
+    id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
     organizationId: ulid("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),

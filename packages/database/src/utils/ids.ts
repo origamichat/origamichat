@@ -15,7 +15,7 @@ const NANOID_LENGTH = 12;
  * - Shorter length
  */
 
-export const ulid = customType<{ data: string }>({
+export const ulid = customType<{ data: string; notNull: true }>({
   dataType() {
     return "ulid";
   },

@@ -9,6 +9,7 @@ import type {
 
 import { apiKey } from "@repo/database";
 import { APIKeyType } from "@repo/database/enums";
+import { generateULID } from "@repo/database/utils";
 import { and, eq, desc } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;
@@ -32,7 +33,12 @@ export async function getApiKeyByKey(
     },
   });
 
-  return result;
+  // Only return if both website and organization exist
+  if (result && result.website && result.organization) {
+    return result as ApiKeyWithWebsiteAndOrganization;
+  }
+
+  return undefined;
 }
 
 // Get API key by ID with org check
@@ -174,6 +180,7 @@ export async function updateApiKeyLastUsed(
 export async function createApiKey(
   db: Database,
   data: {
+    id: string;
     name: string;
     organizationId: string;
     websiteId: string;
@@ -201,6 +208,7 @@ export async function createApiKey(
   const [result] = await db
     .insert(apiKey)
     .values({
+      id: data.id,
       name: data.name,
       key: storedKey,
       organizationId: data.organizationId,
@@ -228,13 +236,14 @@ export async function createDefaultWebsiteKeys(
   // Generate production / test private and public keys
   const keys = [
     {
+      id: generateULID(),
       name: `${data.websiteName} - Public API Key`,
       keyType: APIKeyType.PUBLIC,
       isActive: true,
       isTest: false,
     },
-
     {
+      id: generateULID(),
       name: `${data.websiteName} - Test Public API Key`,
       keyType: APIKeyType.PUBLIC,
       isActive: true,

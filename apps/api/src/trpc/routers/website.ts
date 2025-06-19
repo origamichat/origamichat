@@ -10,33 +10,21 @@ import { and, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { generateULID } from "@repo/database/utils";
 
 export const websiteRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createWebsiteRequestSchema)
     .output(createWebsiteResponseSchema)
     .mutation(async ({ ctx: { db, user }, input }) => {
-      let slug = input.name.trim().toLowerCase().replace(/ /g, "-");
+      // Check if website with same verified domain already exists
+      const existingDomainWebsite = await db.query.website.findFirst({
+        where: and(
+          eq(website.domain, input.domain),
+          eq(website.isDomainOwnershipVerified, true)
+        ),
+      });
 
-      // Check if website with same slug already exists
-      const [existingSlugWebsite, existingDomainWebsite] = await Promise.all([
-        db.query.website.findFirst({
-          where: eq(website.slug, slug),
-        }),
-        db.query.website.findFirst({
-          where: and(
-            eq(website.domain, input.domain),
-            eq(website.isDomainOwnershipVerified, true)
-          ),
-        }),
-      ]);
-
-      // If website with same slug already exists, add a random suffix to the slug
-      if (existingSlugWebsite) {
-        slug = `${slug}-${nanoid(4)}`;
-      }
-
-      // If website with same verified domain already exists, error, the user cannot use that domain
       if (existingDomainWebsite) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -45,14 +33,16 @@ export const websiteRouter = createTRPCRouter({
       }
 
       const userEmailDomain = user.email.split("@")[1];
-
-      // TODO: Add a better verification process for domain ownership
-      // If the user's email domain is the same as the website domain, we can assume that the user owns the domain for now
       const isDomainOwnershipVerified = userEmailDomain === input.domain;
+
+      // Generate a unique slug by always adding a random suffix
+      const baseSlug = input.name.trim().toLowerCase().replace(/ /g, "-");
+      const slug = `${baseSlug}-${nanoid(6)}`;
 
       const [createdWebsite] = await db
         .insert(website)
         .values({
+          id: generateULID(), // Explicitly generate ULID
           name: input.name,
           organizationId: input.organizationId,
           installationTarget: input.installationTarget,
