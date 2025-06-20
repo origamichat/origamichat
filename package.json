@@ -19,6 +19,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@upstash/redis": "^1.35.0",
     "nanoid": "^5.1.5"
   }
 }

@@ -59,6 +59,16 @@ app.use(
   })
 );
 
+// WebSocket endpoint
+app.use(
+  "/ws",
+  cors({
+    origin: acceptedOrigins,
+    maxAge: 86400,
+    credentials: true,
+  })
+);
+
 app.use("/trpc/*", async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
@@ -131,21 +141,35 @@ app.get("/ui", swaggerUI({ url: "/openapi" }));
 
 app.use(
   "/ws",
-  upgradeWebSocket((c) => {
+  upgradeWebSocket(async (c) => {
+    const session = await auth.api.getSession({ headers: c.req.raw.headers });
+
+    if (!session) {
+      return {
+        onMessage: () => {},
+        onClose: () => {},
+        onOpen: () => {},
+      };
+    }
+
     return {
       onMessage(event, ws) {
         console.log(`Message from client: ${event.data}`);
+
         ws.send("Hello from server!");
       },
       onClose: () => {
         console.log("Connection closed");
       },
+      onOpen(evt, ws) {},
     };
   })
 );
 
-export default {
+const server = Bun.serve({
   port: env.PORT,
   fetch: app.fetch,
   websocket,
-};
+});
+
+export default server;
