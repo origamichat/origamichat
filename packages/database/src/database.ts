@@ -14,16 +14,31 @@ const getEnvVariable = (name: string): string => {
   return value;
 };
 
-const sql = neon(getEnvVariable("DATABASE_URL"));
+let _db: ReturnType<typeof drizzle> | null = null;
 
-export const db = drizzle({
-  client: sql,
-  schema,
-  cache: upstashCache({
-    url: getEnvVariable("UPSTASH_REDIS_REST_URL"),
-    token: getEnvVariable("UPSTASH_REDIS_REST_TOKEN"),
-    config: { ex: 60 },
-  }),
+const createDb = () => {
+  if (_db) return _db;
+
+  const sql = neon(getEnvVariable("DATABASE_URL"));
+
+  _db = drizzle({
+    client: sql,
+    schema,
+    cache: upstashCache({
+      url: getEnvVariable("UPSTASH_REDIS_REST_URL"),
+      token: getEnvVariable("UPSTASH_REDIS_REST_TOKEN"),
+      config: { ex: 60 },
+    }),
+  });
+
+  return _db;
+};
+
+export const db = new Proxy({} as ReturnType<typeof drizzle>, {
+  get: (target, prop) => {
+    const actualDb = createDb();
+    return actualDb[prop as keyof typeof actualDb];
+  },
 });
 
 export type Database = typeof db;
