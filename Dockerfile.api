@@ -23,9 +23,8 @@ RUN bunx turbo run build --filter=@origamichat/api...
 # Copy the built server to the root directory
 RUN cp ./apps/api/server ./server
 
-# Expose the port Railway expects
-ENV PORT=3000
-EXPOSE ${PORT}
+# Railway will set the PORT environment variable
+# EXPOSE is mainly for documentation, the actual port is controlled by env.PORT
 
 # Run the server
 CMD ["./server"]
