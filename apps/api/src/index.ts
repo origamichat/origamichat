@@ -166,10 +166,11 @@ app.use(
   })
 );
 
-const server = Bun.serve({
+// Start the server - no export needed for compiled executable
+Bun.serve({
   port: env.PORT,
   fetch: app.fetch,
   websocket,
 });
 
-export default server;
+console.log(`🚀 Server running on port ${env.PORT}`);
