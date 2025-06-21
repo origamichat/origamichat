@@ -34,7 +34,7 @@
         "@types/bun": "^1.2.16",
       },
     },
-    "apps/origami-web": {
+    "apps/web": {
       "name": "@origamichat/web",
       "version": "0.1.0",
       "dependencies": {
@@ -372,7 +372,7 @@
 
     "@origamichat/typescript-config": ["@origamichat/typescript-config@workspace:packages/typescript-config"],
 
-    "@origamichat/web": ["@origamichat/web@workspace:apps/origami-web"],
+    "@origamichat/web": ["@origamichat/web@workspace:apps/web"],
 
     "@peculiar/asn1-android": ["@peculiar/asn1-android@2.3.16", "", { "dependencies": { "@peculiar/asn1-schema": "^2.3.15", "asn1js": "^3.0.5", "tslib": "^2.8.1" } }, "sha512-a1viIv3bIahXNssrOIkXZIlI2ePpZaNmR30d4aBL99mu2rO+mT9D6zBsp7H6eROWGtmwv0Ionp5olJurIo09dw=="],
 

@@ -2,18 +2,17 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Install pnpm and bun
-RUN npm install -g pnpm bun
+# Install and bun
+RUN npm install -g bun
 
 # Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY package.json bun.lock turbo.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/database/package.json ./packages/database/
-COPY packages/eslint-config/package.json ./packages/eslint-config/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 
 # Install dependencies
-RUN pnpm install
+RUN bun install
 
 # Copy source files
 COPY . .
