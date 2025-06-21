@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/base.json",
+  "extends": "@origamichat/typescript-config/base.json",
   "include": ["src"],
   "exclude": ["node_modules"]
 }

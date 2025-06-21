@@ -7,7 +7,7 @@ import {
   auth,
   OrganizationSelect,
   WebsiteSelect,
-} from "@repo/database";
+} from "@origamichat/database";
 import { generateSlugFromEmailDomain } from "@api/utils/organization";
 
 export async function getOrganizationById(
@@ -71,13 +71,14 @@ export async function getOrganizationsForUser(
   // Group websites by organization ID
   const websitesByOrg = allWebsites.reduce(
     (acc, site) => {
-      if (!acc[site.organizationId]) {
-        acc[site.organizationId] = [];
+      const orgId = site.organizationId;
+      if (!acc[orgId]) {
+        acc[orgId] = [];
       }
-      acc[site.organizationId].push(site);
+      acc[orgId].push(site);
       return acc;
     },
-    {} as Record<string, typeof allWebsites>
+    {} as Record<string, WebsiteSelect[]>
   );
 
   // Combine organizations with their websites

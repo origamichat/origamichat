@@ -5,7 +5,7 @@ import { secureHeaders } from "hono/secure-headers";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
-import { auth } from "@repo/database";
+import { auth } from "@origamichat/database";
 
 import { checkHealth } from "@api/utils/health";
 import { routers } from "@api/rest/routers";

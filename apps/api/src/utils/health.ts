@@ -1,4 +1,4 @@
-import { db, user } from "@repo/database";
+import { db, user } from "@origamichat/database";
 
 export async function checkHealth() {
   // This is a simple health check that will return true if the database is

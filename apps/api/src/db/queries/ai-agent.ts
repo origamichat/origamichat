@@ -1,5 +1,5 @@
 import { eq, and, desc, isNull, like, or, count, sql } from "drizzle-orm";
-import { aiAgent, type Database, type AiAgentInsert } from "@repo/database";
+import { aiAgent, type Database, type AiAgentInsert } from "@origamichat/database";
 
 // Create AI agent
 export async function createAiAgent(

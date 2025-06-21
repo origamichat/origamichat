@@ -1,16 +1,17 @@
-import { website } from "@repo/database";
+import { website } from "@origamichat/database";
 import { createTRPCRouter, protectedProcedure } from "../init";
+
 import {
   checkWebsiteDomainRequestSchema,
   createWebsiteRequestSchema,
   createWebsiteResponseSchema,
 } from "@api/schemas/website";
+
 import { createDefaultWebsiteKeys } from "@api/db/queries/api-keys";
 import { and, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { generateULID } from "@repo/database/utils";
 
 export const websiteRouter = createTRPCRouter({
   create: protectedProcedure
@@ -63,8 +64,18 @@ export const websiteRouter = createTRPCRouter({
       });
 
       return {
-        ...createdWebsite,
-        apiKeys,
+        id: createdWebsite.id,
+        name: createdWebsite.name,
+        whitelistedDomains: createdWebsite.whitelistedDomains,
+        organizationId: createdWebsite.organizationId,
+        apiKeys: apiKeys.map((key) => ({
+          id: key.id,
+          key: key.key,
+          createdAt: key.createdAt,
+          isTest: key.isTest,
+          isActive: key.isActive,
+          keyType: key.keyType,
+        })),
       };
     }),
   checkDomain: protectedProcedure

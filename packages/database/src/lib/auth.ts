@@ -1,5 +1,5 @@
-import { db } from "@database/database";
-import { generateULID } from "@database/utils/ids";
+import { db } from "../database";
+import { generateULID } from "../utils/ids";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 

@@ -1,4 +1,4 @@
-import { Database, organization } from "@repo/database";
+import { Database, organization } from "@origamichat/database";
 import { eq } from "drizzle-orm";
 import { customAlphabet } from "nanoid";
 
@@ -8,6 +8,7 @@ const FORBIDDEN_SLUGS = [
   "admin",
   "api",
   "origami-chat",
+  "origamichat",
   "org",
   "select",
   "website",

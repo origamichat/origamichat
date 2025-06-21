@@ -5,11 +5,11 @@ import type {
   Database,
   OrganizationSelect,
   WebsiteSelect,
-} from "@repo/database";
+} from "@origamichat/database";
 
-import { apiKey } from "@repo/database";
-import { APIKeyType } from "@repo/database/enums";
-import { generateULID } from "@repo/database/utils";
+import { apiKey } from "@origamichat/database";
+import { APIKeyType } from "@origamichat/database/enums";
+import { generateULID } from "@origamichat/database/utils";
 import { and, eq, desc } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;
@@ -221,7 +221,7 @@ export async function createApiKey(
     .returning();
 
   // Return the raw key to the caller (not stored)
-  return { ...result, key: rawKey };
+  return { ...result, key: rawKey } as CreateApiKeyResult;
 }
 
 export async function createDefaultWebsiteKeys(

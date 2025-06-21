@@ -7,7 +7,7 @@ OrigamiChat is an open source chat support widget focused on the React ecosystem
 Run the following command to install dependencies:
 
 ```sh
-pnpm install
+bun install --workspaces
 ```
 
 ## What's inside?
@@ -16,14 +16,10 @@ This monorepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `dashboard`: a [Next.js](https://nextjs.org/) app for the main admin dashboard with [Tailwind CSS](https://tailwindcss.com/)
-- `docs`: a [Next.js](https://nextjs.org/) app for documentation
-- `origami-web`: a Next.js application for the web frontend
-- `api`: a [Hono](https://hono.dev/) API server providing backend services
-- `@repo/ui`: a React component library shared across applications
-- `@repo/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL
-- `@repo/eslint-config`: `eslint` configurations
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@origamichat/web`: a Next.js application for the web frontend
+- `@origamichat/api`: a [Hono](https://hono.dev/) API server providing backend services
+- `@origamichat/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL
+- `@origamichat/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -32,8 +28,6 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 This monorepo has some additional tools already setup for you:
 
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Drizzle ORM](https://orm.drizzle.team/) for database operations
 

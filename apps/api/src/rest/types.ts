@@ -3,7 +3,7 @@ import {
   Database,
   OrganizationSelect,
   WebsiteSelect,
-} from "@repo/database";
+} from "@origamichat/database";
 
 export type RestContext = {
   Variables: {

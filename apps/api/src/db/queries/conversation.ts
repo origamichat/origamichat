@@ -3,9 +3,9 @@ import {
   conversation,
   type Database,
   type ConversationInsert,
-} from "@repo/database";
+} from "@origamichat/database";
 
-import { ConversationStatus, ConversationPriority } from "@repo/database/enums";
+import { ConversationStatus, ConversationPriority } from "@origamichat/database/enums";
 
 // Create conversation
 export async function createConversation(

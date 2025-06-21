@@ -6,7 +6,7 @@ import {
   hashApiKey,
 } from "./index";
 
-import { APIKeyType } from "@repo/database/enums";
+import { APIKeyType } from "@origamichat/database/enums";
 
 describe("api-keys utils", () => {
   describe("generateApiKey", () => {

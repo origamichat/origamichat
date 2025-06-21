@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "@origamichat/typescript-config/nextjs.json",
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {

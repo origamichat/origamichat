@@ -1,5 +1,5 @@
 {
-    "name": "@repo/database",
+    "name": "@origamichat/database",
     "version": "0.0.0",
     "private": true,
     "license": "MIT",
@@ -29,8 +29,7 @@
         "ulid": "^3.0.0"
     },
     "devDependencies": {
-        "@repo/eslint-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
+        "@origamichat/typescript-config": "workspace:*",
         "@types/node": "^22.15.3",
         "drizzle-kit": "0.31.1",
         "eslint": "9.27.0",

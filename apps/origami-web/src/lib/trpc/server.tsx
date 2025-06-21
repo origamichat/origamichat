@@ -1,7 +1,7 @@
 import "server-only";
 
-import { getCountryCode, getLocale, getTimezone } from "@repo/location";
-import type { OrigamiTRPCRouter } from "api";
+import { getCountryCode, getLocale, getTimezone } from "@origamichat/location";
+import type { OrigamiTRPCRouter } from "@origamichat/api";
 import { HydrationBoundary } from "@tanstack/react-query";
 import { dehydrate } from "@tanstack/react-query";
 import { createTRPCClient, loggerLink } from "@trpc/client";
