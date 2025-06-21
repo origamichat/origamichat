@@ -13,17 +13,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 9.0.0
+          bun-version: 1.1.25
 
       - name: Install dependencies & tooling
         run: |
-          pnpm install
-          pnpm add -g drizzle-orm drizzle-kit pg
+          bun install
+          bun add -g drizzle-orm drizzle-kit pg
       - name: Apply migrations using drizzle-kit
-        run: cd packages/database && pnpm run db:migrate
+        run: cd packages/database && bun run db:migrate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
