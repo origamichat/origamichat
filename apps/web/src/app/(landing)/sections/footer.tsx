@@ -22,7 +22,7 @@ export function Footer() {
           </div>
 
           {/* Product */}
-          <div>
+          {/* <div>
             <h3 className="text-sm font-mono font-semibold text-foreground mb-4">
               product
             </h3>
@@ -60,7 +60,7 @@ export function Footer() {
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Community */}
           <div>
@@ -70,7 +70,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://github.com/origami-chat"
+                  href="https://github.com/origamichat/origamichat"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-mono text-foreground/60 hover:text-foreground transition-colors"
@@ -88,20 +88,22 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="#twitter"
+                  href="https://x.com/origamichat"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm font-mono text-foreground/60 hover:text-foreground transition-colors"
                 >
-                  twitter
+                  X
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="#blog"
                   className="text-sm font-mono text-foreground/60 hover:text-foreground transition-colors"
                 >
                   blog
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -110,9 +112,9 @@ export function Footer() {
         <div className="mt-8 pt-8 border-t border-foreground/20">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <p className="text-sm font-mono text-foreground/60">
-              © 2024 origami. open source under mit license.
+              © 2025 origami. open source under mit license.
             </p>
-            <div className="flex items-center space-x-6 mt-4 md:mt-0">
+            {/* <div className="flex items-center space-x-6 mt-4 md:mt-0">
               <a
                 href="#privacy"
                 className="text-sm font-mono text-foreground/60 hover:text-foreground transition-colors"
@@ -131,7 +133,7 @@ export function Footer() {
               >
                 security
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

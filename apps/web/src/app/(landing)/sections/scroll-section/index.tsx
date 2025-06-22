@@ -7,22 +7,21 @@ import { TextEffect } from "@/components/ui/text-effect";
 const storySteps = [
   "This is a support chat bubble.",
   "It's just a frame.\nA text box.\nA blinking cursor.",
-  "It sits in the corner.\nWaiting for customers to get confused.\nOr frustrated.\nOr stuck.",
+  "It sits in the corner.\nWaiting for customers to get confused.\nFrustrated.\nStuck.",
   'Now, most of these bubbles come with "AI."',
-  'But the first thing customers ask is still: "Can I talk to a human?"',
+  'But the first thing customers ask is: "Can I talk to a human?"',
   "Why is that?",
   "Because most AI agents don't help.\nThey deflect. Delay. Frustrate.",
   "But it's not AI's fault.\nIt's the system around it.",
   "Support has become disconnected.\nBubbles in the corner. Humans in tickets. Bots in scripts.",
-  "What if it wasn't like that?",
-  "What if support was a system... and not a bubble only?",
-  "What if AI agents could actually help?\nAnd humans could step in, naturally, when needed.",
-  "What if support could finally feel…\nlike your product?",
-  "Fast. Calm. Clear. Composable.",
-  "That's what we're building.",
-  "origami.chat, the open-source, AI-native support infrastructure\nfor modern SaaS.",
-  "Developers-first.\nDesigned for your customers.\nReady to scale with you.",
-  "→ Star us on GitHub\n→ Join the waitlist\n→ Let's escape the bubble",
+  "What if support wasn't trapped in a bubble?",
+  "What if it was a system, flexible, composable, everywhere you need it?",
+  "What if AI agents actually helped?\nAnd humans could step in with a full context and no friction?",
+  "What if support finally felt like your product?\nFast. Useful. Beautiful. Yours.",
+  "That's what Origami is.",
+  "An open-source, AI-native support system built for developers shipping modern SaaS.",
+  "Developer-first.\nCustomer-ready.\nBuilt to scale with you.",
+  "Let's escape the bubble, together.",
 ];
 
 export function ScrollSection() {
@@ -46,7 +45,7 @@ export function ScrollSection() {
           });
         },
         {
-          rootMargin: "-40% 0px -40% 0px",
+          rootMargin: "-20% 0px -20% 0px",
           threshold: 0.1,
         }
       );
