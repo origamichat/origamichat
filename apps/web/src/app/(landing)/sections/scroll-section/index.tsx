@@ -5,23 +5,38 @@ import { motion } from "motion/react";
 import { TextEffect } from "@/components/ui/text-effect";
 
 const storySteps = [
-  "This is a support chat bubble.",
-  "It's just a frame.\nA text box.\nA blinking cursor.",
-  "It sits in the corner.\nWaiting for customers to get confused.\nFrustrated.\nStuck.",
-  'Now, most of these bubbles come with "AI."',
-  'But the first thing customers ask is: "Can I talk to a human?"',
-  "Why is that?",
-  "Because most AI agents don't help.\nThey deflect. Delay. Frustrate.",
-  "But it's not AI's fault.\nIt's the system around it.",
-  "Support has become disconnected.\nBubbles in the corner. Humans in tickets. Bots in scripts.",
-  "What if support wasn't trapped in a bubble?",
-  "What if it was a system, flexible, composable, everywhere you need it?",
-  "What if AI agents actually helped?\nAnd humans could step in with a full context and no friction?",
-  "What if support finally felt like your product?\nFast. Useful. Beautiful. Yours.",
-  "That's what Origami is.",
-  "An open-source, AI-native support system built for developers shipping modern SaaS.",
-  "Developer-first.\nCustomer-ready.\nBuilt to scale with you.",
-  "Let's escape the bubble, together.",
+  <>This is a support chat bubble.</>,
+  <>It's just a frame. A text box. A blinking cursor.</>,
+  <>
+    It sits in the corner. Waiting for customers to get confused. Frustrated.
+    Stuck.
+  </>,
+  <>Now, most of these bubbles come with "AI."</>,
+  <>But the first thing customers ask is: "Can I talk to a human?"</>,
+  <>Why is that?</>,
+  <>Because most AI agents don't help. They deflect. Delay. Frustrate.</>,
+  <>But it's not AI's fault. It's the system around it.</>,
+  <>
+    Support has become disconnected. Bubbles in the corner. Humans in tickets.
+    Bots in scripts.
+  </>,
+  <>What if support wasn't trapped in a bubble?</>,
+  <>What if it was a system, flexible, composable, everywhere you need it?</>,
+  <>
+    What if AI agents actually helped? And humans could step in with a full
+    context and no friction?
+  </>,
+  <>
+    What if support finally felt like your product? Fast. Useful. Beautiful.
+    Yours.
+  </>,
+  <>That's what Origami is.</>,
+  <>
+    An open-source, AI-native support system built for developers shipping
+    modern SaaS.
+  </>,
+  <>Developer-first. Customer-ready. Built to scale with you.</>,
+  <>Let's escape the bubble, together.</>,
 ];
 
 export function ScrollSection() {
@@ -45,8 +60,8 @@ export function ScrollSection() {
           });
         },
         {
-          rootMargin: "-20% 0px -20% 0px",
-          threshold: 0.1,
+          rootMargin: "-40% 0px -40% 0px",
+          threshold: 0.2,
         }
       );
 
@@ -59,40 +74,45 @@ export function ScrollSection() {
     };
   }, []);
 
-  const renderStoryText = (text: string) => {
-    return text.split("\n").map((line, index) => (
-      <TextEffect key={index} className="mb-2" delay={index * 1.3}>
-        {line}
-      </TextEffect>
-    ));
+  const renderStoryText = (text: React.ReactNode, stepIndex: number) => {
+    return (
+      <p
+        key={`${stepIndex}-${activeStep === stepIndex ? "active" : "inactive"}`}
+        className="mb-3"
+      >
+        {text}
+      </p>
+    );
   };
 
   return (
     <div className="relative min-h-screen bg-background snap-y snap-mandatory overflow-y-auto">
       <div className="relative flex max-w-7xl mx-auto px-6 lg:px-8">
         {/* Left Column - Scrolling Text */}
-        <div className="w-full md:w-3/5 min-h-screen">
+        <div className="w-full md:w-4/5 min-h-screen">
           {storySteps.map((step, index) => (
             <div
               key={index}
               ref={(el) => {
                 sectionsRef.current[index] = el;
               }}
-              className="min-h-screen flex items-center snap-start snap-always"
+              className="min-h-screen flex items-center justify-center snap-center snap-always"
             >
-              {activeStep === index && (
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  viewport={{ once: false, margin: "-10% 0px -10% 0px" }}
-                  className="max-w-2xl"
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: activeStep === index ? 1 : 0,
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="max-w-4xl flex text-balance"
+              >
+                <div
+                  className="text-xl lg:text-2xl xl:text-3xl font-mono font-medium leading-relaxed text-foreground"
+                  style={{ opacity: activeStep === index ? 1 : 0 }}
                 >
-                  <div className="text-xl lg:text-2xl xl:text-3xl font-mono leading-relaxed text-foreground">
-                    {renderStoryText(step)}
-                  </div>
-                </motion.div>
-              )}
+                  {renderStoryText(step, index)}
+                </div>
+              </motion.div>
             </div>
           ))}
         </div>

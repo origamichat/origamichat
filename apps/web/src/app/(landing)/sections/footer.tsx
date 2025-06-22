@@ -1,10 +1,11 @@
 "use client";
 
 import { Logo } from "@/components/ui/logo";
+import { DISCORD_INVITE, GITHUB_URL, X_URL } from "@/constants";
 
 export function Footer() {
   return (
-    <footer className="bg-background">
+    <footer>
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -70,7 +71,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://github.com/origamichat/origamichat"
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-mono text-foreground/60 hover:text-foreground transition-colors"
@@ -80,7 +81,9 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="#discord"
+                  href={DISCORD_INVITE}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm font-mono text-foreground/60 hover:text-foreground transition-colors"
                 >
                   discord
@@ -88,7 +91,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://x.com/origamichat"
+                  href={X_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-mono text-foreground/60 hover:text-foreground transition-colors"

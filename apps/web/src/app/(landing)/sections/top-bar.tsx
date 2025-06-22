@@ -1,8 +1,9 @@
 "use client";
 
 import { Logo } from "@/components/ui/logo";
+import { DISCORD_INVITE, GITHUB_URL } from "@/constants";
 
-export function Topbar() {
+export function TopBar() {
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -17,23 +18,23 @@ export function Topbar() {
 
           {/* Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a
+            {/* <a
               href="#docs"
               className="text-sm font-mono text-foreground/70 hover:text-foreground transition-colors"
             >
               docs
-            </a>
+            </a> */}
             <a
-              href="#github"
+              href={GITHUB_URL}
               className="text-sm font-mono text-foreground/70 hover:text-foreground transition-colors"
             >
               github
             </a>
             <a
-              href="#community"
+              href={DISCORD_INVITE}
               className="text-sm font-mono text-foreground/70 hover:text-foreground transition-colors"
             >
-              community
+              discord
             </a>
           </div>
 
