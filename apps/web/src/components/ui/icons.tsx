@@ -62,7 +62,7 @@ export const Icon: React.FC<IconProps> = ({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn("text-primary size-4", className)}
+      className={cn("size-4", className)}
     >
       {iconType === "filled" ? (
         <path

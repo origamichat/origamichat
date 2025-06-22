@@ -47,13 +47,12 @@ function TooltipContent({
         data-slot="tooltip-content"
         sideOffset={sideOffset}
         className={cn(
-          "bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-xs text-balance",
+          "bg-primary text-primary-foreground shadow-2xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md p-0.5 text-xs text-balance",
           className
         )}
         {...props}
       >
         {children}
-        <TooltipPrimitive.Arrow className="bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );
@@ -65,7 +64,7 @@ export function TooltipOnHover({
   forceClose = false,
   shortcuts,
   className,
-  side = "top",
+  side = "bottom",
   footerContent,
   align,
 }: {
@@ -90,19 +89,11 @@ export function TooltipOnHover({
           sideOffset={8}
           side={side}
           align={align}
-          className={cn("px-0 py-0", className)}
+          className={cn("pl-2", className)}
         >
-          <div className="flex items-center justify-center gap-4 px-2 py-1.5 opacity-100">
-            {content}
-            {shortcuts && (
-              <div className="flex gap-0.5">
-                {shortcuts.map((shortcut) => (
-                  <CommandShortcut key={`key-${shortcut}`}>
-                    {shortcut}
-                  </CommandShortcut>
-                ))}
-              </div>
-            )}
+          <div className="flex items-center justify-center">
+            <span className="mr-2">{content}</span>
+            {shortcuts && <CommandShortcut>{shortcuts}</CommandShortcut>}
           </div>
 
           {footerContent && (

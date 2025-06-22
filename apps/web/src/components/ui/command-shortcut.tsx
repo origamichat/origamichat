@@ -5,27 +5,36 @@ export const CommandShortcut = ({
   className,
   children,
   ...props
-}: React.HTMLAttributes<HTMLSpanElement>) => {
+}: React.HTMLAttributes<Omit<HTMLSpanElement, "children">> & {
+  children: string[];
+}) => {
   const isMac =
     typeof window !== "undefined" &&
     window.navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 
-  const renderShortcut = () => {
-    if (children === "mod") {
-      return isMac ? <Icon name="command" className="size-3" /> : "Ctrl";
-    }
-    return children;
+  const renderShortcut = (children: string[]) => {
+    return (
+      <>
+        {children.map((child) => {
+          return (
+            <span key={child}>
+              {child === "mod" ? (isMac ? "⌘" : "Ctrl") : child}
+            </span>
+          );
+        })}
+      </>
+    );
   };
 
   return (
     <span
       className={cn(
-        "ml-auto inline-flex h-[16px] min-w-[16px] items-center justify-center rounded-sm border border-primary/10 bg-os-background-100 px-0.5 text-[10px] capitalize tracking-widest text-primary/60",
+        "ml-auto inline-flex h-[24px] min-w-[24px] items-center justify-center rounded-sm border border-primary/10 bg-primary-foreground/20 px-0.5 text-[12px] text-center capitalize tracking-widest text-primary-foreground",
         className
       )}
       {...props}
     >
-      {renderShortcut()}
+      {renderShortcut(children)}
     </span>
   );
 };

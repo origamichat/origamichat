@@ -1,4 +1,4 @@
-import { ModeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo } from "../logo";
 import { SidebarContainer } from "./container";
 
