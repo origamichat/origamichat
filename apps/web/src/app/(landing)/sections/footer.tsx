@@ -5,8 +5,8 @@ import { DISCORD_INVITE, GITHUB_URL, X_URL } from "@/constants";
 
 export function Footer() {
   return (
-    <footer>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+    <footer className="pb-50">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 z-20">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">

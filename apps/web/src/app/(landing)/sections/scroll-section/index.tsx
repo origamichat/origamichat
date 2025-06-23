@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { TextEffect } from "@/components/ui/text-effect";
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 
 const storySteps = [
   <>This is a support chat bubble.</>,
@@ -107,7 +108,7 @@ export function ScrollSection() {
                 className="max-w-4xl flex text-balance"
               >
                 <div
-                  className="text-xl lg:text-2xl xl:text-3xl font-mono font-medium leading-relaxed text-foreground"
+                  className="text-lg lg:text-xl xl:text-2xl font-mono font-medium leading-relaxed text-foreground"
                   style={{ opacity: activeStep === index ? 1 : 0 }}
                 >
                   {renderStoryText(step, index)}
