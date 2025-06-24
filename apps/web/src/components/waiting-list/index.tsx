@@ -10,13 +10,13 @@ import { db } from "@cossistant/database";
 import { getWaitlistEntryByUserId } from "@cossistant/api/queries";
 import { DISCORD_INVITE } from "@/constants";
 import { DiscordIcon } from "../auth/sign-in-buttons";
-import { ensurePageAuth } from "@/lib/auth/server";
+import { getAuth } from "@/lib/auth/server";
 
 export async function WaitingList({ className }: { className?: string }) {
-  const { user } = await ensurePageAuth();
+  const { user } = await getAuth();
 
   const { entry, rank, totalEntries } = await getWaitlistEntryByUserId(db, {
-    userId: user.id,
+    userId: user?.id,
   });
 
   if (!entry) {
