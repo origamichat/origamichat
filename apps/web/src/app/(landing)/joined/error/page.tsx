@@ -1,5 +1,8 @@
 import { TopBar } from "@/app/(landing)/sections/top-bar";
 import { TextEffect } from "@/components/ui/text-effect";
+
+export const dynamic = "force-dynamic";
+
 async function Page() {
   return (
     <main className="flex flex-col items-center justify-center h-screen gap-6 px-6 pt-20 md:pt-6">

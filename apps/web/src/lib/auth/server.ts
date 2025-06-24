@@ -18,10 +18,8 @@ export async function getAuth(): Promise<{
         cookie: cookie ?? "",
       },
       credentials: "include",
-      cache: "no-store",
     }).then((res) => res.json());
 
-    console.log("session", session);
     return session ?? { user: null, session: null };
   } catch (error) {
     console.error(error);

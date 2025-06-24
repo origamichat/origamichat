@@ -1,15 +1,14 @@
 import { TopBar } from "@/app/(landing)/sections/top-bar";
-import RegisterReferral from "@/components/waiting-list/register-referal";
+import RegisterReferral from "@/components/waiting-list/register-referral";
 
-import { ensurePageAuth } from "@/lib/auth/server";
 import { WaitingList } from "@/components/waiting-list";
 import { WaitingListSkeleton } from "@/components/waiting-list/waiting-list-skeleton";
 import { Suspense } from "react";
 import { TextEffect } from "@/components/ui/text-effect";
 
-async function Page() {
-  const { user } = await ensurePageAuth();
+export const dynamic = "force-dynamic";
 
+async function Page() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen gap-6 px-6 pt-20 md:pt-6">
       <TopBar />
@@ -29,7 +28,7 @@ async function Page() {
         </p>
       </div>
       <Suspense fallback={<WaitingListSkeleton />}>
-        <WaitingList userId={user.id} />
+        <WaitingList />
       </Suspense>
     </main>
   );
