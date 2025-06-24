@@ -9,47 +9,14 @@ import * as schema from "./schema";
 const getEnvVariable = (name: string): string => {
   const value = process.env[name];
 
-  // During build time, environment variables might not be available
-  // Check if we're in a build environment and handle gracefully
-  if (value == null) {
-    if (process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV) {
-      // This is likely a build environment, return a placeholder
-      console.warn(
-        `Warning: Environment variable ${name} not found during build`
-      );
-      return "build-time-placeholder";
-    }
-    throw new Error(`environment variable ${name} not found`);
-  }
-
+  if (value == null) throw new Error(`environment variable ${name} not found`);
   return value;
-};
-
-const isBuildTime = (): boolean => {
-  // Detect if we're in a build environment
-  return (
-    (process.env.NODE_ENV === "production" &&
-      !process.env.VERCEL_ENV &&
-      !process.env.DATABASE_URL) ||
-    process.env.NEXT_PHASE === "phase-production-build"
-  );
 };
 
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
 const createDb = () => {
   if (_db) return _db;
-
-  // If we're in build time, return a mock database
-  if (isBuildTime()) {
-    console.warn("Warning: Database not initialized during build time");
-    // Return a proxy that throws runtime errors for actual usage
-    return new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
-      get: () => {
-        throw new Error("Database is not available during build time");
-      },
-    });
-  }
 
   const sql = neon(getEnvVariable("DATABASE_URL"));
 
