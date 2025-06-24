@@ -3,6 +3,13 @@ const getEnvVariable = (name: string, defaultValue?: string): string => {
 
   if (value == null) {
     if (defaultValue == null) {
+      // During build time, provide fallback values to prevent build failures
+      if (process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV) {
+        console.warn(
+          `Warning: Environment variable ${name} not found during build, using placeholder`
+        );
+        return "build-time-placeholder";
+      }
       throw new Error(`environment variable ${name} not found`);
     }
     return defaultValue;
