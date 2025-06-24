@@ -1,11 +1,19 @@
 "use client";
 
-import { trpc } from "@/lib/trpc";
+import { useTRPC } from "@/lib/trpc/client";
+import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 function RegisterReferral() {
-  const { mutate: redeemReferralCode } =
-    trpc.waitlist.redeemReferralCode.useMutation();
+  const trpc = useTRPC();
+
+  const { mutate: redeemReferralCode } = useMutation(
+    trpc.waitlist.redeemReferralCode.mutationOptions({
+      onSuccess: (data) => {
+        console.log("Successfully redeemed referral code", data);
+      },
+    })
+  );
 
   useEffect(() => {
     const from = localStorage.getItem("from");
