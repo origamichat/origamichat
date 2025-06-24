@@ -8,6 +8,13 @@
       "when": 1750322084185,
       "tag": "0000_good_jackal",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750758460764,
+      "tag": "0001_great_jackal",
+      "breakpoints": true
     }
   ]
 }

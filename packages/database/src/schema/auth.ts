@@ -5,6 +5,7 @@ import { relations } from "drizzle-orm";
 
 import { website } from "./chat";
 import { generateULID, ulid } from "../utils/ids";
+import { waitingListEntry } from "./waiting-list";
 
 export const user = pgTable(
   "user",
@@ -186,11 +187,15 @@ export const invitation = pgTable(
 );
 
 // Relations
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
   memberships: many(member),
   invitations: many(invitation),
+  waitingListEntry: one(waitingListEntry, {
+    fields: [user.id],
+    references: [waitingListEntry.userId],
+  }),
 }));
 
 export const organizationRelations = relations(organization, ({ many }) => ({
