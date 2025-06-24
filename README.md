@@ -1,6 +1,6 @@
-# OrigamiChat
+# Cossistant
 
-OrigamiChat is an open source chat support widget focused on the React ecosystem. This monorepo contains all the packages and applications that make up the OrigamiChat platform.
+Cossistant is an open source chat support widget focused on the React ecosystem. This monorepo contains all the packages and applications that make up the Cossistant platform.
 
 ## Getting Started
 
@@ -16,10 +16,10 @@ This monorepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `@origamichat/web`: a Next.js application for the web frontend
-- `@origamichat/api`: a [Hono](https://hono.dev/) API server providing backend services
-- `@origamichat/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL
-- `@origamichat/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@cossistant/web`: a Next.js application for the web frontend
+- `@cossistant/api`: a [Hono](https://hono.dev/) API server providing backend services
+- `@cossistant/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL
+- `@cossistant/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -111,6 +111,6 @@ This project is licensed under the **[AGPL-3.0](https://opensource.org/licenses/
 ### Commercial Use
 
 For commercial use or deployments requiring a setup fee, please contact us
-for a commercial license at [anthony@origami.chat](mailto:anthony@origami.chat).
+for a commercial license at [anthony@cossistant.com](mailto:anthony@cossistant.com).
 
 By using this software, you agree to the terms of the license.

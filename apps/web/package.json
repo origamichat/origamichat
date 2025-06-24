@@ -1,5 +1,5 @@
 {
-  "name": "@origamichat/web",
+  "name": "@cossistant/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
-    "@origamichat/api": "workspace:*",
-    "@origamichat/database": "workspace:*",
-    "@origamichat/location": "workspace:*",
+    "@cossistant/api": "workspace:*",
+    "@cossistant/database": "workspace:*",
+    "@cossistant/location": "workspace:*",
     "@polar-sh/nextjs": "^0.4.0",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.2",
@@ -38,7 +38,6 @@
     "@trpc/server": "^11.3.1",
     "@trpc/tanstack-react-query": "^11.3.1",
     "@types/mdx": "^2.0.13",
-    "better-auth": "^1.2.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "0.44.0",
@@ -64,7 +63,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@origamichat/typescript-config": "workspace:*",
+    "@cossistant/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

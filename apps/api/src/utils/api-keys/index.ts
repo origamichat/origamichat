@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { createHmac } from "crypto";
 
-import { APIKeyType } from "@origamichat/database/enums";
+import { APIKeyType } from "@cossistant/database/enums";
 
 export function generateApiKey({
   type,

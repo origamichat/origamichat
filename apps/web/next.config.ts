@@ -7,9 +7,9 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   transpilePackages: [
-    "@origamichat/api",
-    "@origamichat/database",
-    "@origamichat/location",
+    "@cossistant/api",
+    "@cossistant/database",
+    "@cossistant/location",
   ],
   eslint: {
     ignoreDuringBuilds: true,

@@ -1,5 +1,5 @@
 {
-  "name": "origami",
+  "name": "cossistant",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -24,5 +24,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "better-auth": "^1.2.10"
+  }
 }

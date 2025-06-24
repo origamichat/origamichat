@@ -1,5 +1,5 @@
 {
-  "name": "@origamichat/location",
+  "name": "@cossistant/location",
   "version": "1.0.0",
   "main": "src/index.ts",
   "private": true,
@@ -22,7 +22,7 @@
     "next": "15.3.2"
   },
   "devDependencies": {
-    "@origamichat/typescript-config": "workspace:*",
+    "@cossistant/typescript-config": "workspace:*",
     "typescript": "^5.8.3"
   }
 }

@@ -1,4 +1,4 @@
-import { db } from "@origamichat/database";
+import { db } from "@cossistant/database";
 import type { MiddlewareHandler } from "hono";
 
 /**

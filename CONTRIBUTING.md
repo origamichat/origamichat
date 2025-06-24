@@ -1,6 +1,6 @@
-# Contributing to Origami Chat
+# Contributing to Cossistant
 
-👋 Hey there — thanks for your interest in Origami Chat!
+👋 Hey there — thanks for your interest in Cossistant!
 
 This project is still in its **early development phase**, and we’re currently focused on building a solid, secure, and scalable foundation before accepting external contributions.
 
@@ -45,10 +45,10 @@ When we open contributions, we’ll make it worth your time:
 
 Have something important, urgent, or security-related?
 
-📧 **anthony@origami.chat**
+📧 **anthony@cossistant.com**
 
 ---
 
-Thanks again — we’re building Origami Chat for developers like you, and we can’t wait to open the doors soon.
+Thanks again — we’re building Cossistant for developers like you, and we can’t wait to open the doors soon.
 
-— Anthony, founder of Origami Chat
+— Anthony, founder of Cossistant

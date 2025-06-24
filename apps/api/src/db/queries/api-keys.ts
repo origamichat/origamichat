@@ -5,11 +5,11 @@ import type {
   Database,
   OrganizationSelect,
   WebsiteSelect,
-} from "@origamichat/database";
+} from "@cossistant/database";
 
-import { apiKey } from "@origamichat/database";
-import { APIKeyType } from "@origamichat/database/enums";
-import { generateULID } from "@origamichat/database/utils";
+import { apiKey } from "@cossistant/database";
+import { APIKeyType } from "@cossistant/database/enums";
+import { generateULID } from "@cossistant/database/utils";
 import { and, eq, desc } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;

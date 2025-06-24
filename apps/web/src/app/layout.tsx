@@ -17,14 +17,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://origamichat.com"),
-  title: "Origami | AI-powered chat for your business",
+  metadataBase: new URL("https://cossistant.com"),
+  title: "Cossistant | AI-powered chat for your business",
   description:
-    "Origami is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
+    "Cossistant is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
   twitter: {
-    title: "Origami | AI-powered chat for your business",
+    title: "Cossistant | AI-powered chat for your business",
     description:
-      "Origami is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
+      "Cossistant is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
     images: [
       // {
       //   url: "https://cdn.midday.ai/opengraph-image.jpg",
@@ -39,11 +39,11 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Origami | AI-powered chat for your business",
+    title: "Cossistant | AI-powered chat for your business",
     description:
-      "Origami is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
-    url: "https://origamichat.com",
-    siteName: "Origami",
+      "Cossistant is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
+    url: "https://cossistant.com",
+    siteName: "Cossistant",
     images: [
       // {
       //   url: "https://cdn.midday.ai/opengraph-image.jpg",

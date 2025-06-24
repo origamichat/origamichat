@@ -1,4 +1,4 @@
-import { website } from "@origamichat/database";
+import { website } from "@cossistant/database";
 import { createTRPCRouter, protectedProcedure } from "../init";
 
 import {

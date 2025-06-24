@@ -1,7 +1,7 @@
 import { eq, and, desc, asc, isNull, like } from "drizzle-orm";
-import { message, type Database, type MessageInsert } from "@origamichat/database";
+import { message, type Database, type MessageInsert } from "@cossistant/database";
 
-import { MessageType, SenderType } from "@origamichat/database/enums";
+import { MessageType, SenderType } from "@cossistant/database/enums";
 
 // Create message
 export async function createMessage(

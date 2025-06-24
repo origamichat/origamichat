@@ -2,11 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { WebsiteInstallationTarget } from "@origamichat/database/enums";
+import { WebsiteInstallationTarget } from "@cossistant/database/enums";
 import {
   CreateWebsiteRequest,
   createWebsiteRequestSchema,
-} from "@origamichat/api/schemas";
+} from "@cossistant/api/schemas";
 import { useTRPC } from "@/lib/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 

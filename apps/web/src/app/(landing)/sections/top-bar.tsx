@@ -12,7 +12,7 @@ export function TopBar() {
           <div className="flex items-center space-x-2">
             <Logo className="size-6" />
             <span className="text-base font-mono font-medium text-foreground">
-              origami
+              cossistant
             </span>
           </div>
 

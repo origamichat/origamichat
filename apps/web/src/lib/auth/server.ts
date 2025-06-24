@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import type { OrigamiUser, OrigamiSession } from "@origamichat/database";
+import type { OrigamiUser, OrigamiSession } from "@cossistant/database";
 
 import { getAPIBaseUrl } from "@/lib/url";
 import { redirect } from "next/navigation";

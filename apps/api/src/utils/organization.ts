@@ -1,13 +1,13 @@
-import { Database, organization } from "@origamichat/database";
+import { Database, organization } from "@cossistant/database";
 import { eq } from "drizzle-orm";
 import { customAlphabet } from "nanoid";
 
 // list of forbidden words for organization names
 const FORBIDDEN_SLUGS = [
-  "origami",
+  "cossistant",
   "admin",
   "api",
-  "origami-chat",
+  "cossistant-chat",
   "origamichat",
   "org",
   "select",

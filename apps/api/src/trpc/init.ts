@@ -1,7 +1,7 @@
 import { getGeoContext } from "@api/utils/geo";
-import { auth, AuthType, Database } from "@origamichat/database";
+import { auth, AuthType, Database } from "@cossistant/database";
 import { Context } from "hono";
-import { db } from "@origamichat/database";
+import { db } from "@cossistant/database";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { withPermission } from "./middleware/auth";

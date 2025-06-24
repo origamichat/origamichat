@@ -31,7 +31,7 @@ export default async function Page({
         <Logo className="size-6" />
         <span className="text-primary/30 text-sm">/</span>
         <TextEffect className="text-center text-2xl font-medium" delay={0.5}>
-          Welcome to Origami
+          Welcome to Cossistant
         </TextEffect>
       </div>
 

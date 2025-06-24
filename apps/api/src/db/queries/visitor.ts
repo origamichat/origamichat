@@ -1,5 +1,5 @@
 import { eq, and, desc, isNull, like, or, count, gte } from "drizzle-orm";
-import { visitor, type Database, type VisitorInsert } from "@origamichat/database";
+import { visitor, type Database, type VisitorInsert } from "@cossistant/database";
 
 // Create visitor
 export async function createVisitor(

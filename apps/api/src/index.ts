@@ -5,7 +5,7 @@ import { secureHeaders } from "hono/secure-headers";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 
-import { auth } from "@origamichat/database";
+import { auth } from "@cossistant/database";
 
 import { checkHealth } from "@api/utils/health";
 import { routers } from "@api/rest/routers";
@@ -25,10 +25,10 @@ const app = new OpenAPIHono<{
 
 const acceptedOrigins = [
   "http://localhost:3000",
-  "https://origami.chat",
-  "https://www.origami.chat",
-  "https://origamichat.com",
-  "https://www.origamichat.com",
+  "https://cossistant.com",
+  "https://www.cossistant.com",
+  "https://cossistant.com",
+  "https://www.cossistant.com",
 ];
 
 const { upgradeWebSocket, websocket } = createBunWebSocket<ServerWebSocket>();
@@ -107,8 +107,8 @@ app.doc("/openapi", {
   openapi: "3.1.0",
   info: {
     version: "0.0.1",
-    title: "Origami Chat API",
-    description: "Origami chat API",
+    title: "Cossistant API",
+    description: "Cossistant API",
     license: {
       name: "AGPL-3.0 license",
       url: "https://github.com/origamichat/monorepo/blob/main/LICENSE",
@@ -116,7 +116,7 @@ app.doc("/openapi", {
   },
   servers: [
     {
-      url: "https://api.origami.chat",
+      url: "https://api.cossistant.com",
       description: "Production server",
     },
   ],

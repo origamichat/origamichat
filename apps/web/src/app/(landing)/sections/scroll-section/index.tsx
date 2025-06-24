@@ -31,7 +31,7 @@ const storySteps = [
     What if support finally felt like your product? Fast. Useful. Beautiful.
     Yours.
   </>,
-  <>That's what Origami is.</>,
+  <>That's what Cossistant is.</>,
   <>
     An open-source, AI-native support system built for developers shipping
     modern SaaS.

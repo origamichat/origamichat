@@ -13,7 +13,7 @@ export function Footer() {
             <div className="flex items-center space-x-2 mb-4">
               <Logo className="h-8 w-8" />
               <span className="text-xl font-mono font-semibold text-foreground">
-                origami
+                cossistant
               </span>
             </div>
             <p className="text-foreground/60 text-sm max-w-md font-mono">
@@ -115,7 +115,7 @@ export function Footer() {
         <div className="mt-8 pt-8 border-t border-foreground/20">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <p className="text-sm font-mono text-foreground/60">
-              © 2025 origami. open source under mit license.
+              © 2025 cossistant. open source under mit license.
             </p>
             {/* <div className="flex items-center space-x-6 mt-4 md:mt-0">
               <a

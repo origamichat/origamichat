@@ -1,5 +1,5 @@
 import { eq, and, desc, isNull, like, or } from "drizzle-orm";
-import { website, type Database, type WebsiteInsert } from "@origamichat/database";
+import { website, type Database, type WebsiteInsert } from "@cossistant/database";
 
 // Create website
 export async function createWebsite(

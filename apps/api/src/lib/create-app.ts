@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { auth } from "@origamichat/database";
+import { auth } from "@cossistant/database";
 
 export type AuthType = {
   Variables: {

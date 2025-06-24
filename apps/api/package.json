@@ -1,5 +1,5 @@
 {
-  "name": "@origamichat/api",
+  "name": "@cossistant/api",
   "private": true,
   "type": "module",
   "scripts": {
@@ -22,9 +22,8 @@
     "@hono/trpc-server": "^0.3.4",
     "@hono/zod-openapi": "^0.19.6",
     "@hono/zod-validator": "^0.5.0",
-    "@origamichat/database": "workspace:*",
+    "@cossistant/database": "workspace:*",
     "@trpc/server": "^11.3.1",
-    "better-auth": "^1.2.9",
     "drizzle-orm": "0.44.0",
     "hono": "^4.7.10",
     "lru-cache": "^11.1.0",

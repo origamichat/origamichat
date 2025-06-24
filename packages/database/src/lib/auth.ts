@@ -9,7 +9,7 @@ export const auth = betterAuth({
   baseURL:
     process.env.BETTER_AUTH_URL ||
     (process.env.NODE_ENV === "production"
-      ? "https://api.origamichat.com"
+      ? "https://api.cossistant.com"
       : "http://localhost:8787"),
   secret: process.env.BETTER_AUTH_SECRET || undefined,
   database: drizzleAdapter(db, {
@@ -32,11 +32,11 @@ export const auth = betterAuth({
   // Allow requests from the frontend development server and production domains
   trustedOrigins: [
     "http://localhost:3000",
-    "https://origami.chat",
-    "https://origamichat.com",
-    "https://www.origami.chat",
-    "https://www.origamichat.com",
-    "https://api.origamichat.com", // Add your API domain
+    "https://cossistant.com",
+    "https://cossistant.com",
+    "https://www.cossistant.com",
+    "https://www.cossistant.com",
+    "https://api.cossistant.com", // Add your API domain
   ],
   socialProviders: {
     google: {
@@ -60,10 +60,10 @@ export const auth = betterAuth({
     crossSubDomainCookies: {
       enabled: true,
       domain:
-        process.env.NODE_ENV === "production" ? ".origamichat.com" : undefined,
+        process.env.NODE_ENV === "production" ? ".cossistant.com" : undefined,
     },
     // Add cookie prefix for better organization
-    cookiePrefix: "origami-auth",
+    cookiePrefix: "cossistant-auth",
     // Generate ULID for the database
     database: {
       generateId() {

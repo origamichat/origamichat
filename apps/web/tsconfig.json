@@ -1,5 +1,5 @@
 {
-  "extends": "@origamichat/typescript-config/nextjs.json",
+  "extends": "@cossistant/typescript-config/nextjs.json",
   "compilerOptions": {
     "plugins": [
       {

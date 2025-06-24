@@ -1,5 +1,5 @@
 import { z } from "@hono/zod-openapi";
-import { WebsiteInstallationTarget, APIKeyType } from "@origamichat/database/enums";
+import { WebsiteInstallationTarget, APIKeyType } from "@cossistant/database/enums";
 
 export const createWebsiteRequestSchema = z.object({
   name: z

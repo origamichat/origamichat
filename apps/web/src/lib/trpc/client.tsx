@@ -1,6 +1,6 @@
 "use client";
 
-import type { OrigamiTRPCRouter } from "@origamichat/api";
+import type { OrigamiTRPCRouter } from "@cossistant/api";
 import type { QueryClient } from "@tanstack/react-query";
 import { QueryClientProvider, isServer } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";

@@ -1,6 +1,6 @@
 # Security Policy
 
-**Origami Chat** is an open-source project committed to building secure, privacy-conscious, and developer-friendly infrastructure from the ground up.
+**Cossistant** is an open-source project committed to building secure, privacy-conscious, and developer-friendly infrastructure from the ground up.
 
 While we are not yet SOC 2 certified, we are actively developing with security best practices and compliance readiness in mind.
 
@@ -44,7 +44,7 @@ While we are not yet SOC 2 certified, we are actively developing with security b
 
 If you discover a vulnerability or security issue, please report it **privately**:
 
-📧 **anthony@origami.chat**
+📧 **anthony@cossistant.com**
 
 Please do **not** open public GitHub issues for sensitive disclosures. We will respond within 48 hours and prioritize remediation based on severity.
 
@@ -65,8 +65,8 @@ We plan to implement the following:
 ## 🤝 Community + Security
 
 Security is a shared responsibility—especially in open source.
-If you're integrating **Origami Chat** and spot something unclear, over-permissive, or potentially exploitable, please open a responsible issue or reach out directly.
+If you're integrating **Cossistant** and spot something unclear, over-permissive, or potentially exploitable, please open a responsible issue or reach out directly.
 
 We’re building this for developers. Help us keep it rock-solid.
 
-— Anthony, founder of Origami Chat
+— Anthony, founder of Cossistant

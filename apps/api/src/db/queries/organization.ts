@@ -7,7 +7,7 @@ import {
   auth,
   OrganizationSelect,
   WebsiteSelect,
-} from "@origamichat/database";
+} from "@cossistant/database";
 import { generateSlugFromEmailDomain } from "@api/utils/organization";
 
 export async function getOrganizationById(
