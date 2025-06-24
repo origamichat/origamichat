@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "globalDependencies": [
-    "**/.env.*local"
+    "**/.env"
   ],
   "ui": "tui",
   "tasks": {
@@ -9,10 +9,25 @@
       "dependsOn": [
         "^build"
       ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*"
-      ],
+      "build": {
+        "env": [
+          "DATABASE_URL",
+          "BETTER_AUTH_URL",
+          "BETTER_AUTH_SECRET",
+          "GOOGLE_CLIENT_ID",
+          "GOOGLE_CLIENT_SECRET",
+          "UPSTASH_REDIS_REST_URL",
+          "UPSTASH_REDIS_REST_TOKEN",
+          "API_KEY_SECRET"
+        ],
+        "inputs": [
+          "$TURBO_DEFAULT$",
+          ".env.production.local",
+          ".env.local",
+          ".env.production",
+          ".env"
+        ]
+      },
       "outputs": [
         ".next/**",
         "!.next/cache/**"
