@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { TRPCReactProvider } from "@/lib/trpc/client";
 import { RootProvider } from "fumadocs-ui/provider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 type ProviderProps = {
   //   locale: string;
@@ -12,15 +13,17 @@ type ProviderProps = {
 
 export function Providers({ children }: ProviderProps) {
   return (
-    <RootProvider
-      theme={{
-        attribute: "class",
-        defaultTheme: "system",
-        enableSystem: true,
-        disableTransitionOnChange: true,
-      }}
-    >
-      <TRPCReactProvider>{children}</TRPCReactProvider>
-    </RootProvider>
+    <NuqsAdapter>
+      <RootProvider
+        theme={{
+          attribute: "class",
+          defaultTheme: "system",
+          enableSystem: true,
+          disableTransitionOnChange: true,
+        }}
+      >
+        <TRPCReactProvider>{children}</TRPCReactProvider>
+      </RootProvider>
+    </NuqsAdapter>
   );
 }

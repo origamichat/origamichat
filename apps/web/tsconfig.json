@@ -20,7 +20,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "../../packages/database/src/schema/auth-schema.ts"
+    "../../packages/database/src/schema/auth-schema.ts",
+    "../api/src/lib/loops.ts"
   ],
   "exclude": ["node_modules"],
   "references": [

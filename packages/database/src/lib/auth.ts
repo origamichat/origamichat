@@ -1,9 +1,11 @@
+import { waitingListEntry } from "@database/schema/waiting-list";
 import { db } from "../database";
 import { generateULID } from "../utils/ids";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { admin, anonymous, organization } from "better-auth/plugins";
+import { slugify } from "@database/utils/db";
 
 export const auth = betterAuth({
   baseURL:
@@ -42,6 +44,7 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      scopes: ["identify", "email", "openid"],
     },
   },
   advanced: {
@@ -77,6 +80,18 @@ export const auth = betterAuth({
     cookieCache: {
       enabled: true,
       maxAge: 5 * 60,
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (createdUser) => {
+          await db.insert(waitingListEntry).values({
+            userId: createdUser.id,
+            uniqueReferralCode: slugify(createdUser.name),
+          });
+        },
+      },
     },
   },
 });

@@ -3,12 +3,13 @@ import { count, eq, lt, or, and, gt } from "drizzle-orm";
 
 export async function getWaitlistEntryByUserId(
   db: Database,
-  params: { userId: string }
+  params: { userId?: string }
 ) {
   try {
     const totalEntries = await db
       .select({ count: count() })
-      .from(waitingListEntry);
+      .from(waitingListEntry)
+      .$withCache();
 
     if (!params.userId) {
       return { entry: null, rank: null, totalEntries: totalEntries[0].count };

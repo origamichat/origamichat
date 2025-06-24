@@ -14,7 +14,8 @@
   },
   "exports": {
     ".": "./src/client/index.ts",
-    "./schemas": "./src/schemas/index.ts"
+    "./schemas": "./src/schemas/index.ts",
+    "./queries": "./src/db/queries/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.7.0",

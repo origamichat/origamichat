@@ -2,13 +2,22 @@ import { TopBar } from "./sections/top-bar";
 import { ScrollSection } from "./sections/scroll-section";
 import { Footer } from "./sections/footer";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
+import { WaitingList } from "@/components/waiting-list";
+import { getAuth } from "@/lib/auth/server";
 
-export default function Landing() {
+export default async function Landing() {
+  const { user } = await getAuth();
+
   return (
     <div className="min-h-screen">
       <TopBar />
-      <main></main>
-      <ScrollSection />
+      <main>
+        <WaitingList
+          userId={user?.id}
+          className="md:mx-0 md:px-0 border-none bg-transparent md:mt-0 md:pt-0"
+        />
+        <ScrollSection />
+      </main>
       <ProgressiveBlur
         className="pointer-events-none fixed top-0 left-0 right-0 w-full h-[200px] z-5"
         direction="top"

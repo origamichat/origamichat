@@ -1,4 +1,4 @@
-import { organizationClient } from "better-auth/client/plugins";
+import { organizationClient, adminClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
 const authClient = createAuthClient({
@@ -6,7 +6,7 @@ const authClient = createAuthClient({
   fetchOptions: {
     credentials: "include",
   },
-  plugins: [organizationClient()],
+  plugins: [organizationClient(), adminClient()],
 });
 
 export const {
