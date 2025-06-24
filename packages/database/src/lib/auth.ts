@@ -36,7 +36,7 @@ export const auth = betterAuth({
     "https://cossistant.com",
     "https://www.cossistant.com",
     "https://www.cossistant.com",
-    "https://api.cossistant.com", // Add your API domain
+    "https://api.cossistant.com",
   ],
   socialProviders: {
     google: {
