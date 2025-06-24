@@ -14,7 +14,7 @@ const getEnvVariable = (name: string): string => {
   return value;
 };
 
-let _db: ReturnType<typeof drizzle> | null = null;
+let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
 const createDb = () => {
   if (_db) return _db;
@@ -34,11 +34,11 @@ const createDb = () => {
   return _db;
 };
 
-export const db = new Proxy({} as ReturnType<typeof drizzle>, {
+export type Database = ReturnType<typeof drizzle<typeof schema>>;
+
+export const db = new Proxy({} as Database, {
   get: (target, prop) => {
     const actualDb = createDb();
     return actualDb[prop as keyof typeof actualDb];
   },
 });
-
-export type Database = typeof db;
