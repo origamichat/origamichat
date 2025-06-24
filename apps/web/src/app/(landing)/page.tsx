@@ -4,6 +4,9 @@ import { Footer } from "./sections/footer";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import { WaitingList } from "@/components/waiting-list";
 
+// Force dynamic rendering since this page depends on user authentication
+export const dynamic = "force-dynamic";
+
 export default async function Landing() {
   return (
     <div className="min-h-screen">

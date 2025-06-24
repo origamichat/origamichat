@@ -9,7 +9,10 @@ import * as schema from "./schema";
 const getEnvVariable = (name: string): string => {
   const value = process.env[name];
 
-  if (value == null) throw new Error(`environment variable ${name} not found`);
+  if (value == null) {
+    console.error(`Environment variable ${name} not found`);
+    throw new Error(`environment variable ${name} not found`);
+  }
   return value;
 };
 
