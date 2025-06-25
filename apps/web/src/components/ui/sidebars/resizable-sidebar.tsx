@@ -1,8 +1,9 @@
 "use client";
-import { type ReactNode, useCallback } from "react";
+
+import type { ReactNode } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import {
-  MAX_SIDEBAR_WIDTH,
+  DEFAULT_SIDEBAR_WIDTH,
   type SidebarPosition,
   useSidebar,
 } from "@/hooks/use-sidebars";
@@ -20,42 +21,30 @@ export const ResizableSidebar = ({
   children,
   position,
 }: ResizableSidebarProps) => {
-  const { width, setWidth, open, toggle } = useSidebar({ position });
+  const { open, toggle } = useSidebar({ position });
 
   return (
     <>
       <aside
         className={cn(
-          "relative flex h-screen max-h-screen border-transparent p-0",
+          "relative flex h-screen max-h-screen border-transparent p-0 transition-all duration-200 ease-in-out",
           className,
           {
             "ml-[3px] p-0": !open,
           }
         )}
         style={{
-          width: open ? width : 0,
-          minWidth: open ? width : 0,
-          maxWidth: open ? width : MAX_SIDEBAR_WIDTH,
+          width: open ? DEFAULT_SIDEBAR_WIDTH : 0,
         }}
       >
         {open && (
           <>
             {children}
-            <SidebarHandle
-              isCollapsed={!open}
-              onResize={setWidth}
-              onToggle={toggle}
-            />
+            <SidebarHandle isCollapsed={!open} onToggle={toggle} />
           </>
         )}
       </aside>
-      {!open && (
-        <SidebarHandle
-          isCollapsed={!open}
-          onResize={setWidth}
-          onToggle={toggle}
-        />
-      )}
+      {!open && <SidebarHandle isCollapsed={!open} onToggle={toggle} />}
     </>
   );
 };
@@ -63,7 +52,6 @@ export const ResizableSidebar = ({
 type SidebarHandleProps = {
   isCollapsed?: boolean;
   onToggle: () => void;
-  onResize: (deltaX: number) => void;
   hotkeys?: string[];
   position?: "left" | "right";
   onClose?: () => void;
@@ -72,52 +60,10 @@ type SidebarHandleProps = {
 const SidebarHandle = ({
   isCollapsed,
   onToggle,
-  onResize,
   hotkeys = ["shift", "s"],
   position = "right",
   onClose,
 }: SidebarHandleProps) => {
-  const onMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      const initialStartX = e.clientX;
-      let startX = e.clientX;
-
-      document.body.style.userSelect = "none"; // Re-enable text selection
-
-      const onMouseMove = (_e: MouseEvent) => {
-        const deltaX =
-          position === "right" ? _e.clientX - startX : startX - _e.clientX;
-
-        if (!isCollapsed) {
-          onResize(deltaX);
-        }
-
-        startX = _e.clientX; // Update startX to the current mouse position
-      };
-
-      const onMouseUp = (_e: MouseEvent) => {
-        // It's a click
-        if (initialStartX === _e.clientX) {
-          onToggle();
-
-          if (onClose && !isCollapsed) {
-            onClose();
-          }
-        }
-
-        document.body.style.userSelect = ""; // Re-enable text selection
-
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-      };
-
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    },
-    [onToggle, onResize, onClose, isCollapsed, position]
-  );
-
   // Open the open on key stroke
   useHotkeys(
     [hotkeys.join("+")],
@@ -129,12 +75,16 @@ const SidebarHandle = ({
     }
   );
 
+  const handleClick = () => {
+    onToggle();
+    onClose?.();
+  };
+
   const tooltipContent = isCollapsed ? (
     "Click to open"
   ) : (
     <div className="flex flex-col gap-1">
-      <span>Click to collapse</span>
-      <span>Drag to resize</span>
+      <span>Click to close</span>
     </div>
   );
 
@@ -150,7 +100,7 @@ const SidebarHandle = ({
             !isCollapsed && position === "left",
         }
       )}
-      onMouseDown={onMouseDown}
+      onClick={handleClick}
       type="button"
     >
       <div className="group flex h-full items-center justify-center hover:cursor-col-resize">

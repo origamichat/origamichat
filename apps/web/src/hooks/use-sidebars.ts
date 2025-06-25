@@ -8,12 +8,8 @@ export const MAX_SIDEBAR_WIDTH = 480;
 export type SidebarPosition = "left" | "right";
 
 type SidebarsState = {
-  leftSidebarWidth: number;
   leftSidebarOpen: boolean;
-  rightSidebarWidth: number;
   rightSidebarOpen: boolean;
-  setLeftSidebarWidth: (width: number) => void;
-  setRightSidebarWidth: (width: number) => void;
   toggleLeftSidebar: () => void;
   toggleRightSidebar: () => void;
   toggleBothSidebars: () => void;
@@ -42,22 +38,6 @@ export const useSidebarsState = create<SidebarsState>()(
         set({ leftSidebarOpen: false, rightSidebarOpen: false }),
       openBothSidebars: () =>
         set({ leftSidebarOpen: true, rightSidebarOpen: true }),
-      leftSidebarWidth: DEFAULT_SIDEBAR_WIDTH,
-      rightSidebarWidth: DEFAULT_SIDEBAR_WIDTH,
-      setLeftSidebarWidth: (width) =>
-        set((state) => ({
-          leftSidebarWidth: Math.min(
-            Math.max(width + state.leftSidebarWidth, MIN_SIDEBAR_WIDTH),
-            MAX_SIDEBAR_WIDTH
-          ),
-        })),
-      setRightSidebarWidth: (width) =>
-        set((state) => ({
-          rightSidebarWidth: Math.min(
-            Math.max(width + state.rightSidebarWidth, MIN_SIDEBAR_WIDTH),
-            MAX_SIDEBAR_WIDTH
-          ),
-        })),
     }),
     {
       name: "sidebars-state",
@@ -68,10 +48,6 @@ export const useSidebarsState = create<SidebarsState>()(
 
 export function useSidebar({ position }: { position: SidebarPosition }) {
   const {
-    leftSidebarWidth,
-    rightSidebarWidth,
-    setLeftSidebarWidth,
-    setRightSidebarWidth,
     leftSidebarOpen,
     rightSidebarOpen,
     toggleLeftSidebar,
@@ -80,16 +56,12 @@ export function useSidebar({ position }: { position: SidebarPosition }) {
 
   if (position === "left") {
     return {
-      width: leftSidebarWidth,
-      setWidth: setLeftSidebarWidth,
       open: leftSidebarOpen,
       toggle: toggleLeftSidebar,
     };
   }
 
   return {
-    width: rightSidebarWidth,
-    setWidth: setRightSidebarWidth,
     open: rightSidebarOpen,
     toggle: toggleRightSidebar,
   };
