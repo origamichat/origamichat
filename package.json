@@ -6,16 +6,16 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types",
-    "format-and-lint": "biome check .",
-    "format-and-lint:fix": "biome check . --write"
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.2",
+    "@biomejs/biome": "2.0.5",
+    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "tsx": "4.19.4",
     "turbo": "^2.5.3",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "ultracite": "^5.0.19"
   },
   "engines": {
     "node": ">=18"

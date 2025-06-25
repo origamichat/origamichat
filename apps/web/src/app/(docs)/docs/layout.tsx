@@ -6,7 +6,12 @@ import { baseOptions } from "@/app/(docs)/layout.config";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <DocsLayout tree={source.pageTree} {...baseOptions}>
+    <DocsLayout
+      tree={source.pageTree}
+      {...baseOptions}
+      sidebar={{ hidden: false, collapsible: false }}
+      nav={{ transparentMode: "top" }}
+    >
       {children}
     </DocsLayout>
   );
