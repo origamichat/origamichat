@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import Icon from "@/components/ui/icons";
 
 export const CommandShortcut = ({
   className,
@@ -12,13 +11,16 @@ export const CommandShortcut = ({
     typeof window !== "undefined" &&
     window.navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 
-  const renderShortcut = (children: string[]) => {
+  const renderShortcut = (_children: string[]) => {
     return (
       <>
-        {children.map((child) => {
+        {_children.map((child, index) => {
           return (
             <span key={child}>
-              {child === "mod" ? (isMac ? "⌘" : "Ctrl") : child}
+              <span>{child === "mod" ? (isMac ? "⌘" : "Ctrl") : child}</span>
+              {index < _children.length - 1 && (
+                <span className="mx-0.5 text-primary-foreground/80">+</span>
+              )}
             </span>
           );
         })}
@@ -29,7 +31,7 @@ export const CommandShortcut = ({
   return (
     <span
       className={cn(
-        "ml-auto inline-flex h-[24px] min-w-[24px] items-center justify-center rounded-sm border border-primary/10 bg-primary-foreground/20 px-0.5 text-[12px] text-center capitalize tracking-widest text-primary-foreground",
+        "ml-auto inline-flex h-[24px] min-w-[24px] items-center justify-center rounded-sm border border-primary/10 bg-primary-foreground/20 px-1 text-center font-mono font-semibold text-[10px] text-primary-foreground capitalize tracking-widest",
         className
       )}
       {...props}
