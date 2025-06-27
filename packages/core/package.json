@@ -1,6 +1,6 @@
 {
     "name": "@cossistant/core",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
@@ -17,6 +17,9 @@
     "files": [
         "dist"
     ],
+    "publishConfig": {
+        "access": "public"
+    },
     "devDependencies": {
         "@cossistant/typescript-config": "workspace:*"
     }
