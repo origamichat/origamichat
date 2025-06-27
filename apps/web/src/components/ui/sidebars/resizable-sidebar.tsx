@@ -103,11 +103,12 @@ const SidebarHandle = ({
       onClick={handleClick}
       type="button"
     >
-      <div className="group flex h-full items-center justify-center hover:cursor-col-resize">
-        <TooltipOnHover
-          content={tooltipContent}
-          shortcuts={hotkeys}
-          side="right"
+      <TooltipOnHover content={tooltipContent} shortcuts={hotkeys} side="right">
+        <div
+          className={cn(
+            "group flex h-full items-center justify-center border-transparent transition-all hover:cursor-pointer hover:border-background-100",
+            position === "left" ? "border-r-4" : "border-l-4"
+          )}
         >
           <div className="h-fit w-4 flex-col items-center justify-center bg-transparent hover:cursor-pointer">
             {position === "right" ? (
@@ -150,8 +151,8 @@ const SidebarHandle = ({
               </>
             )}
           </div>
-        </TooltipOnHover>
-      </div>
+        </div>
+      </TooltipOnHover>
     </button>
   );
 };

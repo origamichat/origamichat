@@ -1,6 +1,6 @@
 {
-  "extends": "@cossistant/typescript-config/nextjs.json",
-  "include": ["**/*.ts", "**/*.tsx", "../../apps/web/src/lib/loops.ts"],
+  "extends": "@cossistant/typescript-config/base.json",
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "baseUrl": ".",

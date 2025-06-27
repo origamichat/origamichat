@@ -1,0 +1,23 @@
+{
+    "name": "@cossistant/core",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "dev": "bun src/index.ts",
+        "build": "tsup"
+    },
+    "files": [
+        "dist"
+    ],
+    "devDependencies": {
+        "@cossistant/typescript-config": "workspace:*"
+    }
+}

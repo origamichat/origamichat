@@ -1,16 +1,16 @@
-import { CopyButton } from "@/components/copy-button";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { getWaitlistUrl } from "@/lib/url";
-import { JoinWaitlistButton } from "./join-button";
-import { Separator } from "@/components/ui/separator";
-import { db } from "@cossistant/database";
 import { getWaitlistEntryByUserId } from "@cossistant/api/queries";
+import { db } from "@cossistant/database";
+import Link from "next/link";
+import { CopyButton } from "@/components/copy-button";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { DISCORD_INVITE } from "@/constants";
-import { DiscordIcon } from "../auth/sign-in-buttons";
 import { getAuth } from "@/lib/auth/server";
+import { getWaitlistUrl } from "@/lib/url";
+import { cn } from "@/lib/utils";
+import { DiscordIcon } from "../auth/sign-in-buttons";
+import { JoinWaitlistButton } from "./join-button";
 
 export async function WaitingList({ className }: { className?: string }) {
   const { user } = await getAuth();
@@ -21,7 +21,7 @@ export async function WaitingList({ className }: { className?: string }) {
 
   if (!entry) {
     return (
-      <div className="flex flex-col gap-4 py-10 md:p-10 rounded-md max-w-[592px] w-full items-center justify-center min-h-[500px] mx-auto">
+      <div className="mx-auto flex min-h-[500px] w-full max-w-[592px] flex-col items-center justify-center gap-4 rounded-md py-10 md:p-10">
         <JoinWaitlistButton totalEntries={totalEntries} />
       </div>
     );
@@ -33,66 +33,66 @@ export async function WaitingList({ className }: { className?: string }) {
     <>
       <div
         className={cn(
-          "flex flex-col gap-4 py-10 md:p-10 rounded-md max-w-[592px] w-full",
+          "mx-auto flex w-full max-w-[592px] flex-col gap-4 rounded-md py-10 md:p-10",
           className
         )}
       >
         <div className="flex items-center gap-10">
           <div className="flex flex-col gap-2">
-            <p className="text-sm text-primary/60">Your points</p>
-            <p className="text-3xl text-primary font-medium font-mono">
+            <p className="text-primary/60 text-sm">Your points</p>
+            <p className="font-medium font-mono text-3xl text-primary">
               {entry.points}
             </p>
           </div>
           <div className="flex flex-col gap-2">
-            <p className="text-sm text-primary/60">Your rank</p>
-            <p className="text-3xl text-primary font-medium font-mono">
+            <p className="text-primary/60 text-sm">Your rank</p>
+            <p className="font-medium font-mono text-3xl text-primary">
               {rank}{" "}
-              <span className="text-sm text-primary/60">/ {totalEntries}</span>
+              <span className="text-primary/60 text-sm">/ {totalEntries}</span>
             </p>
           </div>
         </div>
         <Separator className="my-6" />
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-primary/70 bg-os-background-300 flex items-center justify-center rounded-md size-6 border border-os-background-400">
+            <span className="flex size-6 items-center justify-center rounded-md border border-os-background-400 bg-os-background-300 font-medium text-primary/70 text-xs">
               1
             </span>
             <p className="font-medium text-sm">Share with your friends</p>
-            <span className="text-xs text-primary/70 ml-4">
+            <span className="ml-4 text-primary/70 text-xs">
               +5 points/friend
             </span>
           </div>
           <div className="relative mb-6" id="link-input">
             <Input
+              className="text-xs md:text-md"
+              readOnly
               type="text"
               value={url}
-              readOnly
-              className="text-xs md:text-md"
             />
-            <div className="pointer-events-none absolute bottom-[4px] right-[1px] top-[4px] w-60 rounded-r-xl bg-gradient-to-l from-os-background to-transparent" />
-            <div className="pointer-events-none absolute bottom-[4px] right-[1px] top-[4px] w-60 rounded-r-xl bg-gradient-to-l from-os-background to-transparent" />
+            <div className="pointer-events-none absolute top-[4px] right-[1px] bottom-[4px] w-60 rounded-r-xl bg-gradient-to-l from-os-background to-transparent" />
+            <div className="pointer-events-none absolute top-[4px] right-[1px] bottom-[4px] w-60 rounded-r-xl bg-gradient-to-l from-os-background to-transparent" />
             <CopyButton
+              className="-translate-y-1/2 absolute top-1/2 right-2"
+              size="sm"
               value={url}
               variant="ghost"
-              size="sm"
-              className="absolute right-2 top-1/2 -translate-y-1/2"
             />
           </div>
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-primary/70 bg-os-background-300 flex items-center justify-center rounded-md size-6 border border-os-background-400">
+            <span className="flex size-6 items-center justify-center rounded-md border border-os-background-400 bg-os-background-300 font-medium text-primary/70 text-xs">
               2
             </span>
             <p className="font-medium text-sm">Join our Discord</p>
-            <span className="text-xs text-primary/70 ml-4">+2 points</span>
+            <span className="ml-4 text-primary/70 text-xs">+2 points</span>
           </div>
           <Link
+            className="mb-6 text-primary/80 text-sm hover:text-primary"
             href={DISCORD_INVITE}
-            className="text-sm text-primary/80 hover:text-primary mb-6"
           >
-            <Button variant="outline" size="sm" className="min-h-9">
+            <Button className="min-h-9" size="sm" variant="outline">
               <DiscordIcon className="size-4" />
               Go to Discord server
             </Button>

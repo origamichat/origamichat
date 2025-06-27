@@ -1,9 +1,9 @@
 "use client";
 
-import { signIn } from "@/lib/auth/client";
 import { useQueryState } from "nuqs";
 import { useEffect } from "react";
-import { DiscordIcon } from "../auth/sign-in-buttons";
+import { signIn } from "@/lib/auth/client";
+import { GoogleIcon } from "../auth/sign-in-buttons";
 import { Button } from "../ui/button";
 
 export function JoinWaitlistButton({ totalEntries }: { totalEntries: number }) {
@@ -17,21 +17,21 @@ export function JoinWaitlistButton({ totalEntries }: { totalEntries: number }) {
   }, [from]);
 
   return (
-    <div className="flex flex-col gap-6 justify-center items-center">
+    <div className="flex flex-col items-center justify-center gap-6">
       <Button
-        size="lg"
         onClick={() =>
           signIn.social({
-            provider: "discord",
-            callbackURL: "/joined",
-            errorCallbackURL: "/joined/error",
+            provider: "google",
+            callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/joined`,
+            errorCallbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/joined/error`,
           })
         }
+        size="lg"
       >
-        <DiscordIcon className="size-5" />
-        Join the waitlist with Discord
+        <GoogleIcon className="size-5" />
+        Join the waitlist with Google
       </Button>
-      <p className="flex items-center gap-4 text-sm text-primary/60">
+      <p className="flex items-center gap-4 text-primary/60 text-sm">
         <span>{totalEntries} people are already on the waitlist</span>
       </p>
     </div>
