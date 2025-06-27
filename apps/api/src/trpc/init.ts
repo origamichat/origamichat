@@ -1,8 +1,12 @@
 import { getGeoContext } from "@api/utils/geo";
-import { auth, AuthType, Database } from "@cossistant/database";
-import { Context } from "hono";
-import { db } from "@cossistant/database";
+import {
+  type AuthType,
+  type auth,
+  type Database,
+  db,
+} from "@cossistant/database";
 import { initTRPC } from "@trpc/server";
+import type { Context } from "hono";
 import superjson from "superjson";
 import { withPermission } from "./middleware/auth";
 import { withPrimaryDbMiddleware } from "./middleware/db";
@@ -18,8 +22,8 @@ export const createTRPCContext = async (
   _: unknown,
   c: Context<AuthType>
 ): Promise<TRPCContext> => {
-  const user = c.get("user")!;
-  const session = c.get("session")!;
+  const user = c.get("user") as typeof auth.$Infer.Session.user;
+  const session = c.get("session") as typeof auth.$Infer.Session.session;
 
   const geo = getGeoContext(c.req);
 

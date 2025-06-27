@@ -1,10 +1,10 @@
-import { ensurePageAuth } from "@/lib/auth/server";
-import { db } from "@database/database";
 import { getOrganizationsForUserOrCreateDefault } from "@api/db/queries/organization";
-import { notFound, redirect } from "next/navigation";
+import { db } from "@database/database";
+import type { OrganizationSelect, WebsiteSelect } from "@database/schema";
 import { cookies } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 import { SELECTED_WEBSITE_COOKIE_NAME } from "@/constants";
-import { OrganizationSelect, WebsiteSelect } from "@database/schema";
+import { ensurePageAuth } from "@/lib/auth/server";
 
 const getDefaultWebsiteToRedirectTo = ({
   selectedWebsiteId,
@@ -38,7 +38,7 @@ const getDefaultWebsiteToRedirectTo = ({
   }
 
   const website = orgs.find((org) =>
-    org.websites.some((website) => website.id === selectedWebsiteId)
+    org.websites.some((w) => w.id === selectedWebsiteId)
   );
 
   return {

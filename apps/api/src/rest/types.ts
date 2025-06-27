@@ -1,15 +1,15 @@
-import {
-  ApiKeySelect,
-  Database,
-  OrganizationSelect,
-  WebsiteSelect,
+import type {
+	ApiKeySelect,
+	Database,
+	OrganizationSelect,
+	WebsiteSelect,
 } from "@cossistant/database";
 
 export type RestContext = {
-  Variables: {
-    db: Database;
-    apiKey: ApiKeySelect;
-    organization: OrganizationSelect;
-    website: WebsiteSelect;
-  };
+	Variables: {
+		db: Database;
+		apiKey: ApiKeySelect;
+		organization: OrganizationSelect;
+		website: WebsiteSelect;
+	};
 };

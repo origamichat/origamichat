@@ -1,44 +1,43 @@
+import type { OrigamiSession, OrigamiUser } from "@cossistant/database";
 import { headers } from "next/headers";
-import type { OrigamiUser, OrigamiSession } from "@cossistant/database";
-
-import { getAPIBaseUrl } from "@/lib/url";
 import { redirect } from "next/navigation";
+import { getAPIBaseUrl } from "@/lib/url";
 
 export async function getAuth(): Promise<{
-  user: OrigamiUser | null;
-  session: OrigamiSession | null;
+	user: OrigamiUser | null;
+	session: OrigamiSession | null;
 }> {
-  try {
-    const headersList = await headers();
-    const cookie = headersList.get("cookie");
+	try {
+		const headersList = await headers();
+		const cookie = headersList.get("cookie");
 
-    const session = await fetch(getAPIBaseUrl("/auth/get-session"), {
-      headers: {
-        "Content-Type": "application/json",
-        cookie: cookie ?? "",
-      },
-      credentials: "include",
-    }).then((res) => res.json());
+		const session = await fetch(getAPIBaseUrl("/auth/get-session"), {
+			headers: {
+				"Content-Type": "application/json",
+				cookie: cookie ?? "",
+			},
+			credentials: "include",
+		}).then((res) => res.json());
 
-    return session ?? { user: null, session: null };
-  } catch (error) {
-    console.error(error);
-    return { user: null, session: null };
-  }
+		return session ?? { user: null, session: null };
+	} catch (error) {
+		console.error(error);
+		return { user: null, session: null };
+	}
 }
 
 type EnsurePageAuthProps = {
-  redirectTo: string;
+	redirectTo: string;
 };
 
 export const ensurePageAuth = async (
-  props: EnsurePageAuthProps = { redirectTo: "/" }
+	props: EnsurePageAuthProps = { redirectTo: "/" }
 ) => {
-  const { session, user } = await getAuth();
+	const { session, user } = await getAuth();
 
-  if (!user || !session) {
-    redirect(props.redirectTo);
-  }
+	if (!(user && session)) {
+		redirect(props.redirectTo);
+	}
 
-  return { session, user };
+	return { session, user };
 };

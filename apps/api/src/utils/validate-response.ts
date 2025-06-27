@@ -1,7 +1,7 @@
 import { HTTPException } from "hono/http-exception";
 import type { ZodSchema } from "zod";
 
-export const validateResponse = (data: any, schema: ZodSchema) => {
+export const validateResponse = <T>(data: T, schema: ZodSchema<T>) => {
   const result = schema.safeParse(data);
   if (!result.success) {
     const cause = result.error.flatten();

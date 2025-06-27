@@ -1,35 +1,35 @@
 export enum MessageType {
-  TEXT = "text",
-  IMAGE = "image",
-  FILE = "file",
+	TEXT = "text",
+	IMAGE = "image",
+	FILE = "file",
 }
 
 export enum SenderType {
-  VISITOR = "visitor",
-  TEAM_MEMBER = "team_member",
-  AI = "ai",
+	VISITOR = "visitor",
+	TEAM_MEMBER = "team_member",
+	AI = "ai",
 }
 
 export enum ConversationStatus {
-  OPEN = "open",
-  RESOLVED = "resolved",
-  BLOCKED = "blocked",
-  PENDING = "pending",
+	OPEN = "open",
+	RESOLVED = "resolved",
+	BLOCKED = "blocked",
+	PENDING = "pending",
 }
 
 export enum ConversationPriority {
-  LOW = "low",
-  NORMAL = "normal",
-  HIGH = "high",
-  URGENT = "urgent",
+	LOW = "low",
+	NORMAL = "normal",
+	HIGH = "high",
+	URGENT = "urgent",
 }
 
 export enum WebsiteInstallationTarget {
-  NEXTJS = "nextjs",
-  REACT = "react",
+	NEXTJS = "nextjs",
+	REACT = "react",
 }
 
 export enum APIKeyType {
-  PRIVATE = "private",
-  PUBLIC = "public",
+	PRIVATE = "private",
+	PUBLIC = "public",
 }

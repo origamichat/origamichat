@@ -9,7 +9,8 @@
     "check-types": "turbo run check-types",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.5",

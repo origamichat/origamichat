@@ -1,26 +1,26 @@
 {
-    "name": "@cossistant/core",
-    "version": "0.0.0",
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "types": "dist/index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.js"
-        }
-    },
-    "scripts": {
-        "dev": "bun src/index.ts",
-        "build": "tsup"
-    },
-    "files": [
-        "dist"
-    ],
-    "publishConfig": {
-        "access": "public"
-    },
-    "devDependencies": {
-        "@cossistant/typescript-config": "workspace:*"
+  "name": "@cossistant/core",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
+  },
+  "scripts": {
+    "dev": "bun src/index.ts",
+    "build": "tsup"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@cossistant/typescript-config": "workspace:*"
+  }
 }

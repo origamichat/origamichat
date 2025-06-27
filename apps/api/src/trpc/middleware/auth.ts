@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { TRPCContext } from "../init";
+import type { TRPCContext } from "../init";
 
-export const withPermission = async <TReturn>(opts: {
+export const withPermission = async <TReturn>(options: {
   ctx: TRPCContext;
   next: (opts: { ctx: TRPCContext }) => Promise<TReturn>;
 }) => {
-  const { ctx, next } = opts;
+  const { ctx, next } = options;
 
   if (!ctx.session) {
     throw new TRPCError({

@@ -14,6 +14,6 @@ export const publicMiddleware: MiddlewareHandler[] = [withDatabase];
  * Note: withPublicApiKeyAuth must be first to set session in context
  */
 export const protectedMiddleware: MiddlewareHandler[] = [
-  withDatabase,
-  withPublicApiKeyAuth,
+	withDatabase,
+	withPublicApiKeyAuth,
 ];

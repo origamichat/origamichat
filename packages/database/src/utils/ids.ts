@@ -1,6 +1,6 @@
-import { ulid as ulidGenerator } from "ulid";
-import { customAlphabet } from "nanoid";
 import { customType } from "drizzle-orm/pg-core";
+import { customAlphabet } from "nanoid";
+import { ulid as ulidGenerator } from "ulid";
 
 const NANOID_ALPHABET = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
 const NANOID_LENGTH = 12;
@@ -16,21 +16,21 @@ const NANOID_LENGTH = 12;
  */
 
 export const ulid = customType<{
-  data: string;
-  notNull: false;
-  default: false;
+	data: string;
+	notNull: false;
+	default: false;
 }>({
-  dataType() {
-    return "ulid";
-  },
+	dataType() {
+		return "ulid";
+	},
 });
 
 export const generateULID = (): string => {
-  return ulidGenerator();
+	return ulidGenerator();
 };
 
 export const generateShortPrimaryId = (): string => {
-  const nanoid = customAlphabet(NANOID_ALPHABET, NANOID_LENGTH);
+	const nanoid = customAlphabet(NANOID_ALPHABET, NANOID_LENGTH);
 
-  return nanoid(); // => "DWZPD8BERQKP"
+	return nanoid(); // => "DWZPD8BERQKP"
 };

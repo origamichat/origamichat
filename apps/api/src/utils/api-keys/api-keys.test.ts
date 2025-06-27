@@ -1,12 +1,13 @@
 import { describe, expect, it } from "bun:test";
+import { APIKeyType } from "@cossistant/database/enums";
 import {
   generateApiKey,
-  isValidSecretApiKeyFormat,
-  isValidPublicApiKeyFormat,
   hashApiKey,
+  isValidPublicApiKeyFormat,
+  isValidSecretApiKeyFormat,
 } from "./index";
 
-import { APIKeyType } from "@cossistant/database/enums";
+const HEX_REGEX = /^[0-9a-f]+$/;
 
 describe("api-keys utils", () => {
   describe("generateApiKey", () => {
@@ -39,7 +40,7 @@ describe("api-keys utils", () => {
       it("should generate keys with valid hex characters", () => {
         const key = generateApiKey({ type: APIKeyType.PRIVATE, isTest: false });
         const hexPart = key.replace("sk_", "");
-        expect(hexPart).toMatch(/^[0-9a-f]+$/);
+        expect(hexPart).toMatch(HEX_REGEX);
       });
     });
 
@@ -66,30 +67,30 @@ describe("api-keys utils", () => {
       it("should generate keys with valid hex characters", () => {
         const key = generateApiKey({ type: APIKeyType.PUBLIC, isTest: false });
         const hexPart = key.replace("pk_", "");
-        expect(hexPart).toMatch(/^[0-9a-f]+$/);
+        expect(hexPart).toMatch(HEX_REGEX);
       });
     });
   });
 
   describe("isValidSecretApiKeyFormat", () => {
     it("should return true for valid production secret key", () => {
-      const validKey = "sk_" + "a".repeat(64);
+      const validKey = `sk_${"a".repeat(64)}`;
       expect(isValidSecretApiKeyFormat(validKey)).toBe(true);
     });
 
     it("should return true for valid test secret key", () => {
-      const validKey = "sk_test_" + "a".repeat(64);
+      const validKey = `sk_test_${"a".repeat(64)}`;
       expect(isValidSecretApiKeyFormat(validKey)).toBe(true);
     });
 
     it("should return false for keys without sk_ prefix", () => {
-      const invalidKey = "pk_" + "a".repeat(64);
+      const invalidKey = `pk_${"a".repeat(64)}`;
       expect(isValidSecretApiKeyFormat(invalidKey)).toBe(false);
     });
 
     it("should return false for keys with wrong length", () => {
-      const shortKey = "sk_" + "a".repeat(60);
-      const longKey = "sk_" + "a".repeat(70);
+      const shortKey = `sk_${"a".repeat(60)}`;
+      const longKey = `sk_${"a".repeat(70)}`;
       expect(isValidSecretApiKeyFormat(shortKey)).toBe(false);
       expect(isValidSecretApiKeyFormat(longKey)).toBe(false);
     });
@@ -105,8 +106,8 @@ describe("api-keys utils", () => {
     });
 
     it("should handle keys with correct format but different content", () => {
-      const keyWithNumbers = "sk_" + "1".repeat(64);
-      const keyWithMixed = "sk_" + "1a2b3c".repeat(10) + "1234";
+      const keyWithNumbers = `sk_${"1".repeat(64)}`;
+      const keyWithMixed = `sk_${"1a2b3c".repeat(10)}1234`;
       expect(isValidSecretApiKeyFormat(keyWithNumbers)).toBe(true);
       expect(isValidSecretApiKeyFormat(keyWithMixed)).toBe(true);
     });
@@ -114,23 +115,23 @@ describe("api-keys utils", () => {
 
   describe("isValidPublicApiKeyFormat", () => {
     it("should return true for valid production public key", () => {
-      const validKey = "pk_" + "a".repeat(64);
+      const validKey = `pk_${"a".repeat(64)}`;
       expect(isValidPublicApiKeyFormat(validKey)).toBe(true);
     });
 
     it("should return true for valid test public key", () => {
-      const validKey = "pk_test_" + "a".repeat(64);
+      const validKey = `pk_test_${"a".repeat(64)}`;
       expect(isValidPublicApiKeyFormat(validKey)).toBe(true);
     });
 
     it("should return false for keys without pk_ prefix", () => {
-      const invalidKey = "sk_" + "a".repeat(64);
+      const invalidKey = `sk_${"a".repeat(64)}`;
       expect(isValidPublicApiKeyFormat(invalidKey)).toBe(false);
     });
 
     it("should return false for keys with wrong length", () => {
-      const shortKey = "pk_" + "a".repeat(60);
-      const longKey = "pk_" + "a".repeat(70);
+      const shortKey = `pk_${"a".repeat(60)}`;
+      const longKey = `pk_${"a".repeat(70)}`;
       expect(isValidPublicApiKeyFormat(shortKey)).toBe(false);
       expect(isValidPublicApiKeyFormat(longKey)).toBe(false);
     });
@@ -146,8 +147,8 @@ describe("api-keys utils", () => {
     });
 
     it("should handle keys with correct format but different content", () => {
-      const keyWithNumbers = "pk_" + "1".repeat(64);
-      const keyWithMixed = "pk_" + "1a2b3c".repeat(10) + "1234";
+      const keyWithNumbers = `pk_${"1".repeat(64)}`;
+      const keyWithMixed = `pk_${"1a2b3c".repeat(10)}1234`;
       expect(isValidPublicApiKeyFormat(keyWithNumbers)).toBe(true);
       expect(isValidPublicApiKeyFormat(keyWithMixed)).toBe(true);
     });
@@ -181,7 +182,7 @@ describe("api-keys utils", () => {
 
     it("should return a hex string", () => {
       const hash = hashApiKey(testKey, testSecret);
-      expect(hash).toMatch(/^[0-9a-f]+$/);
+      expect(hash).toMatch(HEX_REGEX);
       expect(hash).toHaveLength(64); // SHA256 hex output length
     });
 
@@ -190,9 +191,9 @@ describe("api-keys utils", () => {
       const hashEmptySecret = hashApiKey(testKey, "");
       const hashBothEmpty = hashApiKey("", "");
 
-      expect(hashEmptyKey).toMatch(/^[0-9a-f]+$/);
-      expect(hashEmptySecret).toMatch(/^[0-9a-f]+$/);
-      expect(hashBothEmpty).toMatch(/^[0-9a-f]+$/);
+      expect(hashEmptyKey).toMatch(HEX_REGEX);
+      expect(hashEmptySecret).toMatch(HEX_REGEX);
+      expect(hashBothEmpty).toMatch(HEX_REGEX);
 
       // All should be different
       expect(hashEmptyKey).not.toBe(hashEmptySecret);
@@ -204,7 +205,7 @@ describe("api-keys utils", () => {
       const specialKey = "sk_test_!@#$%^&*()_+-=[]{}|;:,.<>?";
       const specialSecret = "secret!@#$%^&*()";
       const hash = hashApiKey(specialKey, specialSecret);
-      expect(hash).toMatch(/^[0-9a-f]+$/);
+      expect(hash).toMatch(HEX_REGEX);
       expect(hash).toHaveLength(64);
     });
   });
@@ -254,10 +255,10 @@ describe("api-keys utils", () => {
       expect(uniqueHashes.size).toBe(keys.length);
 
       // All hashes should be valid hex strings
-      hashes.forEach((hash) => {
-        expect(hash).toMatch(/^[0-9a-f]+$/);
+      for (const hash of hashes) {
+        expect(hash).toMatch(HEX_REGEX);
         expect(hash).toHaveLength(64);
-      });
+      }
     });
   });
 });

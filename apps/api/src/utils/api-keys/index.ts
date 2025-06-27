@@ -1,6 +1,4 @@
-import { randomBytes } from "node:crypto";
-import { createHmac } from "crypto";
-
+import { createHmac, randomBytes } from "node:crypto";
 import { APIKeyType } from "@cossistant/database/enums";
 
 export function generateApiKey({
@@ -19,7 +17,7 @@ export function generateApiKey({
   }
 
   if (isTest) {
-    prefix = prefix + "test_";
+    prefix = `${prefix}test_`;
   }
 
   // Generate 32 random bytes and convert to hex

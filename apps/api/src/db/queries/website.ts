@@ -1,177 +1,181 @@
-import { eq, and, desc, isNull, like, or } from "drizzle-orm";
-import { website, type Database, type WebsiteInsert } from "@cossistant/database";
+import {
+	type Database,
+	type WebsiteInsert,
+	website,
+} from "@cossistant/database";
+import { and, desc, eq, isNull, like, or } from "drizzle-orm";
 
 // Create website
 export async function createWebsite(
-  db: Database,
-  params: {
-    orgId: string;
-    data: Omit<WebsiteInsert, "organizationId">;
-  }
+	db: Database,
+	params: {
+		orgId: string;
+		data: Omit<WebsiteInsert, "organizationId">;
+	}
 ) {
-  const [newWebsite] = await db
-    .insert(website)
-    .values({
-      ...params.data,
-      organizationId: params.orgId,
-    })
-    .returning();
+	const [newWebsite] = await db
+		.insert(website)
+		.values({
+			...params.data,
+			organizationId: params.orgId,
+		})
+		.returning();
 
-  return newWebsite;
+	return newWebsite;
 }
 
 // Get website by ID (with org check)
 export async function getWebsiteById(
-  db: Database,
-  params: {
-    orgId: string;
-    websiteId: string;
-  }
+	db: Database,
+	params: {
+		orgId: string;
+		websiteId: string;
+	}
 ) {
-  const [site] = await db
-    .select()
-    .from(website)
-    .where(
-      and(
-        eq(website.id, params.websiteId),
-        eq(website.organizationId, params.orgId),
-        isNull(website.deletedAt)
-      )
-    )
-    .limit(1);
+	const [site] = await db
+		.select()
+		.from(website)
+		.where(
+			and(
+				eq(website.id, params.websiteId),
+				eq(website.organizationId, params.orgId),
+				isNull(website.deletedAt)
+			)
+		)
+		.limit(1);
 
-  return site;
+	return site;
 }
 
 // Get all websites for organization
 export async function getWebsitesByOrganization(
-  db: Database,
-  params: {
-    orgId: string;
-    status?: string;
-    limit?: number;
-    offset?: number;
-  }
+	db: Database,
+	params: {
+		orgId: string;
+		status?: string;
+		limit?: number;
+		offset?: number;
+	}
 ) {
-  const websites = await db
-    .select()
-    .from(website)
-    .where(
-      and(
-        eq(website.organizationId, params.orgId),
-        params.status ? eq(website.status, params.status) : undefined,
-        isNull(website.deletedAt)
-      )
-    )
-    .orderBy(desc(website.createdAt))
-    .limit(params.limit ?? 50)
-    .offset(params.offset ?? 0);
+	const websites = await db
+		.select()
+		.from(website)
+		.where(
+			and(
+				eq(website.organizationId, params.orgId),
+				params.status ? eq(website.status, params.status) : undefined,
+				isNull(website.deletedAt)
+			)
+		)
+		.orderBy(desc(website.createdAt))
+		.limit(params.limit ?? 50)
+		.offset(params.offset ?? 0);
 
-  return websites;
+	return websites;
 }
 
 // Search websites by name or description
 export async function searchWebsites(
-  db: Database,
-  params: {
-    orgId: string;
-    query: string;
-    limit?: number;
-    offset?: number;
-  }
+	db: Database,
+	params: {
+		orgId: string;
+		query: string;
+		limit?: number;
+		offset?: number;
+	}
 ) {
-  const websites = await db
-    .select()
-    .from(website)
-    .where(
-      and(
-        eq(website.organizationId, params.orgId),
-        or(
-          like(website.name, `%${params.query}%`),
-          like(website.description, `%${params.query}%`)
-        ),
-        isNull(website.deletedAt)
-      )
-    )
-    .orderBy(desc(website.createdAt))
-    .limit(params.limit ?? 20)
-    .offset(params.offset ?? 0);
+	const websites = await db
+		.select()
+		.from(website)
+		.where(
+			and(
+				eq(website.organizationId, params.orgId),
+				or(
+					like(website.name, `%${params.query}%`),
+					like(website.description, `%${params.query}%`)
+				),
+				isNull(website.deletedAt)
+			)
+		)
+		.orderBy(desc(website.createdAt))
+		.limit(params.limit ?? 20)
+		.offset(params.offset ?? 0);
 
-  return websites;
+	return websites;
 }
 
 // Update website
 export async function updateWebsite(
-  db: Database,
-  params: {
-    orgId: string;
-    websiteId: string;
-    data: Partial<Omit<WebsiteInsert, "organizationId">>;
-  }
+	db: Database,
+	params: {
+		orgId: string;
+		websiteId: string;
+		data: Partial<Omit<WebsiteInsert, "organizationId">>;
+	}
 ) {
-  const [updatedWebsite] = await db
-    .update(website)
-    .set({
-      ...params.data,
-      updatedAt: new Date(),
-    })
-    .where(
-      and(
-        eq(website.id, params.websiteId),
-        eq(website.organizationId, params.orgId)
-      )
-    )
-    .returning();
+	const [updatedWebsite] = await db
+		.update(website)
+		.set({
+			...params.data,
+			updatedAt: new Date(),
+		})
+		.where(
+			and(
+				eq(website.id, params.websiteId),
+				eq(website.organizationId, params.orgId)
+			)
+		)
+		.returning();
 
-  return updatedWebsite;
+	return updatedWebsite;
 }
 
 // Soft delete website
 export async function deleteWebsite(
-  db: Database,
-  params: {
-    orgId: string;
-    websiteId: string;
-  }
+	db: Database,
+	params: {
+		orgId: string;
+		websiteId: string;
+	}
 ) {
-  const [deletedWebsite] = await db
-    .update(website)
-    .set({
-      deletedAt: new Date(),
-      updatedAt: new Date(),
-    })
-    .where(
-      and(
-        eq(website.id, params.websiteId),
-        eq(website.organizationId, params.orgId)
-      )
-    )
-    .returning();
+	const [deletedWebsite] = await db
+		.update(website)
+		.set({
+			deletedAt: new Date(),
+			updatedAt: new Date(),
+		})
+		.where(
+			and(
+				eq(website.id, params.websiteId),
+				eq(website.organizationId, params.orgId)
+			)
+		)
+		.returning();
 
-  return deletedWebsite;
+	return deletedWebsite;
 }
 
 // Restore website
 export async function restoreWebsite(
-  db: Database,
-  params: {
-    orgId: string;
-    websiteId: string;
-  }
+	db: Database,
+	params: {
+		orgId: string;
+		websiteId: string;
+	}
 ) {
-  const [restoredWebsite] = await db
-    .update(website)
-    .set({
-      deletedAt: null,
-      updatedAt: new Date(),
-    })
-    .where(
-      and(
-        eq(website.id, params.websiteId),
-        eq(website.organizationId, params.orgId)
-      )
-    )
-    .returning();
+	const [restoredWebsite] = await db
+		.update(website)
+		.set({
+			deletedAt: null,
+			updatedAt: new Date(),
+		})
+		.where(
+			and(
+				eq(website.id, params.websiteId),
+				eq(website.organizationId, params.orgId)
+			)
+		)
+		.returning();
 
-  return restoredWebsite;
+	return restoredWebsite;
 }

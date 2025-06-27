@@ -1,15 +1,15 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { WebsiteInstallationTarget } from "@cossistant/database/enums";
 import {
-  CreateWebsiteRequest,
+  type CreateWebsiteRequest,
   createWebsiteRequestSchema,
 } from "@cossistant/api/schemas";
-import { useTRPC } from "@/lib/trpc/client";
+import { WebsiteInstallationTarget } from "@cossistant/database/enums";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-
+import { useForm } from "react-hook-form";
+import { FrameworkPicker } from "@/components/framework-picker";
+import { BaseSubmitButton } from "@/components/ui/base-submit-button";
 import {
   Form,
   FormControl,
@@ -19,12 +19,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { FrameworkPicker } from "@/components/framework-picker";
-import { BaseSubmitButton } from "@/components/ui/base-submit-button";
-import { Spinner } from "@/components/ui/spinner";
-import { isValidDomain } from "@/lib/utils";
 import Icon from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { useTRPC } from "@/lib/trpc/client";
+import { isValidDomain } from "@/lib/utils";
+
+const PROTOCOL_REGEX = /^https?:\/\//;
 
 interface WebsiteCreationFormProps {
   organizationId: string;
@@ -64,7 +65,9 @@ export default function WebsiteCreationForm({
   });
 
   const handleSubmit = (data: CreateWebsiteRequest) => {
-    if (isDomainTaken) return;
+    if (isDomainTaken) {
+      return;
+    }
 
     onSubmit?.(data);
   };
@@ -79,8 +82,8 @@ export default function WebsiteCreationForm({
 
       <Form {...form}>
         <form
+          className="w-full space-y-6"
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="space-y-6 w-full"
         >
           <FormField
             control={form.control}
@@ -111,12 +114,25 @@ export default function WebsiteCreationForm({
                     <Input
                       placeholder="Eg. polar.sh"
                       {...field}
+                      append={
+                        field.value &&
+                        shouldCheckDomain && (
+                          <div className="flex items-center gap-2">
+                            {isCheckingDomain && <Spinner />}
+                            {!isCheckingDomain && isDomainTaken && (
+                              <Icon name="x" />
+                            )}
+                            {!(isCheckingDomain || isDomainTaken) &&
+                              field.value && <Icon name="check" />}
+                          </div>
+                        )
+                      }
                       disabled={isSubmitting}
                       onBlur={(e) => {
                         // Remove protocol if present
                         const value = e.target.value;
                         const domainWithoutProtocol = value.replace(
-                          /^https?:\/\//,
+                          PROTOCOL_REGEX,
                           ""
                         );
 
@@ -125,19 +141,6 @@ export default function WebsiteCreationForm({
                         // Trigger validation
                         form.trigger("domain");
                       }}
-                      append={
-                        field.value &&
-                        shouldCheckDomain && (
-                          <div className="flex items-center gap-2">
-                            {isCheckingDomain && <Spinner />}
-                            {!isCheckingDomain && isDomainTaken ? (
-                              <Icon name="x" />
-                            ) : !isCheckingDomain && field.value ? (
-                              <Icon name="check" />
-                            ) : null}
-                          </div>
-                        )
-                      }
                     />
                   </div>
                 </FormControl>
@@ -145,7 +148,7 @@ export default function WebsiteCreationForm({
                   The domain your users will be chatting with you and your AI
                   agents.
                   {isDomainTaken && (
-                    <p className="text-destructive mt-1">
+                    <p className="mt-1 text-destructive">
                       This domain is already in use. Please choose another one.
                     </p>
                   )}
@@ -162,8 +165,8 @@ export default function WebsiteCreationForm({
                 <FormLabel>Framework</FormLabel>
                 <FormControl>
                   <FrameworkPicker
-                    value={field.value}
                     onValueChange={field.onChange}
+                    value={field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -172,7 +175,7 @@ export default function WebsiteCreationForm({
           />
 
           <BaseSubmitButton
-            type="submit"
+            className="w-full"
             disabled={
               isSubmitting ||
               isDomainTaken ||
@@ -180,7 +183,7 @@ export default function WebsiteCreationForm({
               !isValidDomain(domainValue)
             }
             isSubmitting={isSubmitting}
-            className="w-full"
+            type="submit"
           >
             Start your integration
           </BaseSubmitButton>

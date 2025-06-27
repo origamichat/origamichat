@@ -1,13 +1,13 @@
 type Props = {
-  children: React.ReactNode;
+	children: React.ReactNode;
 };
 
 export function SidebarContainer({ children }: Props) {
-  return (
-    <div className="h-screen p-2 w-full">
-      <div className="flex h-full border rounded-2xl p-2 w-full">
-        {children}
-      </div>
-    </div>
-  );
+	return (
+		<div className="h-screen w-full p-2">
+			<div className="flex h-full w-full rounded-2xl border p-2">
+				{children}
+			</div>
+		</div>
+	);
 }

@@ -4,9 +4,7 @@
       "mode": "auto"
     }
   ],
-  "cSpell.words": [
-    "Cossistant"
-  ],
+  "cSpell.words": ["Cossistant"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript][typescript][javascriptreact][typescriptreact][json][jsonc][css][graphql]": {
     "editor.defaultFormatter": "biomejs.biome"
@@ -14,6 +12,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
+  "editor.tabSize": 2,
   "emmet.showExpandedAbbreviation": "never",
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit",

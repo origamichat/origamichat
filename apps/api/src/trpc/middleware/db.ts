@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { TRPCContext } from "../init.js";
+import type { TRPCContext } from "../init.js";
 
-export const withPrimaryDbMiddleware = async <TReturn>(opts: {
+export const withPrimaryDbMiddleware = async <TReturn>(options: {
   ctx: TRPCContext;
   next: (opts: { ctx: TRPCContext }) => Promise<TReturn>;
 }) => {
-  const { ctx, next } = opts;
+  const { ctx, next } = options;
 
   if (!ctx.db) {
     throw new TRPCError({
