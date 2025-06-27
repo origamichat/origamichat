@@ -6,24 +6,19 @@ import { useEffect, useRef, useState } from "react";
 const storySteps = [
 	"This is a support chat bubble.",
 	"It's just a frame. A text box. A blinking cursor.",
-	"It sits in the corner. Waiting for customers to get confused. Frustrated.
-		Stuck.",
-	"Now, most of these bubbles come with "AI."",
-	"But the first thing customers ask is: "Can I talk to a human?"",
+	"It sits in the corner. Waiting for customers to get confused. Frustrated. Stuck.",
+	'Now, most of these bubbles come with "AI."',
+	'But the first thing customers ask is: "Can I talk to a human?"',
 	"Why is that?",
 	"Because most AI agents don't help. They deflect. Delay. Frustrate.",
 	"But it's not AI's fault. It's the system around it.",
-	"Support has become disconnected. Bubbles in the corner. Humans in tickets.
-		Bots in scripts.",
+	"Support has become disconnected. Bubbles in the corner. Humans in tickets. Bots in scripts.",
 	"What if support wasn't trapped in a bubble?",
 	"What if it was a system, flexible, composable, everywhere you need it?",
-	"What if AI agents actually helped? And humans could step in with a full
-		context and no friction?",
-	"What if support finally felt like your product? Fast. Useful. Beautiful.
-		Yours.",
+	"What if AI agents actually helped? And humans could step in with a full context and no friction?",
+	"What if support finally felt like your product? Fast. Useful. Beautiful. Yours.",
 	"That's what Cossistant is.",
-	"An open-source, AI-native support system built for developers shipping
-		modern SaaS.",
+	"An open-source, AI-native support system built for developers shipping modern SaaS.",
 	"Developer-first. Customer-ready. Built to scale with you.",
 	"Let's escape the bubble, together.",
 ];
@@ -43,12 +38,12 @@ export function ScrollSection() {
 
 			const observer = new IntersectionObserver(
 				(entries) => {
-					entries.forEach((entry) => {
+					for (const entry of entries) {
 						if (entry.isIntersecting) {
 							setActiveStep(index);
 							setShowContinue(index === storySteps.length - 1);
 						}
-					});
+					}
 				},
 				{
 					rootMargin: "-40% 0px -40% 0px",
@@ -61,7 +56,9 @@ export function ScrollSection() {
 		});
 
 		return () => {
-			observers.forEach((observer) => observer.disconnect());
+			for (const observer of observers) {
+				observer.disconnect();
+			}
 		};
 	}, []);
 
@@ -84,7 +81,7 @@ export function ScrollSection() {
 					{storySteps.map((step, index) => (
 						<div
 							className="flex min-h-screen snap-center snap-always items-center justify-center"
-							key={index}
+							key={step}
 							ref={(el) => {
 								sectionsRef.current[index] = el;
 							}}

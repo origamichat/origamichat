@@ -17,4 +17,5 @@ const main = async () => {
 	}
 };
 
+// biome-ignore lint/complexity/noVoid: false positive
 void main();

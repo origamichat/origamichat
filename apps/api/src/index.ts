@@ -168,7 +168,6 @@ app.use(
 );
 
 // Start the server - no export needed for compiled executable
-// biome-ignore lint/correctness/noUndeclaredVariables: This is a valid use case
 Bun.serve({
 	port: env.PORT,
 	fetch: app.fetch,

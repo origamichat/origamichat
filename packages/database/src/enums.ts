@@ -1,35 +1,50 @@
-export enum MessageType {
-	TEXT = "text",
-	IMAGE = "image",
-	FILE = "file",
-}
+export const MessageType = {
+	TEXT: "text",
+	IMAGE: "image",
+	FILE: "file",
+} as const;
 
-export enum SenderType {
-	VISITOR = "visitor",
-	TEAM_MEMBER = "team_member",
-	AI = "ai",
-}
+export type MessageType = (typeof MessageType)[keyof typeof MessageType];
 
-export enum ConversationStatus {
-	OPEN = "open",
-	RESOLVED = "resolved",
-	BLOCKED = "blocked",
-	PENDING = "pending",
-}
+export const SenderType = {
+	VISITOR: "visitor",
+	TEAM_MEMBER: "team_member",
+	AI: "ai",
+} as const;
 
-export enum ConversationPriority {
-	LOW = "low",
-	NORMAL = "normal",
-	HIGH = "high",
-	URGENT = "urgent",
-}
+export type SenderType = (typeof SenderType)[keyof typeof SenderType];
 
-export enum WebsiteInstallationTarget {
-	NEXTJS = "nextjs",
-	REACT = "react",
-}
+export const ConversationStatus = {
+	OPEN: "open",
+	RESOLVED: "resolved",
+	BLOCKED: "blocked",
+	PENDING: "pending",
+} as const;
 
-export enum APIKeyType {
-	PRIVATE = "private",
-	PUBLIC = "public",
-}
+export type ConversationStatus =
+	(typeof ConversationStatus)[keyof typeof ConversationStatus];
+
+export const ConversationPriority = {
+	LOW: "low",
+	NORMAL: "normal",
+	HIGH: "high",
+	URGENT: "urgent",
+} as const;
+
+export type ConversationPriority =
+	(typeof ConversationPriority)[keyof typeof ConversationPriority];
+
+export const WebsiteInstallationTarget = {
+	NEXTJS: "nextjs",
+	REACT: "react",
+} as const;
+
+export type WebsiteInstallationTarget =
+	(typeof WebsiteInstallationTarget)[keyof typeof WebsiteInstallationTarget];
+
+export const APIKeyType = {
+	PRIVATE: "private",
+	PUBLIC: "public",
+} as const;
+
+export type APIKeyType = (typeof APIKeyType)[keyof typeof APIKeyType];

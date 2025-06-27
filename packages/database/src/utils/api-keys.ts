@@ -12,6 +12,8 @@ const KEY_LENGTHS = {
 
 export type KeyType = keyof typeof KEY_PREFIXES;
 
+const BASE64URL_PATTERN = /^[A-Za-z0-9_-]+$/;
+
 export function generateApiKey(keyType: KeyType) {
 	const prefix = KEY_PREFIXES[keyType];
 	const keyLength = KEY_LENGTHS[keyType];
@@ -43,8 +45,8 @@ export function validateKeyFormat(key: string): {
 	}
 
 	// Check if key starts with a valid prefix
-	const keyType = Object.entries(KEY_PREFIXES).find(([_, prefix]) =>
-		key.startsWith(prefix)
+	const keyType = Object.entries(KEY_PREFIXES).find(([_, p]) =>
+		key.startsWith(p)
 	)?.[0] as KeyType;
 
 	if (!keyType) {
@@ -67,9 +69,8 @@ export function validateKeyFormat(key: string): {
 
 	// Validate base64url characters after prefix
 	const keyBody = key.slice(prefix.length);
-	const base64urlPattern = /^[A-Za-z0-9_-]+$/;
 
-	if (!base64urlPattern.test(keyBody)) {
+	if (!BASE64URL_PATTERN.test(keyBody)) {
 		return {
 			isValid: false,
 			error: "Key contains invalid characters",
@@ -85,7 +86,7 @@ export function hashApiKey(key: string): string {
 
 export function getKeyType(key: string): KeyType | null {
 	const validation = validateKeyFormat(key);
-	return validation.isValid ? validation.keyType! : null;
+	return validation.isValid ? (validation.keyType ?? null) : null;
 }
 
 export function isPrivateKey(key: string): boolean {

@@ -7,9 +7,9 @@ import { waitlistRouter } from "./waitlist";
 import { websiteRouter } from "./website";
 
 export const origamiTRPCRouter = createTRPCRouter({
-  user: userRouter,
-  website: websiteRouter,
-  waitlist: waitlistRouter,
+	user: userRouter,
+	website: websiteRouter,
+	waitlist: waitlistRouter,
 });
 
 // export type definition of API

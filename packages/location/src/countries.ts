@@ -1,3 +1,1 @@
-import countries from "./countries.json" with { type: "json" };
-
-export { countries };
+export { default as countries } from "./countries.json";

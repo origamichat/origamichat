@@ -2,7 +2,11 @@ import { waitingListEntry } from "@database/schema/waiting-list";
 import { slugify } from "@database/utils/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, anonymous, organization } from "better-auth/plugins";
+import {
+	admin,
+	anonymous,
+	organization as organizationPlugin,
+} from "better-auth/plugins";
 import { db } from "../database";
 import { generateULID } from "../utils/ids";
 
@@ -17,7 +21,7 @@ export const auth = betterAuth({
 		provider: "pg",
 	}),
 	plugins: [
-		organization({
+		organizationPlugin({
 			organizationCreation: {
 				disabled: false,
 				afterCreate: async ({ organization, member, user }, request) => {
@@ -41,8 +45,8 @@ export const auth = betterAuth({
 	],
 	socialProviders: {
 		google: {
-			clientId: process.env.GOOGLE_CLIENT_ID!,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+			clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
 			scopes: ["identify", "email", "openid"],
 		},
 	},

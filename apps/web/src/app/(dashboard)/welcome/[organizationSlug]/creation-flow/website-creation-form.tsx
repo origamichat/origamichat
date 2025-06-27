@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  type CreateWebsiteRequest,
-  createWebsiteRequestSchema,
+	type CreateWebsiteRequest,
+	createWebsiteRequestSchema,
 } from "@cossistant/api/schemas";
 import { WebsiteInstallationTarget } from "@cossistant/database/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,13 +11,13 @@ import { useForm } from "react-hook-form";
 import { FrameworkPicker } from "@/components/framework-picker";
 import { BaseSubmitButton } from "@/components/ui/base-submit-button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
 } from "@/components/ui/form";
 import Icon from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
@@ -28,167 +28,167 @@ import { isValidDomain } from "@/lib/utils";
 const PROTOCOL_REGEX = /^https?:\/\//;
 
 interface WebsiteCreationFormProps {
-  organizationId: string;
-  onSubmit?: (data: CreateWebsiteRequest) => void;
-  isSubmitting?: boolean;
+	organizationId: string;
+	onSubmit?: (data: CreateWebsiteRequest) => void;
+	isSubmitting?: boolean;
 }
 
 export default function WebsiteCreationForm({
-  organizationId,
-  onSubmit,
-  isSubmitting = false,
+	organizationId,
+	onSubmit,
+	isSubmitting = false,
 }: WebsiteCreationFormProps) {
-  const trpc = useTRPC();
-  const form = useForm<CreateWebsiteRequest>({
-    resolver: zodResolver(createWebsiteRequestSchema),
-    defaultValues: {
-      name: "",
-      domain: "",
-      organizationId,
-      installationTarget: WebsiteInstallationTarget.NEXTJS,
-    },
-  });
+	const trpc = useTRPC();
+	const form = useForm<CreateWebsiteRequest>({
+		resolver: zodResolver(createWebsiteRequestSchema),
+		defaultValues: {
+			name: "",
+			domain: "",
+			organizationId,
+			installationTarget: WebsiteInstallationTarget.NEXTJS,
+		},
+	});
 
-  const domainValue = form.watch("domain");
+	const domainValue = form.watch("domain");
 
-  const shouldCheckDomain =
-    !!domainValue &&
-    form.formState.isDirty &&
-    isValidDomain(domainValue) &&
-    !isSubmitting;
+	const shouldCheckDomain =
+		!!domainValue &&
+		form.formState.isDirty &&
+		isValidDomain(domainValue) &&
+		!isSubmitting;
 
-  const { data: isDomainTaken, isFetching: isCheckingDomain } = useQuery({
-    ...trpc.website.checkDomain.queryOptions({
-      domain: domainValue,
-    }),
-    enabled: !!shouldCheckDomain,
-  });
+	const { data: isDomainTaken, isFetching: isCheckingDomain } = useQuery({
+		...trpc.website.checkDomain.queryOptions({
+			domain: domainValue,
+		}),
+		enabled: !!shouldCheckDomain,
+	});
 
-  const handleSubmit = (data: CreateWebsiteRequest) => {
-    if (isDomainTaken) {
-      return;
-    }
+	const handleSubmit = (data: CreateWebsiteRequest) => {
+		if (isDomainTaken) {
+			return;
+		}
 
-    onSubmit?.(data);
-  };
+		onSubmit?.(data);
+	};
 
-  return (
-    <div className="mt-4 w-full">
-      <div className="mb-6">
-        <p className="text-muted-foreground">
-          Provide your website details and select your framework to get started.
-        </p>
-      </div>
+	return (
+		<div className="mt-4 w-full">
+			<div className="mb-6">
+				<p className="text-muted-foreground">
+					Provide your website details and select your framework to get started.
+				</p>
+			</div>
 
-      <Form {...form}>
-        <form
-          className="w-full space-y-6"
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Website Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Eg. Dub, Midday"
-                    {...field}
-                    disabled={isSubmitting}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+			<Form {...form}>
+				<form
+					className="w-full space-y-6"
+					onSubmit={form.handleSubmit(handleSubmit)}
+				>
+					<FormField
+						control={form.control}
+						name="name"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Website Name</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="Eg. Dub, Midday"
+										{...field}
+										disabled={isSubmitting}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-          <FormField
-            control={form.control}
-            name="domain"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Domain</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      placeholder="Eg. polar.sh"
-                      {...field}
-                      append={
-                        field.value &&
-                        shouldCheckDomain && (
-                          <div className="flex items-center gap-2">
-                            {isCheckingDomain && <Spinner />}
-                            {!isCheckingDomain && isDomainTaken && (
-                              <Icon name="x" />
-                            )}
-                            {!(isCheckingDomain || isDomainTaken) &&
-                              field.value && <Icon name="check" />}
-                          </div>
-                        )
-                      }
-                      disabled={isSubmitting}
-                      onBlur={(e) => {
-                        // Remove protocol if present
-                        const value = e.target.value;
-                        const domainWithoutProtocol = value.replace(
-                          PROTOCOL_REGEX,
-                          ""
-                        );
+					<FormField
+						control={form.control}
+						name="domain"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Domain</FormLabel>
+								<FormControl>
+									<div className="relative">
+										<Input
+											placeholder="Eg. polar.sh"
+											{...field}
+											append={
+												field.value &&
+												shouldCheckDomain && (
+													<div className="flex items-center gap-2">
+														{isCheckingDomain && <Spinner />}
+														{!isCheckingDomain && isDomainTaken && (
+															<Icon name="x" />
+														)}
+														{!(isCheckingDomain || isDomainTaken) &&
+															field.value && <Icon name="check" />}
+													</div>
+												)
+											}
+											disabled={isSubmitting}
+											onBlur={(e) => {
+												// Remove protocol if present
+												const value = e.target.value;
+												const domainWithoutProtocol = value.replace(
+													PROTOCOL_REGEX,
+													""
+												);
 
-                        field.onChange(domainWithoutProtocol);
+												field.onChange(domainWithoutProtocol);
 
-                        // Trigger validation
-                        form.trigger("domain");
-                      }}
-                    />
-                  </div>
-                </FormControl>
-                <FormDescription>
-                  The domain your users will be chatting with you and your AI
-                  agents.
-                  {isDomainTaken && (
-                    <p className="mt-1 text-destructive">
-                      This domain is already in use. Please choose another one.
-                    </p>
-                  )}
-                </FormDescription>
-              </FormItem>
-            )}
-          />
+												// Trigger validation
+												form.trigger("domain");
+											}}
+										/>
+									</div>
+								</FormControl>
+								<FormDescription>
+									The domain your users will be chatting with you and your AI
+									agents.
+									{isDomainTaken && (
+										<p className="mt-1 text-destructive">
+											This domain is already in use. Please choose another one.
+										</p>
+									)}
+								</FormDescription>
+							</FormItem>
+						)}
+					/>
 
-          <FormField
-            control={form.control}
-            name="installationTarget"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Framework</FormLabel>
-                <FormControl>
-                  <FrameworkPicker
-                    onValueChange={field.onChange}
-                    value={field.value}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+					<FormField
+						control={form.control}
+						name="installationTarget"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Framework</FormLabel>
+								<FormControl>
+									<FrameworkPicker
+										onValueChange={field.onChange}
+										value={field.value}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-          <BaseSubmitButton
-            className="w-full"
-            disabled={
-              isSubmitting ||
-              isDomainTaken ||
-              !form.formState.isValid ||
-              !isValidDomain(domainValue)
-            }
-            isSubmitting={isSubmitting}
-            type="submit"
-          >
-            Start your integration
-          </BaseSubmitButton>
-        </form>
-      </Form>
-    </div>
-  );
+					<BaseSubmitButton
+						className="w-full"
+						disabled={
+							isSubmitting ||
+							isDomainTaken ||
+							!form.formState.isValid ||
+							!isValidDomain(domainValue)
+						}
+						isSubmitting={isSubmitting}
+						type="submit"
+					>
+						Start your integration
+					</BaseSubmitButton>
+				</form>
+			</Form>
+		</div>
+	);
 }

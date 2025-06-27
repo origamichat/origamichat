@@ -13,6 +13,8 @@ export type PresetType = "blur" | "fade-in-blur" | "scale" | "fade" | "slide";
 
 export type PerType = "word" | "char" | "line";
 
+const SPACE_REGEX = /(\s+)/;
+
 export type TextEffectProps = {
 	children: string | string[];
 	per?: PerType;
@@ -161,7 +163,7 @@ const splitText = (text: string, per: PerType) => {
 	if (per === "line") {
 		return text.split("\n");
 	}
-	return text.split(/(\s+)/);
+	return text.split(SPACE_REGEX);
 };
 
 const hasTransition = (

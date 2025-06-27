@@ -147,9 +147,12 @@ export async function generateSlugFromEmailDomain(
 
 	// if empty after cleaning, generate random slug
 	if (!slug) {
-		const slug = generateNanoSlugId();
+		const generatedSlug = generateNanoSlugId();
 
-		return { slug, organizationName: slug.replace(/-/g, " ") };
+		return {
+			slug: generatedSlug,
+			organizationName: generatedSlug.replace(/-/g, " "),
+		};
 	}
 
 	// if the slug is in the forbidden words list, add a random number to the end

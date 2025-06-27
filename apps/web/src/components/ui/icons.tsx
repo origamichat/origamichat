@@ -64,6 +64,7 @@ export const Icon: React.FC<IconProps> = ({
 			width="24"
 			xmlns="http://www.w3.org/2000/svg"
 		>
+			<title>{name}</title>
 			{iconType === "filled" ? (
 				<path
 					clipRule="evenodd"

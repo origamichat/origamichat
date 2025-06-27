@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import flags from "./country-flags";
 import { currencies } from "./currencies";
 import { EU_COUNTRY_CODES } from "./eu-countries";
-import timezones from "./timezones.json" with { type: "json" };
+import { timezones } from "./timezones";
 
 export async function getCountryCode() {
 	const headersList = await headers();

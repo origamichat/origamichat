@@ -5,10 +5,7 @@ import { getCountryCode, getLocale, getTimezone } from "@cossistant/location";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createTRPCClient, loggerLink } from "@trpc/client";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
-import {
-	createTRPCOptionsProxy,
-	type TRPCQueryOptions,
-} from "@trpc/tanstack-react-query";
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { cache } from "react";
 import superjson from "superjson";
 import { getTRPCUrl } from "../url";
@@ -58,30 +55,4 @@ export function HydrateClient(props: { children: React.ReactNode }) {
 			{props.children}
 		</HydrationBoundary>
 	);
-}
-
-export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
-	queryOptions: T
-) {
-	const queryClient = getQueryClient();
-
-	if (queryOptions.queryKey[1]?.type === "infinite") {
-		void queryClient.prefetchInfiniteQuery(queryOptions as any);
-	} else {
-		void queryClient.prefetchQuery(queryOptions);
-	}
-}
-
-export function batchPrefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
-	queryOptionsArray: T[]
-) {
-	const queryClient = getQueryClient();
-
-	for (const queryOptions of queryOptionsArray) {
-		if (queryOptions.queryKey[1]?.type === "infinite") {
-			void queryClient.prefetchInfiniteQuery(queryOptions as any);
-		} else {
-			void queryClient.prefetchQuery(queryOptions);
-		}
-	}
 }

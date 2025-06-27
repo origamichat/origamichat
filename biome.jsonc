@@ -17,11 +17,19 @@
       "suspicious": {
         "noConsole": "off",
         "noEmptyBlockStatements": "off",
-        "useAwait": "off"
+        "useAwait": "off",
+        "noArrayIndexKey": "off"
       },
       "correctness": {
-        "noUndeclaredVariables": "error",
+        "noUnusedImports": "off",
+        "noUndeclaredVariables": "off",
         "noUnusedFunctionParameters": "off"
+      },
+      "performance": {
+        "noNamespaceImport": "off"
+      },
+      "style": {
+        "noNestedTernary": "off"
       }
     }
   }
