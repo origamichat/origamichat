@@ -1,16 +1,19 @@
 {
-  "name": "@cossistant/core",
+  "name": "@cossistant/react",
   "version": "0.0.0",
   "private": false,
   "author": "Cossistant Team",
-  "description": "Cossistant Core is a library of core utilities to create your own support AI agent for your SaaS.",
+  "description": "Cossistant React is a library of headless ('unstyled') React components and low-level hooks to create your own support AI agent.",
   "keywords": [
     "react",
     "ai-agent",
     "support-ai",
+    "react-component",
     "support-agent",
     "saas",
-    "support"
+    "support",
+    "unstyled",
+    "a11y"
   ],
   "bugs": {
     "url": "https://github.com/cossistantcom/cossistant/issues"
@@ -18,7 +21,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cossistantcom/cossistant.git",
-    "directory": "packages/core"
+    "directory": "packages/react"
   },
   "license": "GNU GPLv3",
   "homepage": "https://cossistant.com",
