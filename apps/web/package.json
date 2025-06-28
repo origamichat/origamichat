@@ -17,6 +17,7 @@
     "@cossistant/api": "workspace:*",
     "@cossistant/database": "workspace:*",
     "@cossistant/location": "workspace:*",
+    "@cossistant/react": "workspace:*",
     "@hookform/resolvers": "^5.1.1",
     "@polar-sh/nextjs": "^0.4.0",
     "@radix-ui/react-avatar": "^1.1.10",
