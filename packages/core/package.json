@@ -32,7 +32,6 @@
     }
   },
   "scripts": {
-    "dev": "bun src/index.ts",
     "build": "tsup"
   },
   "files": [

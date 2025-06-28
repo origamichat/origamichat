@@ -49,6 +49,7 @@
         "@cossistant/api": "workspace:*",
         "@cossistant/database": "workspace:*",
         "@cossistant/location": "workspace:*",
+        "@cossistant/react": "workspace:*",
         "@hookform/resolvers": "^5.1.1",
         "@polar-sh/nextjs": "^0.4.0",
         "@radix-ui/react-avatar": "^1.1.10",
@@ -144,6 +145,13 @@
       "devDependencies": {
         "@cossistant/typescript-config": "workspace:*",
         "typescript": "^5.8.3",
+      },
+    },
+    "packages/react": {
+      "name": "@cossistant/react",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@cossistant/typescript-config": "workspace:*",
       },
     },
     "packages/typescript-config": {
@@ -265,6 +273,8 @@
     "@cossistant/database": ["@cossistant/database@workspace:packages/database"],
 
     "@cossistant/location": ["@cossistant/location@workspace:packages/location"],
+
+    "@cossistant/react": ["@cossistant/react@workspace:packages/react"],
 
     "@cossistant/typescript-config": ["@cossistant/typescript-config@workspace:packages/typescript-config"],
 

@@ -1,16 +1,30 @@
 {
   "extends": "@cossistant/typescript-config/react-library.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "declaration": true,
-    "declarationMap": false,
-    "module": "ESNext",
-    "target": "ES2022",
-    "moduleResolution": "Bundler",
+    "module": "nodenext",
+    "target": "es2020",
+    "lib": ["es2020", "dom"],
+    "jsx": "preserve",
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "noErrorTruncation": false,
+    "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@cossistant/react": ["./src"],
+      "@cossistant/react/*": ["./src/*"]
+    }
   },
-  "include": ["src"]
+  "exclude": [
+    "**/.*/",
+    "**/build",
+    "**/build-tests",
+    "**/node_modules",
+    "docs/export"
+  ]
 }

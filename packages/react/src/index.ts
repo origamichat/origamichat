@@ -1,5 +1,4 @@
-export { CossistantProvider, useCossistant } from "./provider";
-export { Bubble } from "./bubble";
-export { Window } from "./window";
-export { Input } from "./input";
-export { SendButton } from "./send-button";
+export * as Bubble from "./bubble";
+export * as Chat from "./chat";
+export * as Provider from "./provider";
+export * as Window from "./window";

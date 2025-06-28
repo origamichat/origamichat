@@ -12,9 +12,9 @@ export interface CossistantContextValue {
   toggle: () => void;
 }
 
-const CossistantContext = React.createContext<CossistantContextValue | undefined>(
-  undefined,
-);
+const CossistantContext = React.createContext<
+  CossistantContextValue | undefined
+>(undefined);
 
 export function CossistantProvider({
   children,
@@ -28,11 +28,13 @@ export function CossistantProvider({
 
   const value = React.useMemo<CossistantContextValue>(
     () => ({ isOpen, open, close, toggle }),
-    [isOpen, open, close, toggle],
+    [isOpen, open, close, toggle]
   );
 
   return (
-    <CossistantContext.Provider value={value}>{children}</CossistantContext.Provider>
+    <CossistantContext.Provider value={value}>
+      {children}
+    </CossistantContext.Provider>
   );
 }
 

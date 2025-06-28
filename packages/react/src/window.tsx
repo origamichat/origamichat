@@ -10,7 +10,7 @@ export interface WindowProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Window = React.forwardRef<HTMLDivElement, WindowProps>(
   (
     { header, footer, children, className, id = "cossistant-window", ...props },
-    ref,
+    ref
   ) => {
     const { isOpen, close } = useCossistant();
 
@@ -33,11 +33,11 @@ export const Window = React.forwardRef<HTMLDivElement, WindowProps>(
 
     return (
       <div
-        role="dialog"
         aria-modal="true"
+        className={className}
         id={id}
         ref={ref}
-        className={className}
+        role="dialog"
         {...props}
       >
         {header && <div>{header}</div>}
@@ -45,7 +45,7 @@ export const Window = React.forwardRef<HTMLDivElement, WindowProps>(
         {footer && <div>{footer}</div>}
       </div>
     );
-  },
+  }
 );
 
 Window.displayName = "Window";

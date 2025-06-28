@@ -11,7 +11,9 @@
       "@/docs/*": ["./src/app/(docs)/*"],
       "@/docs-source/*": ["./.source/*"],
       "@api/*": ["../api/src/*"],
-      "@database/*": ["../../packages/database/src/*"]
+      "@database/*": ["../../packages/database/src/*"],
+      "@cossistant/react/*": ["../../packages/react/src/*"],
+      "@cossistant/react": ["../../packages/react/src"]
     },
     "skipLibCheck": true
   },
