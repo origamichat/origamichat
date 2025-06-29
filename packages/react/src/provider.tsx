@@ -10,38 +10,39 @@ export interface CossistantContextValue {
 	open: () => void;
 	close: () => void;
 	toggle: () => void;
+	unreadCount: number;
+	setUnreadCount: (count: number) => void;
 }
 
-const CossistantContext = React.createContext<
-	CossistantContextValue | undefined
->(undefined);
+const SupportContext = React.createContext<CossistantContextValue | undefined>(
+	undefined
+);
 
-export function CossistantProvider({
+export function SupportProvider({
 	children,
 	defaultOpen = false,
 }: CossistantProviderProps) {
 	const [isOpen, setIsOpen] = React.useState(defaultOpen);
+	const [unreadCount, setUnreadCount] = React.useState(0);
 
 	const open = React.useCallback(() => setIsOpen(true), []);
 	const close = React.useCallback(() => setIsOpen(false), []);
 	const toggle = React.useCallback(() => setIsOpen((o) => !o), []);
 
 	const value = React.useMemo<CossistantContextValue>(
-		() => ({ isOpen, open, close, toggle }),
-		[isOpen, open, close, toggle]
+		() => ({ isOpen, open, close, toggle, unreadCount, setUnreadCount }),
+		[isOpen, open, close, toggle, unreadCount]
 	);
 
 	return (
-		<CossistantContext.Provider value={value}>
-			{children}
-		</CossistantContext.Provider>
+		<SupportContext.Provider value={value}>{children}</SupportContext.Provider>
 	);
 }
 
-export function useCossistant() {
-	const context = React.useContext(CossistantContext);
+export function useSupport() {
+	const context = React.useContext(SupportContext);
 	if (!context) {
-		throw new Error("useCossistant must be used within a CossistantProvider");
+		throw new Error("useSupport must be used within a SupportProvider");
 	}
 	return context;
 }

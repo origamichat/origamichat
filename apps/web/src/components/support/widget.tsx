@@ -1,9 +1,11 @@
 "use client";
-import { Bubble, Chat, Provider, Window } from "@cossistant/react";
+import { Support, SupportProvider } from "@cossistant/react";
+
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import Icon from "../ui/icons";
 
-export function ChatWidget() {
+export function DemoSupportWidget() {
 	const [value, setValue] = React.useState("");
 
 	const handleSubmit = () => {
@@ -12,41 +14,48 @@ export function ChatWidget() {
 	};
 
 	return (
-		<Provider.CossistantProvider>
-			<Bubble.Button
+		<SupportProvider>
+			<Support.Bubble
 				className={cn(
-					"fixed right-4 bottom-4 z-50",
-					"rounded-full bg-primary px-4 py-2 text-primary-foreground"
+					"group/btn flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground",
+					"group-data-[open=true]/btn:bg-primary/50"
 				)}
 			>
-				Chat
-			</Bubble.Button>
-			<Window.Window
+				{({ isOpen, unreadCount, toggle }) => (
+					<>
+						<Icon className="size-6" name="chat" variant="filled" />
+						{unreadCount > 0 && (
+							<span className="-right-1 -top-1 absolute size-4 rounded-full bg-red-500 text-white text-xs">
+								{unreadCount}
+							</span>
+						)}
+					</>
+				)}
+			</Support.Bubble>
+			<Support.Window
 				className={cn(
 					"fixed right-4 bottom-20 z-50 flex w-80 flex-col",
 					"rounded border bg-background shadow-lg"
 				)}
-				footer={null}
-				header={<div className="p-3 font-medium">Chat</div>}
 			>
 				<div className="flex-1 overflow-y-auto p-3">
 					{/* messages go here */}
 				</div>
 				<div className="flex items-end gap-2 border-t p-3">
-					<Chat.Input
+					<Support.Input
 						className="flex-1 resize-none rounded border px-2 py-1"
 						onChange={setValue}
 						onSubmit={handleSubmit}
 						value={value}
 					/>
-					<Chat.SendButton
+					<Support.SendButton
 						className="rounded bg-primary px-3 py-1 text-primary-foreground"
 						onClick={handleSubmit}
 					>
 						Send
-					</Chat.SendButton>
+					</Support.SendButton>
 				</div>
-			</Window.Window>
-		</Provider.CossistantProvider>
+			</Support.Window>
+		</SupportProvider>
 	);
 }

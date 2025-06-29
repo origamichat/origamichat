@@ -27,10 +27,7 @@
   "homepage": "https://cossistant.com",
   "exports": {
     ".": "./src/index.ts",
-    "bubble": "./src/bubble/index.ts",
-    "chat": "./src/chat/index.ts",
-    "provider": "./src/provider.tsx",
-    "window": "./src/window.tsx"
+    "support": "./src/support/index.ts"
   },
   "scripts": {
     "build": "tsup"

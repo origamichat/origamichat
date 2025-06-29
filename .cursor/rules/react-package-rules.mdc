@@ -1,0 +1,183 @@
+---
+description:
+globs: packages/react/**/*.tsx,packages/react/**/*.ts
+alwaysApply: false
+---
+---
+description: Rules that apply to @cossistant/react
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+# Cursor Component Rule – Cossistant UI Primitives
+
+You're working inside the `@cossistant/react` package.
+
+This library is a **headless, developer-first component system** designed to power support widgets (AI + human), agent dashboards, and rich message interfaces.
+
+Think of it like `shadcn/ui`, but specifically for **support systems**, blending chat, tools, and agent collaboration.
+
+---
+
+## 🧠 Goals
+
+* Fully typed, headless primitives
+* Built for **Tailwind and CSS styling** (no emotion, no style props)
+* Developer-owned rendering and state control
+* Expose internal logic through **hooks** or **render props**, not Base UI APIs
+* Use `useRenderElement` to manage element rendering in a composable, flexible way
+
+---
+
+## ✅ Component Rules
+
+### 1. Headless and Unstyled
+
+* Components must render without any styles.
+* Accept `className`, `style`, and `asChild` to allow Tailwind/CSS.
+* No visual assumptions.
+* Use `useRenderElement` to simplify element creation while staying unstyled and type-safe.
+
+### 2. Controlled by Default
+
+* If a component has internal state, it must support external control via props:
+
+  * `value`, `defaultValue`, `onChange`
+  * `isOpen`, `onOpenChange`, etc.
+
+### 3. State Accessible via Hook or Render Prop
+
+* Internal state should be exposed in one of two ways:
+
+  * Via a hook: `useInput`, `useWindow`, etc.
+  * Or via a render function (render prop):
+
+```tsx
+<Window isOpen={isOpen} onOpenChange={setOpen}>
+  {({ isOpen }) => (
+    <div>{isOpen ? "Chat is open" : "Closed"}</div>
+  )}
+</Window>
+```
+
+* This allows full flexibility and prevents magic hidden logic.
+
+### 4. Inspired by Base UI (But Never Exposed)
+
+* You may use Base UI hooks or logic as a reference.
+* Never expose Base UI or MUI APIs.
+* Do not leak `getRootProps`, `getInputProps`, etc.
+* Instead, use `useRenderElement` to encapsulate render logic.
+
+### 5. Modular Composition
+
+* Always prefer small composable components over one big `<Chat />` abstraction.
+* Example: `Provider`, `Bubble`, `Window`, `MessageList`, `Message`, `Input`, `SendButton`, `Typing`, `Event`, etc.
+
+---
+
+## 🛠️ `useRenderElement` – Why and How
+
+Use `useRenderElement` to create flexible, typed, and overrideable HTML elements with zero styling baked in.
+
+### Why use it?
+
+* Reduces repetitive `className`, `render`, and `ref` handling logic.
+* Supports both intrinsic tags (`div`, `button`, etc.) and `render` props.
+* Works great for headless, composable primitives.
+
+### Example Usage
+
+#### Simple Wrapper Component
+
+```tsx
+const Bubble = (props) => {
+  return useRenderElement('button', props, {
+    props: {
+      type: 'button',
+      children: 'Need help?',
+    },
+  });
+};
+```
+
+#### Render Element Override
+
+```tsx
+<Bubble
+  className="rounded"
+  render={(props) => <CustomButton {...props} icon="💬" />}
+/>
+```
+
+#### Fully Flexible Shape
+
+```tsx
+const Message = ({ state, ...props }) => {
+  return useRenderElement('div', props, {
+    state,
+    props: { children: state.text },
+  });
+};
+```
+
+### Component Shape (DX)
+
+```ts
+interface BubbleProps {
+  render?: (props: HTMLProps, state: any) => React.ReactElement;
+  className?: string | ((state: any) => string);
+}
+```
+
+You always:
+
+* Pass `render`, `className`, and optionally a `state` object
+* Keep the component logic clean and predictable
+* Style using Tailwind in the parent or via className
+
+---
+
+## 🧪 Examples
+
+### Bubble (simple launcher button)
+
+```tsx
+<Bubble className="fixed bottom-4 right-4" />
+```
+
+### Controlled Input with logic access
+
+```tsx
+<Input value={value} onChange={setValue}>
+  {({ value, onChange }) => (
+    <input value={value} onChange={onChange} className="w-full" />
+  )}
+</Input>
+```
+
+### Window with state exposure
+
+```tsx
+<Window isOpen={open} onOpenChange={setOpen}>
+  {({ isOpen }) => (
+    <div className={isOpen ? "block" : "hidden"}>Support content</div>
+  )}
+</Window>
+```
+
+---
+
+## 🧩 Final Reminder
+
+> You are not building styled components.
+> You are building **fully composable support primitives**, typed, accessible, and render-agnostic.
+
+Make sure everything:
+
+* Can be styled with Tailwind
+* Can be controlled via props
+* Can expose its state cleanly if needed
+* Uses `useRenderElement` to simplify rendering when applicable
+
+This is the design system foundation for the Cossistant ecosystem.
+Build it like you want 100,000 developers to use it.
