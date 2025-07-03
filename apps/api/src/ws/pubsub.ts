@@ -16,7 +16,12 @@ const subscriber = new Redis({
 });
 
 export async function publishMessage(message: ServerMessage) {
-    await publisher.publish(CHANNEL, JSON.stringify(message));
+    try {
+        await publisher.publish(CHANNEL, JSON.stringify(message));
+    } catch (error) {
+        console.error('Failed to publish message:', error);
+        throw error;
+    }
 }
 
 export function subscribeMessages(onMessage: (msg: ServerMessage) => void) {
