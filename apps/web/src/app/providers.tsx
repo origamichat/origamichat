@@ -3,6 +3,7 @@
 import { RootProvider } from "fumadocs-ui/provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
+import { usePingWebSocket } from "@/hooks/use-websocket";
 import { TRPCReactProvider } from "@/lib/trpc/client";
 
 type ProviderProps = {
@@ -11,6 +12,7 @@ type ProviderProps = {
 };
 
 export function Providers({ children }: ProviderProps) {
+	usePingWebSocket();
 	return (
 		<NuqsAdapter>
 			<RootProvider

@@ -3,6 +3,8 @@ import { routers } from "@api/rest/routers";
 import { createTRPCContext } from "@api/trpc/init";
 import { origamiTRPCRouter } from "@api/trpc/routers/_app";
 import { checkHealth } from "@api/utils/health";
+import { clientMessageSchema } from "@api/ws/schema";
+import { publishMessage, subscribeMessages } from "@api/ws/pubsub";
 import { auth } from "@cossistant/database";
 import { swaggerUI } from "@hono/swagger-ui";
 import { trpcServer } from "@hono/trpc-server";
@@ -29,6 +31,24 @@ const acceptedOrigins = [
 ];
 
 const { upgradeWebSocket, websocket } = createBunWebSocket<ServerWebSocket>();
+
+const sockets = new Set<ServerWebSocket>();
+
+let subscription: ReturnType<typeof subscribeMessages> | null = null;
+
+try {
+    subscription = subscribeMessages((msg) => {
+        for (const ws of sockets) {
+            try {
+                ws.send(JSON.stringify(msg));
+            } catch {
+                sockets.delete(ws);
+            }
+        }
+    });
+} catch (error) {
+    console.error('Failed to setup Redis subscription:', error);
+}
 
 // Logger middleware
 app.use(logger());
@@ -153,18 +173,29 @@ app.use(
 			};
 		}
 
-		return {
-			onMessage(event, ws) {
-				console.log(`Message from client: ${event.data}`);
-
-				ws.send("Hello from server!");
-			},
-			onClose: () => {
-				console.log("Connection closed");
-			},
-			onOpen(evt, ws) {},
-		};
-	})
+                return {
+                        onMessage(event, ws) {
+                                try {
+                                        const message = clientMessageSchema.parse(
+                                                JSON.parse(event.data.toString())
+                                        );
+                                        if (message.type === "ping") {
+                                                publishMessage({ type: "pong" });
+                                        }
+                                } catch (_err) {
+                                        ws.send(JSON.stringify({ error: "invalid message" }));
+                                }
+                        },
+                        onClose: () => {
+                                sockets.delete(ws);
+                                console.log("Connection closed");
+                        },
+                        onOpen() {
+                                sockets.add(ws);
+                                console.log("WebSocket connection opened");
+                        },
+                };
+        })
 );
 
 // Start the server - no export needed for compiled executable
