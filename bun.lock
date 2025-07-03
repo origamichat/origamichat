@@ -88,6 +88,7 @@
         "react-dom": "^19.0.0",
         "react-hook-form": "^7.58.0",
         "react-hotkeys-hook": "^5.1.0",
+        "react-use-websocket": "^4.13.0",
         "sonner": "^2.0.5",
         "superjson": "^2.2.2",
         "tailwind-merge": "^3.3.0",
@@ -153,6 +154,14 @@
       "devDependencies": {
         "@cossistant/typescript-config": "workspace:*",
       },
+      "peerDependencies": {
+        "@types/react": "^17 || ^18 || ^19",
+        "react": "^17 || ^18 || ^19",
+        "react-dom": "^17 || ^18 || ^19",
+      },
+      "optionalPeers": [
+        "@types/react",
+      ],
     },
     "packages/typescript-config": {
       "name": "@cossistant/typescript-config",
@@ -1549,6 +1558,8 @@
     "react-remove-scroll-bar": ["react-remove-scroll-bar@2.3.8", "", { "dependencies": { "react-style-singleton": "^2.2.2", "tslib": "^2.0.0" }, "peerDependencies": { "@types/react": "*", "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0" }, "optionalPeers": ["@types/react"] }, "sha512-9r+yi9+mgU33AKcj6IbT9oRCO78WriSj6t/cF8DWBZJ9aOGPOTEDvdUDz1FwKim7QXWwmHqtdHnRJfhAxEG46Q=="],
 
     "react-style-singleton": ["react-style-singleton@2.2.3", "", { "dependencies": { "get-nonce": "^1.0.0", "tslib": "^2.0.0" }, "peerDependencies": { "@types/react": "*", "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc" }, "optionalPeers": ["@types/react"] }, "sha512-b6jSvxvVnyptAiLjbkWLE/lOnR4lfTtDAl+eUC7RZy+QQWc6wRzIV2CE6xBuMmDxc2qIihtDCZD5NPOFl7fRBQ=="],
+
+    "react-use-websocket": ["react-use-websocket@4.13.0", "", {}, "sha512-anMuVoV//g2N76Wxqvqjjo1X48r9Np3y1/gMl7arX84tAPXdy5R7sB5lO5hvCzQRYjqXwV8XMAiEBOUbyrZFrw=="],
 
     "read-yaml-file": ["read-yaml-file@1.1.0", "", { "dependencies": { "graceful-fs": "^4.1.5", "js-yaml": "^3.6.1", "pify": "^4.0.1", "strip-bom": "^3.0.0" } }, "sha512-VIMnQi/Z4HT2Fxuwg5KrY174U1VdUIASQVWXXyqtNRtxSr9IYkn1rsI6Tb6HsrHCmB7gVpNwX6JxPTHcH6IoTA=="],
 
