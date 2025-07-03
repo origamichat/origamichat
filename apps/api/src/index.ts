@@ -34,15 +34,21 @@ const { upgradeWebSocket, websocket } = createBunWebSocket<ServerWebSocket>();
 
 const sockets = new Set<ServerWebSocket>();
 
-subscribeMessages((msg) => {
-    for (const ws of sockets) {
-        try {
-            ws.send(JSON.stringify(msg));
-        } catch {
-            sockets.delete(ws);
+let subscription: ReturnType<typeof subscribeMessages> | null = null;
+
+try {
+    subscription = subscribeMessages((msg) => {
+        for (const ws of sockets) {
+            try {
+                ws.send(JSON.stringify(msg));
+            } catch {
+                sockets.delete(ws);
+            }
         }
-    }
-});
+    });
+} catch (error) {
+    console.error('Failed to setup Redis subscription:', error);
+}
 
 // Logger middleware
 app.use(logger());
