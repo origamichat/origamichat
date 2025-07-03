@@ -27,4 +27,9 @@ export function subscribeMessages(onMessage: (msg: ServerMessage) => void) {
             onMessage(parsed.data);
         }
     });
+    
+    return {
+        unsubscribe: () => sub.unsubscribe(),
+        subscription: sub
+    };
 }
