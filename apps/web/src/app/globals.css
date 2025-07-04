@@ -36,12 +36,12 @@
 
 .dark {
 	--background: oklch(0.145 0 0);
-	--background-100: oklch(0.145 0 0);
-	--background-200: oklch(0.145 0 0);
-	--background-300: oklch(0.145 0 0);
-	--background-400: oklch(0.145 0 0);
-	--background-500: oklch(0.145 0 0);
-	--background-600: oklch(0.145 0 0);
+	--background-100: oklch(0.155 0 0);
+	--background-200: oklch(0.165 0 0);
+	--background-300: oklch(0.175 0 0);
+	--background-400: oklch(0.185 0 0);
+	--background-500: oklch(0.195 0 0);
+	--background-600: oklch(0.205 0 0);
 
 	--foreground: oklch(0.985 0 0);
 
