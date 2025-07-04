@@ -3,28 +3,26 @@
 import { RootProvider } from "fumadocs-ui/provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
-import { usePingWebSocket } from "@/hooks/use-websocket";
 import { TRPCReactProvider } from "@/lib/trpc/client";
 
 type ProviderProps = {
-	//   locale: string;
-	children: ReactNode;
+  //   locale: string;
+  children: ReactNode;
 };
 
 export function Providers({ children }: ProviderProps) {
-	usePingWebSocket();
-	return (
-		<NuqsAdapter>
-			<RootProvider
-				theme={{
-					attribute: "class",
-					defaultTheme: "system",
-					enableSystem: true,
-					disableTransitionOnChange: true,
-				}}
-			>
-				<TRPCReactProvider>{children}</TRPCReactProvider>
-			</RootProvider>
-		</NuqsAdapter>
-	);
+  return (
+    <NuqsAdapter>
+      <RootProvider
+        theme={{
+          attribute: "class",
+          defaultTheme: "system",
+          enableSystem: true,
+          disableTransitionOnChange: true,
+        }}
+      >
+        <TRPCReactProvider>{children}</TRPCReactProvider>
+      </RootProvider>
+    </NuqsAdapter>
+  );
 }
