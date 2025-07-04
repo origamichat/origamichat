@@ -7,59 +7,59 @@ import { cn } from "@/lib/utils";
 import { TooltipOnHover } from "./tooltip";
 
 interface TopbarButtonProps {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-  icon?: React.ReactNode;
-  tooltip?: string;
-  shortcuts?: string[];
-  withBrackets?: boolean;
+	href: string;
+	children: React.ReactNode;
+	className?: string;
+	icon?: React.ReactNode;
+	tooltip?: string;
+	shortcuts?: string[];
+	withBrackets?: boolean;
 }
 
 export function TopbarButton({
-  href,
-  children,
-  className,
-  icon,
-  tooltip,
-  shortcuts,
-  withBrackets = true,
+	href,
+	children,
+	className,
+	icon,
+	tooltip,
+	shortcuts,
+	withBrackets = true,
 }: TopbarButtonProps) {
-  const router = useRouter();
+	const router = useRouter();
 
-  useHotkeys(
-    [shortcuts?.join("+") ?? ""],
-    () => {
-      router.push(href);
-    },
-    {
-      enabled: !!shortcuts,
-      preventDefault: true,
-    }
-  );
+	useHotkeys(
+		[shortcuts?.join("+") ?? ""],
+		() => {
+			router.push(href);
+		},
+		{
+			enabled: !!shortcuts,
+			preventDefault: true,
+		}
+	);
 
-  return (
-    <TooltipOnHover content={tooltip} shortcuts={shortcuts}>
-      <Link
-        className={cn(
-          "group flex items-center gap-1 font-mono text-foreground/70 text-sm transition-colors hover:text-foreground",
-          className
-        )}
-        href={href}
-      >
-        {withBrackets && (
-          <span className="text-foreground/30 transition-all duration-200 group-hover:translate-x-[-1px] group-hover:rotate-[-1deg] group-hover:scale-105">
-            [
-          </span>
-        )}
-        {icon && <span className="mr-1">{icon}</span>}
-        {children}
-        {withBrackets && (
-          <span className="text-foreground/30 transition-all duration-200 group-hover:translate-x-[1px] group-hover:rotate-[1deg] group-hover:scale-105">
-            ]
-          </span>
-        )}
-      </Link>
-    </TooltipOnHover>
-  );
+	return (
+		<TooltipOnHover content={tooltip} shortcuts={shortcuts}>
+			<Link
+				className={cn(
+					"group flex items-center gap-1 font-mono text-foreground/70 text-sm transition-colors hover:text-foreground",
+					className
+				)}
+				href={href}
+			>
+				{withBrackets && (
+					<span className="text-foreground/30 transition-all duration-200 group-hover:translate-x-[-1px] group-hover:rotate-[-1deg] group-hover:scale-105">
+						[
+					</span>
+				)}
+				{icon && <span className="mr-1">{icon}</span>}
+				{children}
+				{withBrackets && (
+					<span className="text-foreground/30 transition-all duration-200 group-hover:translate-x-[1px] group-hover:rotate-[1deg] group-hover:scale-105">
+						]
+					</span>
+				)}
+			</Link>
+		</TooltipOnHover>
+	);
 }
