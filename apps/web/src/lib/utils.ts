@@ -19,3 +19,7 @@ export function isValidDomain(domain: string) {
 	// But reject: example, http://example.com
 	return DOMAIN_REGEX.test(domain);
 }
+
+export function absoluteUrl(path: string) {
+	return `${process.env.NEXT_PUBLIC_APP_URL}${path}`;
+}

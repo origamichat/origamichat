@@ -11,6 +11,9 @@ export type IconName =
 	| "clipboard"
 	| "send"
 	| "chevron-down"
+	| "arrow-left"
+	| "arrow-right"
+	| "arrow-up-right"
 	| "chat";
 
 export interface IconProps {
@@ -64,6 +67,18 @@ const iconRegistry: Record<IconName, Record<IconVariant, string>> = {
 		default: "M6 9L12 15L18 9",
 		filled:
 			"M10.8686 14.8686L7.73137 11.7314C6.87462 10.8746 6.44624 10.4462 6.4173 10.0785C6.39218 9.75934 6.52136 9.44749 6.76477 9.23959C7.04529 9 7.65111 9 8.86274 9H15.1373C16.3489 9 16.9547 9 17.2352 9.23959C17.4786 9.44749 17.6078 9.75934 17.5827 10.0785C17.5538 10.4462 17.1254 10.8746 16.2686 11.7314L13.1314 14.8686C12.7354 15.2646 12.5373 15.4627 12.309 15.5368C12.1082 15.6021 11.8918 15.6021 11.691 15.5368C11.4627 15.4627 11.2646 15.2646 10.8686 14.8686Z",
+	},
+	"arrow-left": {
+		default: "M15 19l-7-7 7-7",
+		filled: "M15 19l-7-7 7-7",
+	},
+	"arrow-right": {
+		default: "M9 5l7 7-7 7",
+		filled: "M9 5l7 7-7 7",
+	},
+	"arrow-up-right": {
+		default: "M15 19l-7-7 7-7",
+		filled: "M15 19l-7-7 7-7",
 	},
 };
 
