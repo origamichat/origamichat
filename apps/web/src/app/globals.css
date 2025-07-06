@@ -16,6 +16,10 @@
 
 	--foreground: oklch(0.145 0 0);
 
+	/* Layout dimensions */
+	--header-height: 80px;
+	--footer-height: 0px;
+
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.145 0 0);
 	--primary: oklch(0.205 0 0);
@@ -128,7 +132,55 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
+	html {
+		@apply scroll-smooth;
+	}
+
 	body {
 		@apply bg-background text-foreground;
+	}
+}
+
+@layer utilities {
+	.step {
+		counter-increment: step;
+	}
+
+	.step:before {
+		@apply md:absolute w-8 h-8 md:w-9 md:h-9 bg-muted rounded-full font-mono font-medium text-center text-base inline-flex items-center justify-center -indent-px border-4 mr-2 border-background;
+		@apply md:ml-[-50px] md:mt-[-4px];
+		content: counter(step);
+	}
+
+	.chunk-container {
+		@apply shadow-none;
+	}
+
+	.chunk-container::after {
+		content: "";
+		@apply absolute -inset-4 shadow-xl rounded-xl border;
+	}
+
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+
+	.border-grid {
+		@apply border-border/50 dark:border-border border-dashed;
+	}
+
+	.container-wrapper {
+		@apply max-w-[1400px] min-[1800px]:max-w-screen-2xl mx-auto w-full;
+	}
+
+	.container {
+		@apply px-4 xl:px-6 mx-auto max-w-screen-2xl;
 	}
 }

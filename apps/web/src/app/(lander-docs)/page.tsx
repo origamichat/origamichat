@@ -1,8 +1,6 @@
 import { WaitingList } from "@/app/(lander-docs)/components/waiting-list";
 import { DemoSupportWidget } from "@/components/support/widget";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { Footer } from "./components/footer";
-import { TopBar } from "./components/top-bar";
 
 // Force dynamic rendering since this page depends on user authentication
 export const dynamic = "force-dynamic";
@@ -38,17 +36,6 @@ export default function Landing() {
 				</div>
 			</div>
 			<div className="mt-40 flex w-full flex-col items-center justify-center gap-6" />
-			<ProgressiveBlur
-				blurIntensity={1}
-				className="pointer-events-none fixed top-0 right-0 left-0 z-5 h-[200px] w-full"
-				direction="top"
-			/>
-			<ProgressiveBlur
-				blurIntensity={1}
-				className="pointer-events-none fixed right-0 bottom-0 left-0 z-5 h-[200px] w-full"
-				direction="bottom"
-			/>
-			<Footer />
 		</>
 	);
 }
