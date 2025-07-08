@@ -14,7 +14,7 @@ function Page() {
 			<div className="flex w-full max-w-lg flex-col gap-6">
 				<TextEffect
 					as="h1"
-					className="text-balance font-medium text-4xl md:text-6xl md:leading-tight"
+					className="text-balance font-f37-stout font-medium text-4xl md:text-6xl md:leading-tight"
 					per="word"
 					preset="blur"
 				>

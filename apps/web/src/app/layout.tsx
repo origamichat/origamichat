@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
@@ -14,6 +15,17 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],
+});
+
+const F37Stout = localFont({
+	src: [
+		{
+			path: "../../public/fonts/F37Stout-Regular.woff2",
+			weight: "400",
+			style: "normal",
+		},
+	],
+	variable: "--font-f37-stout",
 });
 
 export const metadata: Metadata = {
@@ -80,7 +92,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} group/body overscroll-none antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} ${F37Stout.variable} group/body overscroll-none antialiased`}
 			>
 				<Providers>{children}</Providers>
 				<Toaster />

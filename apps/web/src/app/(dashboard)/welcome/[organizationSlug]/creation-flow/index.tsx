@@ -41,5 +41,7 @@ export default function CreationFlowWrapper({
 		);
 	}
 
+	console.log({ website });
+
 	return <div>Creation Flow</div>;
 }

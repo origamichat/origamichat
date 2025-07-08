@@ -357,11 +357,36 @@ app.use(
 								isTyping,
 								websiteId: socketInfo.websiteId || "",
 								organizationId: socketInfo.organizationId || "",
+								timestamp: Date.now(),
 							};
 
 							publishMessage(
 								ChannelPatterns.conversation(conversationId),
 								typingMessage
+							);
+							break;
+						}
+
+						case "typing_progress": {
+							const { conversationId, content } = message;
+
+							// TODO: Add authorization check for the conversation
+
+							// Broadcast typing progress to conversation channel
+							const typingProgressMessage: ServerMessage = {
+								type: "typing_progress",
+								conversationId,
+								userId: socketInfo.userId || "",
+								userType: socketInfo.userType,
+								content,
+								websiteId: socketInfo.websiteId || "",
+								organizationId: socketInfo.organizationId || "",
+								timestamp: Date.now(),
+							};
+
+							publishMessage(
+								ChannelPatterns.conversation(conversationId),
+								typingProgressMessage
 							);
 							break;
 						}
@@ -415,6 +440,17 @@ app.use(
 
 				sockets.set(ws, socketInfo);
 				console.log("WebSocket connection opened");
+
+				// Send connection established message
+				const connectionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+				ws.send(
+					JSON.stringify({
+						type: "connection_established",
+						connectionId,
+						serverTime: Date.now(),
+						timestamp: Date.now(),
+					} as ServerMessage)
+				);
 			},
 		};
 	})

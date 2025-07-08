@@ -14,7 +14,8 @@ export type IconName =
 	| "arrow-left"
 	| "arrow-right"
 	| "arrow-up-right"
-	| "chat";
+	| "chat"
+	| "menu";
 
 export interface IconProps {
 	name: IconName;
@@ -79,6 +80,10 @@ const iconRegistry: Record<IconName, Record<IconVariant, string>> = {
 	"arrow-up-right": {
 		default: "M15 19l-7-7 7-7",
 		filled: "M15 19l-7-7 7-7",
+	},
+	menu: {
+		default: "M3 6H21M3 12H21M3 18H21",
+		filled: "M3 6H21M3 12H21M3 18H21",
 	},
 };
 

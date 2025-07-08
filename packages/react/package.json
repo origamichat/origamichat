@@ -27,7 +27,8 @@
   "homepage": "https://cossistant.com",
   "exports": {
     ".": "./src/index.ts",
-    "support": "./src/support/index.ts"
+    "support": "./src/support/index.ts",
+    "websocket": "./src/websocket/index.ts"
   },
   "scripts": {
     "build": "tsup"
@@ -37,6 +38,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "zod": "^3.25.56"
   },
   "devDependencies": {
     "@cossistant/typescript-config": "workspace:*"

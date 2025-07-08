@@ -25,6 +25,7 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "0.44.0",
     "nanoid": "^5.1.5",
+    "resend": "^4.6.0",
     "ulid": "^3.0.0"
   },
   "devDependencies": {

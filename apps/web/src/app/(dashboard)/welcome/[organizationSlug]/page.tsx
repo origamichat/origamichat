@@ -29,8 +29,8 @@ export default async function Page({
 			<div className="flex items-center gap-4">
 				<Logo className="size-6" />
 				<span className="text-primary/30 text-sm">/</span>
-				<TextEffect className="text-center font-medium text-2xl" delay={0.5}>
-					Welcome to Cossistant
+				<TextEffect className="text-center font-f37-stout text-2xl" delay={0.5}>
+					Welcome to cossistant
 				</TextEffect>
 			</div>
 

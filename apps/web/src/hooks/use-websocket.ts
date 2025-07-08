@@ -2,6 +2,12 @@
 
 import type { ClientMessage, ServerMessage } from "@api/ws/schema";
 import { serverMessageSchema } from "@api/ws/schema";
+// Import the new WebSocket implementation
+import {
+	useWebSocketDirect,
+	type WebSocketConfig,
+	type WebSocketEventHandlers,
+} from "@cossistant/react/websocket";
 import { useCallback, useEffect, useRef } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { getWebSocketUrl } from "@/lib/url";

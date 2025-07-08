@@ -27,5 +27,9 @@ export const env = {
 	API_KEY_SECRET: getEnvVariable("API_KEY_SECRET"),
 	GOOGLE_CLIENT_ID: getEnvVariable("GOOGLE_CLIENT_ID"),
 	GOOGLE_CLIENT_SECRET: getEnvVariable("GOOGLE_CLIENT_SECRET"),
+	GITHUB_CLIENT_ID: getEnvVariable("GITHUB_CLIENT_ID"),
+	GITHUB_CLIENT_SECRET: getEnvVariable("GITHUB_CLIENT_SECRET"),
+	RESEND_API_KEY: getEnvVariable("RESEND_API_KEY"),
+	RESEND_AUDIENCE_ID: getEnvVariable("RESEND_AUDIENCE_ID"),
 	PORT: +getEnvVariable("PORT", "8787"),
 };

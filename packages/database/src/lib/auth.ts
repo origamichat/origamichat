@@ -7,10 +7,14 @@ import {
 	anonymous,
 	organization as organizationPlugin,
 } from "better-auth/plugins";
+import { Resend } from "resend";
 import { db } from "../database";
 import { generateULID } from "../utils/ids";
 
-export const auth = betterAuth({
+// Initialize Resend client
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export const auth: ReturnType<typeof betterAuth> = betterAuth({
 	baseURL:
 		process.env.BETTER_AUTH_URL ||
 		(process.env.NODE_ENV === "production"
@@ -20,6 +24,10 @@ export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "pg",
 	}),
+	emailAndPassword: {
+		enabled: true,
+		autoSignIn: true, // Auto sign-in after email registration
+	},
 	plugins: [
 		organizationPlugin({
 			organizationCreation: {
@@ -48,6 +56,10 @@ export const auth = betterAuth({
 			clientId: process.env.GOOGLE_CLIENT_ID ?? "",
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
 			scopes: ["identify", "email", "openid"],
+		},
+		github: {
+			clientId: process.env.GITHUB_CLIENT_ID ?? "",
+			clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
 		},
 	},
 	advanced: {
@@ -89,10 +101,28 @@ export const auth = betterAuth({
 		user: {
 			create: {
 				after: async (createdUser) => {
-					await db.insert(waitingListEntry).values({
-						userId: createdUser.id,
-						uniqueReferralCode: slugify(createdUser.name),
-					});
+					try {
+						// Add user to waiting list
+						await db.insert(waitingListEntry).values({
+							userId: createdUser.id,
+							uniqueReferralCode: slugify(createdUser.name),
+						});
+
+						// Add user to Resend audience if API key and audience ID are configured
+						if (process.env.RESEND_API_KEY && process.env.RESEND_AUDIENCE_ID) {
+							await resend.contacts.create({
+								email: createdUser.email,
+								firstName: createdUser.name?.split(" ")[0] || "",
+								lastName: createdUser.name?.split(" ").slice(1).join(" ") || "",
+								unsubscribed: false,
+								audienceId: process.env.RESEND_AUDIENCE_ID,
+							});
+							console.log(`Added user ${createdUser.email} to Resend audience`);
+						}
+					} catch (error) {
+						console.error("Error in user creation hook:", error);
+						// Don't throw error to avoid blocking user creation
+					}
 				},
 			},
 		},
