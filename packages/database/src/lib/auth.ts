@@ -14,7 +14,7 @@ import { generateULID } from "../utils/ids";
 // Initialize Resend client
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const auth: ReturnType<typeof betterAuth> = betterAuth({
+export const auth = betterAuth({
 	baseURL:
 		process.env.BETTER_AUTH_URL ||
 		(process.env.NODE_ENV === "production"

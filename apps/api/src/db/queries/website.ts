@@ -3,7 +3,8 @@ import {
 	type WebsiteInsert,
 	website,
 } from "@cossistant/database";
-import { and, desc, eq, isNull, like, or } from "drizzle-orm";
+
+import { and, desc, eq, isNull } from "drizzle-orm";
 
 // Create website
 export async function createWebsite(
@@ -69,36 +70,6 @@ export async function getWebsitesByOrganization(
 		)
 		.orderBy(desc(website.createdAt))
 		.limit(params.limit ?? 50)
-		.offset(params.offset ?? 0);
-
-	return websites;
-}
-
-// Search websites by name or description
-export async function searchWebsites(
-	db: Database,
-	params: {
-		orgId: string;
-		query: string;
-		limit?: number;
-		offset?: number;
-	}
-) {
-	const websites = await db
-		.select()
-		.from(website)
-		.where(
-			and(
-				eq(website.organizationId, params.orgId),
-				or(
-					like(website.name, `%${params.query}%`),
-					like(website.description, `%${params.query}%`)
-				),
-				isNull(website.deletedAt)
-			)
-		)
-		.orderBy(desc(website.createdAt))
-		.limit(params.limit ?? 20)
 		.offset(params.offset ?? 0);
 
 	return websites;

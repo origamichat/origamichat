@@ -1,4 +1,6 @@
+import { getWaitlistEntryByUserId } from "@api/db/queries/waitlist";
 import type { OrigamiSession, OrigamiUser } from "@cossistant/database";
+import { db } from "@database/database";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAPIBaseUrl } from "@/lib/url";
@@ -40,4 +42,19 @@ export const ensurePageAuth = async (
 	}
 
 	return { session, user };
+};
+
+export const checkWaitlistAccess = async (userId: string) => {
+	const waitlistData = await getWaitlistEntryByUserId(db, { userId });
+	return waitlistData.entry?.accessGranted ?? false;
+};
+
+export const ensureWaitlistAccess = async (userId: string) => {
+	const hasAccess = await checkWaitlistAccess(userId);
+
+	if (!hasAccess) {
+		redirect("/joined");
+	}
+
+	return hasAccess;
 };

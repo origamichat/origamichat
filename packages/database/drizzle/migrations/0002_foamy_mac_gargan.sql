@@ -1,0 +1,1 @@
+ALTER TABLE "waiting_list_entry" ADD COLUMN "access_granted" boolean DEFAULT false NOT NULL;

@@ -4,7 +4,7 @@ import type { OrganizationSelect, WebsiteSelect } from "@database/schema";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { SELECTED_WEBSITE_COOKIE_NAME } from "@/constants";
-import { ensurePageAuth } from "@/lib/auth/server";
+import { ensurePageAuth, ensureWaitlistAccess } from "@/lib/auth/server";
 
 const getDefaultWebsiteToRedirectTo = ({
 	selectedWebsiteId,
@@ -49,6 +49,10 @@ const getDefaultWebsiteToRedirectTo = ({
 
 export default async function Select() {
 	const { user } = await ensurePageAuth();
+
+	// Check if user has valid waiting list access
+	await ensureWaitlistAccess(user.id);
+
 	const cookieStore = await cookies();
 
 	// If the user has a selected website already

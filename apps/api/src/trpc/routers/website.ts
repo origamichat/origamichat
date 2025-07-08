@@ -4,6 +4,7 @@ import {
 	createWebsiteRequestSchema,
 	createWebsiteResponseSchema,
 } from "@api/schemas/website";
+import { domainToSlug } from "@api/utils/domain-slug";
 import { website } from "@cossistant/database";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
@@ -35,8 +36,7 @@ export const websiteRouter = createTRPCRouter({
 			const isDomainOwnershipVerified = userEmailDomain === input.domain;
 
 			// Generate a unique slug by always adding a random suffix
-			const baseSlug = input.name.trim().toLowerCase().replace(/ /g, "-");
-			const slug = `${baseSlug}-${nanoid(6)}`;
+			const slug = domainToSlug(input.domain);
 
 			const [createdWebsite] = await db
 				.insert(website)

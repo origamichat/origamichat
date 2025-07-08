@@ -15,6 +15,13 @@
       "when": 1750758460764,
       "tag": "0001_great_jackal",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1751997702982,
+      "tag": "0002_foamy_mac_gargan",
+      "breakpoints": true
     }
   ]
 }
