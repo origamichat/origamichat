@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/complexity/useLiteralKeys: ok */
 import type { ShikiTransformer } from "shiki";
 import { codeToHtml } from "shiki";
+import { cossistantLight, cossistantDark } from "./cossistant-theme";
 
 export const transformers = [
 	{
@@ -67,14 +68,19 @@ export async function highlightCode(code: string, language = "tsx") {
 	const html = await codeToHtml(code, {
 		lang: language,
 		themes: {
-			dark: "github-dark",
-			light: "github-light",
+			dark: cossistantDark,
+			light: cossistantLight,
 		},
+		defaultColor: false,
+		cssVariablePrefix: "--shiki-",
 		transformers: [
 			{
 				pre(node) {
 					node.properties["class"] =
-						"no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0 !bg-transparent";
+						"no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0";
+					// Use CSS variables that switch based on dark mode
+					node.properties["style"] = 
+						"background-color: var(--shiki-light-bg); color: var(--shiki-light)";
 				},
 				code(node) {
 					node.properties["data-line-numbers"] = "";

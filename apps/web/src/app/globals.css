@@ -44,6 +44,11 @@
 	--sidebar-accent-foreground: hsl(240 5.9% 10%);
 	--sidebar-border: hsl(220 13% 91%);
 	--sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+	--cossistant-pink: hsla(314, 100%, 85%, 1);
+	--cossistant-yellow: hsla(58, 92%, 79%, 1);
+	--cossistant-blue: hsla(218, 91%, 78%, 1);
+	--cossistant-orange: hsla(19, 99%, 50%, 1);
 }
 
 .dark {
@@ -125,6 +130,12 @@
 	--color-sidebar-primary: var(--sidebar-primary);
 	--color-sidebar-foreground: var(--sidebar-foreground);
 	--color-sidebar: var(--sidebar);
+
+	/* custom colors */
+	--color-cossistant-pink: var(--cossistant-pink);
+	--color-cossistant-yellow: var(--cossistant-yellow);
+	--color-cossistant-blue: var(--cossistant-blue);
+	--color-cossistant-orange: var(--cossistant-orange);
 }
 
 @layer base {
@@ -171,8 +182,8 @@
 		scrollbar-width: none; /* Firefox */
 	}
 
-	.border-grid {
-		@apply border-border/50 dark:border-border border-dashed;
+	.border-grid-x {
+		@apply border-x border-primary/20 border-dashed;
 	}
 
 	.container-wrapper {
@@ -181,5 +192,26 @@
 
 	.container {
 		@apply px-4 xl:px-6 mx-auto max-w-screen-2xl;
+	}
+
+	/* Shiki syntax highlighting theme switching */
+	.shiki,
+	.shiki span {
+		color: var(--shiki-light);
+		background-color: var(--shiki-light-bg);
+		--cossistant-pink: hsla(314, 100%, 50%, 1);
+		--cossistant-yellow: hsla(58, 92%, 55%, 1);
+		--cossistant-blue: hsla(218, 91%, 50%, 1);
+		--cossistant-orange: hsla(19, 99%, 50%, 1);
+	}
+
+	.dark .shiki,
+	.dark .shiki span {
+		color: var(--shiki-dark);
+		background-color: var(--shiki-dark-bg);
+		--cossistant-pink: hsla(314, 100%, 85%, 1);
+		--cossistant-yellow: hsla(58, 92%, 79%, 1);
+		--cossistant-blue: hsla(218, 91%, 78%, 1);
+		--cossistant-orange: hsla(19, 99%, 70%, 1);
 	}
 }
