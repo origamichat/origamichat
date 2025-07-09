@@ -116,10 +116,7 @@
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
-	--radius-sm: calc(var(--radius) - 4px);
-	--radius-md: calc(var(--radius) - 2px);
-	--radius-lg: var(--radius);
-	--radius-xl: calc(var(--radius) + 4px);
+	--radius: 2px;
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -161,7 +158,7 @@
 
 	.chunk-container::after {
 		content: "";
-		@apply absolute -inset-4 shadow-xl rounded-xl border;
+		@apply absolute -inset-4 shadow-xl rounded border;
 	}
 
 	/* Hide scrollbar for Chrome, Safari and Opera */
