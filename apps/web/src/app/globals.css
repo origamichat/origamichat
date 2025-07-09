@@ -183,7 +183,7 @@
 	}
 
 	.border-grid-x {
-		@apply border-x border-primary/20 border-dashed;
+		@apply border-x border-primary/10 border-dashed;
 	}
 
 	.container-wrapper {
