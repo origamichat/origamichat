@@ -10,7 +10,7 @@ import { generateULID, ulid } from "../utils/ids";
 import { user } from "./auth";
 
 export const waitingListEntry = pgTable("waiting_list_entry", {
-	id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
+	id: ulidPrimaryKey("id"),
 	userId: ulid("user_id")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),

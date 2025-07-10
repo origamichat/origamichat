@@ -4,14 +4,18 @@ import {
 	relations,
 } from "drizzle-orm";
 import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { generateULID, ulid } from "../utils/ids";
-import { website } from "./chat";
+import {
+	ulidNullableReference,
+	ulidPrimaryKey,
+	ulidReference,
+} from "../utils/ids";
 import { waitingListEntry } from "./waiting-list";
+import { website } from "./website";
 
 export const user = pgTable(
 	"user",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
+		id: ulidPrimaryKey("id"),
 		name: text("name").notNull(),
 		email: text("email").notNull().unique(),
 		emailVerified: boolean("email_verified")
@@ -45,18 +49,18 @@ export const user = pgTable(
 export const session = pgTable(
 	"session",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
+		id: ulidPrimaryKey("id"),
 		expiresAt: timestamp("expires_at").notNull(),
 		token: text("token").notNull().unique(),
 		createdAt: timestamp("created_at").notNull(),
 		updatedAt: timestamp("updated_at").notNull(),
 		ipAddress: text("ip_address"),
 		userAgent: text("user_agent"),
-		userId: ulid("user_id")
-			.notNull()
-			.references(() => user.id, { onDelete: "cascade" }),
-		activeOrganizationId: ulid("active_organization_id"),
-		impersonatedBy: ulid("impersonated_by"),
+		userId: ulidReference("user_id").references(() => user.id, {
+			onDelete: "cascade",
+		}),
+		activeOrganizationId: ulidNullableReference("active_organization_id"),
+		impersonatedBy: ulidNullableReference("impersonated_by"),
 	},
 	(table) => [
 		// Index for token lookups
@@ -73,12 +77,12 @@ export const session = pgTable(
 export const account = pgTable(
 	"account",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
+		id: ulidPrimaryKey("id"),
 		accountId: text("account_id").notNull(),
 		providerId: text("provider_id").notNull(),
-		userId: ulid("user_id")
-			.notNull()
-			.references(() => user.id, { onDelete: "cascade" }),
+		userId: ulidReference("user_id").references(() => user.id, {
+			onDelete: "cascade",
+		}),
 		accessToken: text("access_token"),
 		refreshToken: text("refresh_token"),
 		idToken: text("id_token"),
@@ -102,7 +106,7 @@ export const account = pgTable(
 export const verification = pgTable(
 	"verification",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
+		id: ulidPrimaryKey("id"),
 		identifier: text("identifier").notNull(),
 		value: text("value").notNull(),
 		expiresAt: timestamp("expires_at").notNull(),
@@ -124,7 +128,7 @@ export const verification = pgTable(
 export const organization = pgTable(
 	"organization",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
+		id: ulidPrimaryKey("id"),
 		name: text("name").notNull(),
 		slug: text("slug").notNull().unique(),
 		logo: text("logo"),
@@ -140,13 +144,14 @@ export const organization = pgTable(
 export const member = pgTable(
 	"member",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
-		organizationId: ulid("organization_id")
-			.notNull()
-			.references(() => organization.id, { onDelete: "cascade" }),
-		userId: ulid("user_id")
-			.notNull()
-			.references(() => user.id, { onDelete: "cascade" }),
+		id: ulidPrimaryKey("id"),
+		organizationId: ulidReference("organization_id").references(
+			() => organization.id,
+			{ onDelete: "cascade" }
+		),
+		userId: ulidReference("user_id").references(() => user.id, {
+			onDelete: "cascade",
+		}),
 		role: text("role").default("member").notNull(),
 		createdAt: timestamp("created_at").notNull(),
 	},
@@ -163,17 +168,18 @@ export const member = pgTable(
 export const invitation = pgTable(
 	"invitation",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
-		organizationId: ulid("organization_id")
-			.notNull()
-			.references(() => organization.id, { onDelete: "cascade" }),
+		id: ulidPrimaryKey("id"),
+		organizationId: ulidReference("organization_id").references(
+			() => organization.id,
+			{ onDelete: "cascade" }
+		),
 		email: text("email").notNull(),
 		role: text("role"),
 		status: text("status").default("pending").notNull(),
 		expiresAt: timestamp("expires_at").notNull(),
-		inviterId: ulid("inviter_id")
-			.notNull()
-			.references(() => user.id, { onDelete: "cascade" }),
+		inviterId: ulidReference("inviter_id").references(() => user.id, {
+			onDelete: "cascade",
+		}),
 	},
 	(table) => [
 		// Index for organization invitations

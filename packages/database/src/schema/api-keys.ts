@@ -14,28 +14,33 @@ import {
 } from "drizzle-orm/pg-core";
 import { APIKeyType } from "../enums";
 import { enumToPgEnum } from "../utils/db";
-import { generateULID, ulid } from "../utils/ids";
+import {
+	ulidNullableReference,
+	ulidPrimaryKey,
+	ulidReference,
+} from "../utils/ids";
 import { organization, user } from "./auth";
-import { website } from "./chat";
+import { website } from "./website";
 
 export const keyTypeEnum = pgEnum("key_type", enumToPgEnum(APIKeyType));
 
 export const apiKey = pgTable(
 	"api_key",
 	{
-		id: ulid("id").primaryKey().notNull().$defaultFn(generateULID),
+		id: ulidPrimaryKey("id"),
 		keyType: keyTypeEnum("key_type").notNull(),
 		key: varchar("key", { length: 255 }).notNull().unique(),
 		name: text("name").notNull(),
-		organizationId: ulid("organization_id")
-			.notNull()
-			.references(() => organization.id, { onDelete: "cascade" }),
-		websiteId: ulid("website_id")
-			.notNull()
-			.references(() => website.id, { onDelete: "cascade" }),
-		createdBy: ulid("created_by")
-			.notNull()
-			.references(() => user.id, { onDelete: "cascade" }),
+		organizationId: ulidReference("organization_id").references(
+			() => organization.id,
+			{ onDelete: "cascade" }
+		),
+		websiteId: ulidReference("website_id").references(() => website.id, {
+			onDelete: "cascade",
+		}),
+		createdBy: ulidReference("created_by").references(() => user.id, {
+			onDelete: "cascade",
+		}),
 		isActive: boolean("is_active")
 			.$defaultFn(() => true)
 			.notNull(),
@@ -45,7 +50,7 @@ export const apiKey = pgTable(
 		lastUsedAt: timestamp("last_used_at"),
 		expiresAt: timestamp("expires_at"),
 		revokedAt: timestamp("revoked_at"),
-		revokedBy: ulid("revoked_by").references(() => user.id, {
+		revokedBy: ulidNullableReference("revoked_by").references(() => user.id, {
 			onDelete: "set null",
 		}),
 		createdAt: timestamp("created_at")
