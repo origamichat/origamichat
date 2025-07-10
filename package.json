@@ -34,8 +34,6 @@
     "packages/*"
   ],
   "dependencies": {
-    "better-auth": "1.3.0-beta.7",
-    "drizzle-kit": "^0.31.4",
-    "drizzle-orm": "^0.44.2"
+    "better-auth": "1.3.0-beta.7"
   }
 }

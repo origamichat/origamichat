@@ -29,14 +29,19 @@
     "@hono/zod-openapi": "^0.19.6",
     "@hono/zod-validator": "^0.5.0",
     "@trpc/server": "^11.3.1",
+    "@upstash/redis": "^1.35.1",
+    "drizzle-orm": "^0.44.2",
     "hono": "^4.7.10",
     "lru-cache": "^11.1.0",
+    "pg": "^8.16.3",
     "superjson": "^2.2.2",
     "trpc-to-openapi": "^2.3.0",
     "ulid": "^3.0.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.16"
+    "@types/bun": "^1.2.16",
+    "@types/pg": "^8.15.4",
+    "drizzle-kit": "^0.31.4"
   }
 }
