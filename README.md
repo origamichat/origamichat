@@ -79,7 +79,7 @@ The `api` app provides HTTP endpoints and is built with [Hono](https://hono.dev/
 
    ```
    PORT=3001
-   DATABASE_URL=postgresql://
+   DATABASE_URL=postgres://postgres:@127.0.0.1:5432/postgres
    ```
 
 2. Start the API server:
