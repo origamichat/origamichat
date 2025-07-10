@@ -21,6 +21,8 @@ import {
 
 import { enumToPgEnum } from "../utils/db";
 import {
+	nanoidPrimaryKey,
+	nanoidReference,
 	ulidNullableReference,
 	ulidPrimaryKey,
 	ulidReference,
@@ -49,7 +51,7 @@ export const conversationPriorityEnum = pgEnum(
 export const conversation = pgTable(
 	"conversation",
 	{
-		id: ulidPrimaryKey("id"),
+		id: nanoidPrimaryKey("id"),
 		status: conversationStatusEnum("status")
 			.default(ConversationStatus.OPEN)
 			.notNull(),
@@ -123,7 +125,7 @@ export const message = pgTable(
 			() => organization.id,
 			{ onDelete: "cascade" }
 		),
-		conversationId: ulidReference("conversation_id").references(
+		conversationId: nanoidReference("conversation_id").references(
 			() => conversation.id,
 			{ onDelete: "cascade" }
 		),

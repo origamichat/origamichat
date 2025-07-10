@@ -11,20 +11,20 @@ let resendClient: Resend | null = null;
  * @returns Resend client or null if API key is not configured
  */
 const getResendClient = (): Resend | null => {
-  if (!resendClient && env.RESEND_API_KEY) {
-    resendClient = new Resend(env.RESEND_API_KEY);
-  }
-  return resendClient;
+	if (!resendClient && env.RESEND_API_KEY) {
+		resendClient = new Resend(env.RESEND_API_KEY);
+	}
+	return resendClient;
 };
 
 /**
  * Contact data for creating or updating contacts
  */
 export interface ContactData {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  unsubscribed?: boolean;
+	email: string;
+	firstName?: string;
+	lastName?: string;
+	unsubscribed?: boolean;
 }
 
 /**
@@ -34,34 +34,34 @@ export interface ContactData {
  * @returns Promise with success status
  */
 export const addContactToAudience = async (
-  audienceId: string,
-  contactData: ContactData
+	audienceId: string,
+	contactData: ContactData
 ): Promise<boolean> => {
-  const resend = getResendClient();
+	const resend = getResendClient();
 
-  if (!(resend && env.RESEND_AUDIENCE_ID)) {
-    console.warn("Resend service not configured - skipping contact creation");
-    return false;
-  }
+	if (!(resend && env.RESEND_AUDIENCE_ID)) {
+		console.warn("Resend service not configured - skipping contact creation");
+		return false;
+	}
 
-  try {
-    await resend.contacts.create({
-      email: contactData.email,
-      firstName: contactData.firstName,
-      lastName: contactData.lastName,
-      unsubscribed: contactData.unsubscribed ?? false,
-      audienceId,
-    });
+	try {
+		await resend.contacts.create({
+			email: contactData.email,
+			firstName: contactData.firstName,
+			lastName: contactData.lastName,
+			unsubscribed: contactData.unsubscribed ?? false,
+			audienceId,
+		});
 
-    console.log(
-      `Successfully added contact ${contactData.email} to Resend audience ${audienceId}`
-    );
-    return true;
-  } catch (error) {
-    console.error("Failed to add contact to Resend audience:", error);
-    // Don't throw error to avoid blocking user operations
-    return false;
-  }
+		console.log(
+			`Successfully added contact ${contactData.email} to Resend audience ${audienceId}`
+		);
+		return true;
+	} catch (error) {
+		console.error("Failed to add contact to Resend audience:", error);
+		// Don't throw error to avoid blocking user operations
+		return false;
+	}
 };
 
 /**
@@ -71,31 +71,31 @@ export const addContactToAudience = async (
  * @returns Promise with success status
  */
 export const removeContactFromAudience = async (
-  audienceId: string,
-  email: string
+	audienceId: string,
+	email: string
 ): Promise<boolean> => {
-  const resend = getResendClient();
+	const resend = getResendClient();
 
-  if (!(resend && env.RESEND_AUDIENCE_ID)) {
-    console.warn("Resend service not configured - skipping contact removal");
-    return false;
-  }
+	if (!(resend && env.RESEND_AUDIENCE_ID)) {
+		console.warn("Resend service not configured - skipping contact removal");
+		return false;
+	}
 
-  try {
-    await resend.contacts.remove({
-      email,
-      audienceId,
-    });
+	try {
+		await resend.contacts.remove({
+			email,
+			audienceId,
+		});
 
-    console.log(
-      `Successfully removed contact ${email} from Resend audience ${audienceId}`
-    );
-    return true;
-  } catch (error) {
-    console.error("Failed to remove contact from Resend audience:", error);
-    // Don't throw error to avoid blocking user operations
-    return false;
-  }
+		console.log(
+			`Successfully removed contact ${email} from Resend audience ${audienceId}`
+		);
+		return true;
+	} catch (error) {
+		console.error("Failed to remove contact from Resend audience:", error);
+		// Don't throw error to avoid blocking user operations
+		return false;
+	}
 };
 
 /**
@@ -105,31 +105,31 @@ export const removeContactFromAudience = async (
  * @returns Promise with success status
  */
 export const removeContactFromAudienceById = async (
-  audienceId: string,
-  contactId: string
+	audienceId: string,
+	contactId: string
 ): Promise<boolean> => {
-  const resend = getResendClient();
+	const resend = getResendClient();
 
-  if (!(resend && env.RESEND_AUDIENCE_ID)) {
-    console.warn("Resend service not configured - skipping contact removal");
-    return false;
-  }
+	if (!(resend && env.RESEND_AUDIENCE_ID)) {
+		console.warn("Resend service not configured - skipping contact removal");
+		return false;
+	}
 
-  try {
-    await resend.contacts.remove({
-      id: contactId,
-      audienceId,
-    });
+	try {
+		await resend.contacts.remove({
+			id: contactId,
+			audienceId,
+		});
 
-    console.log(
-      `Successfully removed contact ${contactId} from Resend audience ${audienceId}`
-    );
-    return true;
-  } catch (error) {
-    console.error("Failed to remove contact from Resend audience:", error);
-    // Don't throw error to avoid blocking user operations
-    return false;
-  }
+		console.log(
+			`Successfully removed contact ${contactId} from Resend audience ${audienceId}`
+		);
+		return true;
+	} catch (error) {
+		console.error("Failed to remove contact from Resend audience:", error);
+		// Don't throw error to avoid blocking user operations
+		return false;
+	}
 };
 
 /**
@@ -140,33 +140,33 @@ export const removeContactFromAudienceById = async (
  * @returns Promise with success status
  */
 export const updateContactSubscriptionStatus = async (
-  audienceId: string,
-  email: string,
-  unsubscribed: boolean
+	audienceId: string,
+	email: string,
+	unsubscribed: boolean
 ): Promise<boolean> => {
-  const resend = getResendClient();
+	const resend = getResendClient();
 
-  if (!(resend && env.RESEND_AUDIENCE_ID)) {
-    console.warn("Resend service not configured - skipping contact update");
-    return false;
-  }
+	if (!(resend && env.RESEND_AUDIENCE_ID)) {
+		console.warn("Resend service not configured - skipping contact update");
+		return false;
+	}
 
-  try {
-    await resend.contacts.update({
-      email,
-      audienceId,
-      unsubscribed,
-    });
+	try {
+		await resend.contacts.update({
+			email,
+			audienceId,
+			unsubscribed,
+		});
 
-    console.log(
-      `Successfully updated contact ${email} subscription status to ${unsubscribed ? "unsubscribed" : "subscribed"}`
-    );
-    return true;
-  } catch (error) {
-    console.error("Failed to update contact subscription status:", error);
-    // Don't throw error to avoid blocking user operations
-    return false;
-  }
+		console.log(
+			`Successfully updated contact ${email} subscription status to ${unsubscribed ? "unsubscribed" : "subscribed"}`
+		);
+		return true;
+	} catch (error) {
+		console.error("Failed to update contact subscription status:", error);
+		// Don't throw error to avoid blocking user operations
+		return false;
+	}
 };
 
 /**
@@ -176,25 +176,25 @@ export const updateContactSubscriptionStatus = async (
  * @returns Promise with success status
  */
 export const addUserToDefaultAudience = async (
-  email: string,
-  name?: string
+	email: string,
+	name?: string
 ): Promise<boolean> => {
-  if (!env.RESEND_AUDIENCE_ID) {
-    console.warn(
-      "RESEND_AUDIENCE_ID not configured - skipping user addition to audience"
-    );
-    return false;
-  }
+	if (!env.RESEND_AUDIENCE_ID) {
+		console.warn(
+			"RESEND_AUDIENCE_ID not configured - skipping user addition to audience"
+		);
+		return false;
+	}
 
-  const firstName = name?.split(" ")[0] || "";
-  const lastName = name?.split(" ").slice(1).join(" ") || "";
+	const firstName = name?.split(" ")[0] || "";
+	const lastName = name?.split(" ").slice(1).join(" ") || "";
 
-  return addContactToAudience(env.RESEND_AUDIENCE_ID, {
-    email,
-    firstName,
-    lastName,
-    unsubscribed: false,
-  });
+	return addContactToAudience(env.RESEND_AUDIENCE_ID, {
+		email,
+		firstName,
+		lastName,
+		unsubscribed: false,
+	});
 };
 
 /**
@@ -203,14 +203,14 @@ export const addUserToDefaultAudience = async (
  * @returns Promise with success status
  */
 export const removeUserFromDefaultAudience = async (
-  email: string
+	email: string
 ): Promise<boolean> => {
-  if (!env.RESEND_AUDIENCE_ID) {
-    console.warn(
-      "RESEND_AUDIENCE_ID not configured - skipping user removal from audience"
-    );
-    return false;
-  }
+	if (!env.RESEND_AUDIENCE_ID) {
+		console.warn(
+			"RESEND_AUDIENCE_ID not configured - skipping user removal from audience"
+		);
+		return false;
+	}
 
-  return removeContactFromAudience(env.RESEND_AUDIENCE_ID, email);
+	return removeContactFromAudience(env.RESEND_AUDIENCE_ID, email);
 };
