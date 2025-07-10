@@ -8,7 +8,7 @@ import {
 	ulidNullableReference,
 	ulidPrimaryKey,
 	ulidReference,
-} from "../utils/ids";
+} from "../../utils/db/ids";
 import { waitingListEntry } from "./waiting-list";
 import { website } from "./website";
 

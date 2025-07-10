@@ -10,7 +10,12 @@
     "dev:types": "tsc --build --watch",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "test:coverage": "bun test --coverage"
+    "test:coverage": "bun test --coverage",
+    "db:seed": "bun run scripts/seed.ts",
+    "db:migrate": "bun run scripts/migrate.ts",
+    "db:studio": "drizzle-kit studio",
+    "better-auth:generate-schema": "npx @better-auth/cli@latest generate --output ./src/db/schema/auth-generated.ts",
+    "generate": "drizzle-kit generate"
   },
   "exports": {
     ".": "./src/client/index.ts",
@@ -23,9 +28,7 @@
     "@hono/trpc-server": "^0.3.4",
     "@hono/zod-openapi": "^0.19.6",
     "@hono/zod-validator": "^0.5.0",
-    "@cossistant/database": "workspace:*",
     "@trpc/server": "^11.3.1",
-    "drizzle-orm": "0.44.0",
     "hono": "^4.7.10",
     "lru-cache": "^11.1.0",
     "superjson": "^2.2.2",

@@ -18,7 +18,6 @@ This monorepo includes the following packages/apps:
 
 - `@cossistant/web`: a Next.js application for the web frontend
 - `@cossistant/api`: a [Hono](https://hono.dev/) API server providing backend services
-- `@cossistant/database`: a database package using [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL
 - `@cossistant/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).

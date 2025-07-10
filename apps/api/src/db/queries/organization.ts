@@ -1,13 +1,13 @@
-import { generateSlugFromEmailDomain } from "@api/utils/organization";
+import type { Database } from "@api/db";
 import {
-	auth,
-	type Database,
 	member,
 	type OrganizationSelect,
 	organization,
 	type WebsiteSelect,
 	website,
-} from "@cossistant/database";
+} from "@api/db/schema";
+import { auth } from "@api/lib/auth";
+import { generateSlugFromEmailDomain } from "@api/utils/organization";
 import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 
 export async function getOrganizationById(

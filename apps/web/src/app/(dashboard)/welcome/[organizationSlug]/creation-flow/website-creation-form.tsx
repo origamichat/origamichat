@@ -1,10 +1,11 @@
 "use client";
 
+import { WebsiteInstallationTarget } from "@api/db/enums";
 import {
 	type CreateWebsiteRequest,
 	createWebsiteRequestSchema,
-} from "@cossistant/api/schemas";
-import { WebsiteInstallationTarget } from "@cossistant/database/enums";
+} from "@api/schemas/website";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";

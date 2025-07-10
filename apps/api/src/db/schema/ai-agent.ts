@@ -3,7 +3,6 @@ import {
 	type InferSelectModel,
 	relations,
 } from "drizzle-orm";
-
 import {
 	boolean,
 	index,
@@ -13,8 +12,7 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
-
-import { ulidPrimaryKey, ulidReference } from "../utils/ids";
+import { ulidPrimaryKey, ulidReference } from "../../utils/db/ids";
 import { organization } from "./auth";
 import { message } from "./conversation";
 import { website } from "./website";

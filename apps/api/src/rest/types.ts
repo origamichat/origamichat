@@ -1,9 +1,9 @@
+import type { Database } from "@api/db";
 import type {
 	ApiKeySelect,
-	Database,
 	OrganizationSelect,
 	WebsiteSelect,
-} from "@cossistant/database";
+} from "@api/db/schema";
 
 export type RestContext = {
 	Variables: {

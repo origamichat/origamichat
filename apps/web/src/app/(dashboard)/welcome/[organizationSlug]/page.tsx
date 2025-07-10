@@ -1,5 +1,5 @@
+import { db } from "@api/db";
 import { getOrganizationBySlug } from "@api/db/queries/organization";
-import { db } from "@database/database";
 import { notFound } from "next/navigation";
 import { Logo } from "@/components/ui/logo";
 import { TextEffect } from "@/components/ui/text-effect";

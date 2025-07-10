@@ -7,7 +7,7 @@ import {
 	timestamp,
 } from "drizzle-orm/pg-core";
 
-import { ulidPrimaryKey, ulidReference } from "../utils/ids";
+import { ulidPrimaryKey, ulidReference } from "../../utils/db/ids";
 
 import { user } from "./auth";
 

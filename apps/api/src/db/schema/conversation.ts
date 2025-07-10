@@ -3,6 +3,7 @@ import {
 	type InferSelectModel,
 	relations,
 } from "drizzle-orm";
+
 import {
 	index,
 	integer,
@@ -12,6 +13,17 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
+
+import { enumToPgEnum } from "../../utils/db";
+
+import {
+	nanoidPrimaryKey,
+	nanoidReference,
+	ulidNullableReference,
+	ulidPrimaryKey,
+	ulidReference,
+} from "../../utils/db/ids";
+
 import {
 	ConversationPriority,
 	ConversationStatus,
@@ -19,14 +31,6 @@ import {
 	SenderType,
 } from "../enums";
 
-import { enumToPgEnum } from "../utils/db";
-import {
-	nanoidPrimaryKey,
-	nanoidReference,
-	ulidNullableReference,
-	ulidPrimaryKey,
-	ulidReference,
-} from "../utils/ids";
 import { aiAgent } from "./ai-agent";
 import { organization, user } from "./auth";
 import { visitor, website } from "./website";

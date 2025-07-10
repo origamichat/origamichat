@@ -1,9 +1,9 @@
 import { env } from "@api/env";
+import { auth } from "@api/lib/auth";
 import { routers } from "@api/rest/routers";
 import { createTRPCContext } from "@api/trpc/init";
 import { origamiTRPCRouter } from "@api/trpc/routers/_app";
 import { checkHealth } from "@api/utils/health";
-import { auth } from "@cossistant/database";
 import { swaggerUI } from "@hono/swagger-ui";
 import { trpcServer } from "@hono/trpc-server";
 import { OpenAPIHono } from "@hono/zod-openapi";

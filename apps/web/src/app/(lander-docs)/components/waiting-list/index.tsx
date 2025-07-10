@@ -1,5 +1,3 @@
-import { getWaitlistEntryByUserId } from "@cossistant/api/queries";
-import { db } from "@cossistant/database";
 import Link from "next/link";
 import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/ui/button";
@@ -7,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { DISCORD_INVITE } from "@/constants";
 import { getAuth } from "@/lib/auth/server";
+import { trpc } from "@/lib/trpc/server";
 import { getWaitlistUrl } from "@/lib/url";
 import { cn } from "@/lib/utils";
 import { DiscordIcon } from "../login-form";
@@ -15,9 +14,8 @@ import { JoinWaitlistButton } from "./join-button";
 export async function WaitingList({ className }: { className?: string }) {
 	const { user } = await getAuth();
 
-	const { entry, rank, totalEntries } = await getWaitlistEntryByUserId(db, {
-		userId: user?.id,
-	});
+	const { entry, rank, totalEntries } =
+		await trpc.waitlist.getWaitlistEntry.query({ userId: user?.id });
 
 	if (!entry) {
 		return (

@@ -19,6 +19,7 @@ const getEnvVariable = (name: string, defaultValue?: string): string => {
 };
 
 export const env = {
+	NODE_ENV: getEnvVariable("NODE_ENV"),
 	DATABASE_URL: getEnvVariable("DATABASE_URL"),
 	UPSTASH_REDIS_REST_URL: getEnvVariable("UPSTASH_REDIS_REST_URL"),
 	UPSTASH_REDIS_REST_TOKEN: getEnvVariable("UPSTASH_REDIS_REST_TOKEN"),

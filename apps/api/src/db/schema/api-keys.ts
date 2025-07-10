@@ -12,13 +12,13 @@ import {
 	timestamp,
 	varchar,
 } from "drizzle-orm/pg-core";
-import { APIKeyType } from "../enums";
-import { enumToPgEnum } from "../utils/db";
+import { enumToPgEnum } from "../../utils/db";
 import {
 	ulidNullableReference,
 	ulidPrimaryKey,
 	ulidReference,
-} from "../utils/ids";
+} from "../../utils/db/ids";
+import { APIKeyType } from "../enums";
 import { organization, user } from "./auth";
 import { website } from "./website";
 

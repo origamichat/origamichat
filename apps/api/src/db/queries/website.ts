@@ -1,8 +1,6 @@
-import {
-	type Database,
-	type WebsiteInsert,
-	website,
-} from "@cossistant/database";
+import type { Database } from "@api/db";
+import type { WebsiteInsert } from "@api/db/schema";
+import { website } from "@api/db/schema";
 
 import { and, desc, eq, isNull } from "drizzle-orm";
 

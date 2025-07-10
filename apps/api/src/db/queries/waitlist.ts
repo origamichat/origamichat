@@ -1,4 +1,6 @@
-import { type Database, waitingListEntry } from "@cossistant/database";
+import type { Database } from "@api/db";
+import { waitingListEntry } from "@api/db/schema";
+
 import { and, count, eq, gt, lt, or } from "drizzle-orm";
 
 export async function getWaitlistEntryByUserId(

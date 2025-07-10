@@ -1,5 +1,6 @@
-import { waitingListEntry } from "@database/schema/waiting-list";
-import { slugify } from "@database/utils/db";
+import { db } from "@api/db";
+import { waitingListEntry } from "@api/db/schema/waiting-list";
+import { generateULID } from "@api/utils/db/ids";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
@@ -7,8 +8,6 @@ import {
 	anonymous,
 	organization as organizationPlugin,
 } from "better-auth/plugins";
-import { db } from "../database";
-import { generateULID } from "../utils/ids";
 
 export const auth = betterAuth({
 	baseURL:

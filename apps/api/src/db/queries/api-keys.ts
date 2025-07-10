@@ -1,15 +1,14 @@
-import { env } from "@api/env";
-import { generateApiKey, hashApiKey } from "@api/utils/api-keys";
+import type { Database } from "@api/db";
+import { APIKeyType } from "@api/db/enums";
 import type {
 	ApiKeySelect,
-	Database,
 	OrganizationSelect,
 	WebsiteSelect,
-} from "@cossistant/database";
-
-import { apiKey } from "@cossistant/database";
-import { APIKeyType } from "@cossistant/database/enums";
-import { generateULID } from "@cossistant/database/utils";
+} from "@api/db/schema";
+import { apiKey } from "@api/db/schema";
+import { env } from "@api/env";
+import { generateApiKey, hashApiKey } from "@api/utils/api-keys";
+import { generateULID } from "@api/utils/db/ids";
 import { and, desc, eq } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;

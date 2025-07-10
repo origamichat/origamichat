@@ -14,14 +14,13 @@ import {
 	timestamp,
 	uniqueIndex,
 } from "drizzle-orm/pg-core";
-
-import { WebsiteInstallationTarget } from "../enums";
-import { enumToPgEnum } from "../utils/db";
+import { enumToPgEnum } from "../../utils/db";
 import {
 	ulidNullableReference,
 	ulidPrimaryKey,
 	ulidReference,
-} from "../utils/ids";
+} from "../../utils/db/ids";
+import { WebsiteInstallationTarget } from "../enums";
 import { aiAgent } from "./ai-agent";
 import { apiKey } from "./api-keys";
 import { organization, user } from "./auth";

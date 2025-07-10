@@ -1,15 +1,15 @@
 import { createDefaultWebsiteKeys } from "@api/db/queries/api-keys";
+import { website } from "@api/db/schema";
 import {
 	checkWebsiteDomainRequestSchema,
 	createWebsiteRequestSchema,
 	createWebsiteResponseSchema,
 } from "@api/schemas/website";
 import { domainToSlug } from "@api/utils/domain-slug";
-import { website } from "@cossistant/database";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
-import { nanoid } from "nanoid";
 import { z } from "zod";
+
 import { createTRPCRouter, protectedProcedure } from "../init";
 
 export const websiteRouter = createTRPCRouter({

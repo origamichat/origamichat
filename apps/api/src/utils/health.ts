@@ -1,4 +1,5 @@
-import { db, user } from "@cossistant/database";
+import { db } from "@api/db";
+import { user } from "@api/db/schema";
 
 export async function checkHealth() {
 	// This is a simple health check that will return true if the database is

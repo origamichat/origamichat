@@ -1,6 +1,6 @@
+import { db } from "@api/db";
 import { getOrganizationsForUserOrCreateDefault } from "@api/db/queries/organization";
-import { db } from "@database/database";
-import type { OrganizationSelect, WebsiteSelect } from "@database/schema";
+import type { OrganizationSelect, WebsiteSelect } from "@api/db/schema";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { SELECTED_WEBSITE_COOKIE_NAME } from "@/constants";

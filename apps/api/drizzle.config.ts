@@ -18,7 +18,7 @@ const getEnvVariable = (name: string) => {
 };
 
 export default {
-	schema: "./src/schema/index.ts",
+	schema: "./src/db/schema/index.ts",
 	out: "./drizzle/migrations",
 	dialect: "postgresql",
 	dbCredentials: {

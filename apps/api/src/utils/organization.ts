@@ -1,4 +1,6 @@
-import { type Database, organization } from "@cossistant/database";
+import type { Database } from "@api/db";
+import { organization } from "@api/db/schema";
+
 import { eq } from "drizzle-orm";
 import { customAlphabet } from "nanoid";
 

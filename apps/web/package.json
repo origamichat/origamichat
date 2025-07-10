@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@cossistant/api": "workspace:*",
-    "@cossistant/database": "workspace:*",
     "@cossistant/location": "workspace:*",
     "@cossistant/react": "workspace:*",
     "@hookform/resolvers": "^5.1.1",

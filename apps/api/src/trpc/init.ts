@@ -1,10 +1,7 @@
+import type { Database } from "@api/db";
+import { db } from "@api/db";
+import type { AuthType, auth } from "@api/lib/auth";
 import { getGeoContext } from "@api/utils/geo";
-import {
-	type AuthType,
-	type auth,
-	type Database,
-	db,
-} from "@cossistant/database";
 import { initTRPC } from "@trpc/server";
 import type { Context } from "hono";
 import superjson from "superjson";

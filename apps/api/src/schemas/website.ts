@@ -1,7 +1,4 @@
-import {
-	APIKeyType,
-	WebsiteInstallationTarget,
-} from "@cossistant/database/enums";
+import { APIKeyType, WebsiteInstallationTarget } from "@api/db/enums";
 import { z } from "@hono/zod-openapi";
 
 export const createWebsiteRequestSchema = z.object({

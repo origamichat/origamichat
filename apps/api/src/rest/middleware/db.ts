@@ -1,4 +1,4 @@
-import { db } from "@cossistant/database";
+import { db } from "@api/db";
 import type { MiddlewareHandler } from "hono";
 
 /**
