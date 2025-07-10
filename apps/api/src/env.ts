@@ -20,7 +20,11 @@ const getEnvVariable = (name: string, defaultValue?: string): string => {
 
 export const env = {
 	NODE_ENV: getEnvVariable("NODE_ENV"),
-	DATABASE_URL: getEnvVariable("DATABASE_URL"),
+	DATABASE_HOST: getEnvVariable("DATABASE_HOST"),
+	DATABASE_PORT: +getEnvVariable("DATABASE_PORT"),
+	DATABASE_USER: getEnvVariable("DATABASE_USER"),
+	DATABASE_PASSWORD: getEnvVariable("DATABASE_PASSWORD"),
+	DATABASE_NAME: getEnvVariable("DATABASE_NAME"),
 	UPSTASH_REDIS_REST_URL: getEnvVariable("UPSTASH_REDIS_REST_URL"),
 	UPSTASH_REDIS_REST_TOKEN: getEnvVariable("UPSTASH_REDIS_REST_TOKEN"),
 	BETTER_AUTH_URL: getEnvVariable("BETTER_AUTH_URL"),

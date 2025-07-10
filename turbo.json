@@ -6,7 +6,11 @@
     "build": {
       "dependsOn": ["^build"],
       "env": [
-        "DATABASE_URL",
+        "DATABASE_HOST",
+        "DATABASE_PORT",
+        "DATABASE_USER",
+        "DATABASE_PASSWORD",
+        "DATABASE_NAME",
         "BETTER_AUTH_URL",
         "BETTER_AUTH_SECRET",
         "GOOGLE_CLIENT_ID",

@@ -12,7 +12,11 @@ const createDb = (): NodePgDatabase<typeof schema> => {
 
 	_db = drizzle({
 		connection: {
-			connectionString: env.DATABASE_URL,
+			host: env.DATABASE_HOST,
+			port: env.DATABASE_PORT,
+			user: env.DATABASE_USER,
+			password: env.DATABASE_PASSWORD,
+			database: env.DATABASE_NAME,
 			ssl: env.NODE_ENV === "production",
 		},
 		cache: upstashCache({
