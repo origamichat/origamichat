@@ -6,9 +6,9 @@ import { GitHubLink } from "./github-link";
 
 export function Footer() {
 	return (
-		<footer className="flex-col pb-50">
-			<div className="container-wrapper z-0 mx-auto py-12">
-				<div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+		<footer className="mt-16 flex-col border-primary/10 border-t border-dashed pb-50 md:mt-0 md:border-transparent">
+			<div className="container-wrapper z-0 mx-auto px-2 py-12 lg:px-0">
+				<div className="container grid grid-cols-1 gap-8 px-6 md:grid-cols-4 lg:px-0">
 					{/* Brand */}
 					<div className="col-span-1 md:col-span-2">
 						<div className="mb-4 flex items-center space-x-2">
@@ -84,10 +84,10 @@ export function Footer() {
 			</div>
 			<div className="mt-8 border-primary/10 border-t border-dashed pt-8">
 				<div className="container-wrapper mx-auto flex flex-col items-center justify-between md:flex-row">
-					<p className="font-mono text-foreground/60 text-sm">
+					<p className="px-6 font-mono text-foreground/60 text-sm lg:px-0">
 						© 2025 cossistant. open source under GPL-3.0 license.
 					</p>
-					<div className="mt-4 flex items-center space-x-6 md:mt-0">
+					<div className="mt-4 flex items-center space-x-6 px-6 md:mt-0 lg:px-0">
 						<a
 							className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
 							href="#privacy"

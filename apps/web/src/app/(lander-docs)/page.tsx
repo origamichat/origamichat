@@ -12,24 +12,24 @@ export default function Landing() {
 		<>
 			<div className="flex min-h-screen flex-col gap-8 pt-32 md:flex-row md:items-center md:pt-0">
 				<div className="flex gap-20">
-					<div className="flex flex-1 flex-col items-start justify-between gap-6 pt-11">
-						<p className="font-mono text-foreground/60 text-xs">
+					<div className="flex flex-1 flex-col items-start justify-between gap-6 pt-11 ">
+						<p className="px-6 font-mono text-foreground/60 text-xs lg:px-0">
 							Escape the iframe
 						</p>
-						<div className="my-auto flex flex-col gap-6">
-							<h1 className="font-f37-stout text-4xl leading-tight lg:text-6xl">
+						<div className="my-auto flex flex-col gap-6 px-6">
+							<h1 className="font-f37-stout text-3xl leading-tight lg:text-6xl">
 								Extraordinary AI and human
 								<br />
 								<span className="text-cossistant-blue">{"<Support /> "}</span>
 								right in your app.
 							</h1>
-							<h3 className="max-w-[80%] text-balance text-lg text-primary/70">
+							<h3 className="text-base text-primary/70 md:text-balance md:text-lg lg:max-w-[80%]">
 								Cossistant is the open-source support framework that puts human
 								and AI help right in your React app with custom actions and UI.
 							</h3>
-							<div className="mt-10 flex flex-col items-center gap-6 lg:flex-row">
+							<div className="mt-10 flex flex-col gap-3 md:items-center md:gap-6 lg:flex-row">
 								<Button
-									className="h-16 w-[280px] justify-between border border-transparent font-medium text-md has-[>svg]:px-4"
+									className="h-16 w-full justify-between border border-transparent font-medium text-md has-[>svg]:px-4 md:w-[280px]"
 									size="lg"
 								>
 									Join the waitlist
@@ -39,18 +39,18 @@ export default function Landing() {
 									/>
 								</Button>
 								<GitHubLink
-									className="h-16 w-[280px] justify-between px-4 font-medium text-md"
+									className="h-16 w-full justify-between px-4 font-medium text-md md:w-[280px]"
 									size="lg"
 									variant="outline"
 								>
 									Star us on GitHub
 								</GitHubLink>
 							</div>
-							<p className="font-mono text-foreground/60 text-xs">
+							<p className="text-balance text-center font-mono text-foreground/60 text-xs md:text-left">
 								Already 28 people on the waitlist. Join them, be early.
 							</p>
 						</div>
-						<div className="mt-auto flex items-center gap-2">
+						<div className="mt-10 flex w-full items-center justify-center gap-2 px-6 md:justify-start lg:mt-auto lg:px-0">
 							<p className="font-mono text-foreground/60 text-xs">
 								Works well with
 							</p>
