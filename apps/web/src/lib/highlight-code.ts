@@ -68,8 +68,8 @@ export async function highlightCode(code: string, language = "tsx") {
 	const html = await codeToHtml(code, {
 		lang: language,
 		themes: {
-			dark: cossistantDark,
-			light: cossistantLight,
+			dark: "github-dark",
+			light: "github-light",
 		},
 		defaultColor: false,
 		cssVariablePrefix: "--shiki-",

@@ -47,10 +47,10 @@
 	--sidebar-border: hsl(220 13% 91%);
 	--sidebar-ring: hsl(217.2 91.2% 59.8%);
 
-	--cossistant-pink: hsla(314, 100%, 85%, 1);
-	--cossistant-yellow: hsla(58, 92%, 79%, 1);
-	--cossistant-blue: hsla(218, 91%, 78%, 1);
-	--cossistant-orange: hsla(19, 99%, 50%, 1);
+	--cossistant-pink: hsla(314, 100%, 75%, 1);
+	--cossistant-yellow: hsla(58, 92%, 70%, 1);
+	--cossistant-blue: hsla(218, 91%, 68%, 1);
+	--cossistant-orange: hsla(19, 99%, 65%, 1);
 }
 
 .dark {
@@ -92,6 +92,11 @@
 	--sidebar-accent-foreground: hsl(240 4.8% 95.9%);
 	--sidebar-border: hsl(240 3.7% 15.9%);
 	--sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+	--cossistant-pink: hsla(314, 100%, 85%, 1);
+	--cossistant-yellow: hsla(58, 92%, 79%, 1);
+	--cossistant-blue: hsla(218, 91%, 78%, 1);
+	--cossistant-orange: hsla(19, 99%, 50%, 1);
 }
 
 @theme inline {

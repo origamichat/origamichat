@@ -66,7 +66,7 @@ export function ComponentPreviewTabs({
 						{/* right */}
 						<motion.div
 							animate={{ scaleY: 1 }}
-							className="-top-10 -bottom-10 pointer-events-none absolute right-0 w-[1px] bg-primary/60"
+							className="-top-10 -bottom-10 pointer-events-none absolute right-[-1px] w-[1px] bg-primary/60"
 							initial={{ scaleY: 0 }}
 							style={{ originY: 0.5 }}
 							transition={{ duration: 0.8, delay: 0, ease: "easeOut" }}
@@ -79,13 +79,13 @@ export function ComponentPreviewTabs({
 							transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
 						/>
 
-						<motion.div
-							animate={{ scaleY: 1 }}
-							className="-top-[25vh] pointer-events-none absolute right-0 h-[100vh] w-[1px] border-primary/10 border-r border-dashed"
-							initial={{ scaleY: 0 }}
-							style={{ originY: 0.5 }}
-							transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
-						/>
+						{/* <motion.div
+              animate={{ scaleY: 1 }}
+              className="-top-[25vh] pointer-events-none absolute right-0 h-[100vh] w-[1px] border-red-600 border-r border-dashed"
+              initial={{ scaleY: 0 }}
+              style={{ originY: 0.5 }}
+              transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
+            /> */}
 						<motion.div
 							animate={{ scaleY: 1 }}
 							className="-top-[25vh] pointer-events-none absolute right-4 h-[100vh] w-[1px] border-primary/10 border-r border-dashed"
@@ -173,7 +173,7 @@ export function ComponentPreviewTabs({
 				{tab === "code" && (
 					<div
 						className={cn(
-							"scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-background-100 overflow-auto px-5 py-4",
+							"scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-background-100 overflow-auto bg-background-100 px-5 py-4",
 							sizeClasses
 						)}
 					>

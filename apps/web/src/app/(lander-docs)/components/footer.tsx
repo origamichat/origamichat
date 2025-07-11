@@ -1,12 +1,13 @@
-import { StatusWidget } from "@openstatus/react";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { LogoText } from "@/components/ui/logo";
-import { DISCORD_INVITE, GITHUB_URL, X_URL } from "@/constants";
+import { DISCORD_INVITE, X_URL } from "@/constants";
 import { GitHubLink } from "./github-link";
+import { StatusWidget } from "./status-widget";
 
 export function Footer() {
 	return (
-		<footer className="mt-16 flex-col border-primary/10 border-t border-dashed pb-50 md:mt-0 md:border-transparent">
+		<footer className="mt-16 flex-col border-primary/10 border-t border-dashed md:mt-0 md:border-transparent">
 			<div className="container-wrapper z-0 mx-auto px-2 py-12 lg:px-0">
 				<div className="container grid grid-cols-1 gap-8 px-6 md:grid-cols-4 lg:px-0">
 					{/* Brand */}
@@ -82,31 +83,34 @@ export function Footer() {
 					</div>
 				</div>
 			</div>
-			<div className="mt-8 border-primary/10 border-t border-dashed pt-8">
-				<div className="container-wrapper mx-auto flex flex-col items-center justify-between md:flex-row">
-					<p className="px-6 font-mono text-foreground/60 text-sm lg:px-0">
-						© 2025 cossistant. open source under GPL-3.0 license.
-					</p>
-					<div className="mt-4 flex items-center space-x-6 px-6 md:mt-0 lg:px-0">
-						<a
-							className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
-							href="#privacy"
-						>
-							Privacy
-						</a>
-						<a
-							className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
-							href="#terms"
-						>
-							Terms
-						</a>
-						<a
-							className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
-							href="https://github.com/cossistantcom/cossistant?tab=security-ov-file#readme"
-						>
-							Security
-						</a>
+			<div className="flex flex-col items-center justify-between gap-6 border-primary/10 border-t border-dashed md:items-start">
+				<div className="container-wrapper mx-auto flex flex-col items-center justify-between gap-6 px-4 pt-4 pb-20 md:flex-row md:items-start md:gap-0">
+					<div className="flex flex-col gap-4">
+						<p className="px-6 text-center font-mono text-foreground/60 text-sm md:text-left lg:px-0">
+							© 2025 cossistant. open source under GPL-3.0 license.
+						</p>
+						<div className="mt-4 flex items-center space-x-6 px-6 md:mt-0 lg:px-0">
+							<a
+								className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
+								href="#privacy"
+							>
+								Privacy
+							</a>
+							<a
+								className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
+								href="#terms"
+							>
+								Terms
+							</a>
+							<a
+								className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
+								href="https://github.com/cossistantcom/cossistant?tab=security-ov-file#readme"
+							>
+								Security
+							</a>
+						</div>
 					</div>
+					<ThemeToggle />
 				</div>
 			</div>
 		</footer>

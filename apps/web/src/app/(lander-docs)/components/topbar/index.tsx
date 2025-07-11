@@ -25,7 +25,7 @@ export function TopBar({
 			)}
 		>
 			<div className="container-wrapper mx-auto">
-				<div className="container mx-auto flex items-center justify-between py-3">
+				<div className="container mx-auto flex items-center justify-between py-4">
 					<div className="w-60">
 						<Link className="flex items-center" href="/">
 							<LogoText />
