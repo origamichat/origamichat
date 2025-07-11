@@ -36,9 +36,6 @@ export function TopBar({
 					<TopbarButton className="text-foreground" href="/docs">
 						docs
 					</TopbarButton>
-					<TopbarButton href={GITHUB_URL} icon={<GithubIcon />}>
-						github
-					</TopbarButton>
 					<TopbarButton href={DISCORD_INVITE} icon={<DiscordIcon />}>
 						discord
 					</TopbarButton>

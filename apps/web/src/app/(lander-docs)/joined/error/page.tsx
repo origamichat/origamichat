@@ -1,4 +1,4 @@
-import { TopBar } from "@/app/(lander-docs)/components/top-bar";
+import { TopBar } from "@/app/(lander-docs)/components/topbar";
 import { TextEffect } from "@/components/ui/text-effect";
 
 export const dynamic = "force-dynamic";

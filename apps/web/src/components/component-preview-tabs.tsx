@@ -11,11 +11,13 @@ export function ComponentPreviewTabs({
 	component,
 	source,
 	withOrnament = false,
+	sizeClasses = "h-[350px] w-full md:h-[450px] md:w-[600px]",
 }: React.ComponentProps<"div"> & {
 	align?: "center" | "start" | "end";
 	component: React.ReactNode;
 	source: React.ReactNode;
 	withOrnament?: boolean;
+	sizeClasses?: string;
 }) {
 	const [tab, setTab] = React.useState("preview");
 
@@ -158,7 +160,8 @@ export function ComponentPreviewTabs({
 				{tab === "preview" && (
 					<div
 						className={cn(
-							"flex h-[350px] w-full justify-center p-10 md:h-[450px] md:w-[600px]",
+							"flex w-full justify-center p-10",
+							sizeClasses,
 							align === "start" && "items-start",
 							align === "center" && "items-center",
 							align === "end" && "items-end"
@@ -168,7 +171,12 @@ export function ComponentPreviewTabs({
 					</div>
 				)}
 				{tab === "code" && (
-					<div className="h-[350px] overflow-auto px-5 py-4 md:h-[450px] md:w-[600px]">
+					<div
+						className={cn(
+							"scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-background-100 overflow-auto px-5 py-4",
+							sizeClasses
+						)}
+					>
 						{source}
 					</div>
 				)}

@@ -23,12 +23,34 @@
     "url": "git+https://github.com/cossistantcom/cossistant.git",
     "directory": "packages/react"
   },
-  "license": "GNU GPLv3",
+  "license": "MIT",
   "homepage": "https://cossistant.com",
   "exports": {
-    ".": "./src/index.ts",
-    "./support": "./src/support/index.ts"
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./support": {
+      "import": {
+        "types": "./dist/support/index.d.ts",
+        "default": "./dist/support/index.js"
+      },
+      "require": {
+        "types": "./dist/support/index.d.cts",
+        "default": "./dist/support/index.cjs"
+      }
+    }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "tsup"
   },

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TopbarButton } from "@/components/ui/topbar-button";
 import { getAuth } from "@/lib/auth/server";
+import { CtaButton } from "./cta-button";
 
 export function DashboardButtonSkeleton() {
 	return (
@@ -29,22 +30,22 @@ export async function DashboardButton() {
 				>
 					Login
 				</TopbarButton>
-				<Link href="/">
-					<Button>Join Waitlist</Button>
-				</Link>
+				<CtaButton />
 			</>
 		);
 	}
 
 	return (
-		<Link href="/select">
-			<Button className="h-auto p-1 pr-3">
-				<Avatar className="size-7">
-					{user.image && <AvatarImage src={user.image} />}
-					<AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
-				</Avatar>
-				Dashboard
-			</Button>
-		</Link>
+		<>
+			<Link href="/select">
+				<Button className="h-auto p-1 pr-3">
+					<Avatar className="size-7">
+						{user.image && <AvatarImage src={user.image} />}
+						<AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+					</Avatar>
+					Dashboard
+				</Button>
+			</Link>
+		</>
 	);
 }

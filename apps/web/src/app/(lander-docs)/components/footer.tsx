@@ -2,11 +2,12 @@ import { StatusWidget } from "@openstatus/react";
 import Link from "next/link";
 import { LogoText } from "@/components/ui/logo";
 import { DISCORD_INVITE, GITHUB_URL, X_URL } from "@/constants";
+import { GitHubLink } from "./github-link";
 
 export function Footer() {
 	return (
 		<footer className="flex-col pb-50">
-			<div className="container z-0 mx-auto px-6 py-12 lg:px-8">
+			<div className="container-wrapper z-0 mx-auto py-12">
 				<div className="grid grid-cols-1 gap-8 md:grid-cols-4">
 					{/* Brand */}
 					<div className="col-span-1 md:col-span-2">
@@ -17,10 +18,13 @@ export function Footer() {
 							the open-source, ai-native support infrastructure for modern saas.
 							built for developers, designed for your customers.
 						</p>
-						<StatusWidget
-							href="https://cossistant.openstatus.dev"
-							slug="cossistant"
-						/>
+						<div className="mt-10 flex items-center gap-2">
+							<StatusWidget
+								href="https://cossistant.openstatus.dev"
+								slug="cossistant"
+							/>
+							<GitHubLink>Star us on GitHub</GitHubLink>
+						</div>
 					</div>
 
 					{/* Product */}
@@ -46,16 +50,6 @@ export function Footer() {
 							Community
 						</h3>
 						<ul className="space-y-2">
-							<li>
-								<a
-									className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
-									href={GITHUB_URL}
-									rel="noopener noreferrer"
-									target="_blank"
-								>
-									GitHub
-								</a>
-							</li>
 							<li>
 								<a
 									className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
@@ -89,7 +83,7 @@ export function Footer() {
 				</div>
 			</div>
 			<div className="mt-8 border-primary/10 border-t border-dashed pt-8">
-				<div className="container mx-auto flex flex-col items-center justify-between md:flex-row">
+				<div className="container-wrapper mx-auto flex flex-col items-center justify-between md:flex-row">
 					<p className="font-mono text-foreground/60 text-sm">
 						© 2025 cossistant. open source under GPL-3.0 license.
 					</p>
@@ -108,7 +102,7 @@ export function Footer() {
 						</a>
 						<a
 							className="font-mono text-foreground/60 text-sm transition-colors hover:text-foreground"
-							href="#security"
+							href="https://github.com/cossistantcom/cossistant?tab=security-ov-file#readme"
 						>
 							Security
 						</a>

@@ -2,7 +2,7 @@ import { FileIcon } from "lucide-react";
 
 type IconProps = React.HTMLAttributes<SVGElement>;
 
-export const Icons = {
+export const Logos = {
 	shadcn: (props: IconProps) => (
 		<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<title>shadcn</title>
@@ -211,15 +211,15 @@ export const Icons = {
 export function getIconForLanguageExtension(language: string) {
 	switch (language) {
 		case "json":
-			return <Icons.json />;
+			return <Logos.json />;
 		case "css":
-			return <Icons.css className="fill-foreground" />;
+			return <Logos.css className="fill-foreground" />;
 		case "js":
 		case "jsx":
 		case "ts":
 		case "tsx":
 		case "typescript":
-			return <Icons.ts className="fill-foreground" />;
+			return <Logos.ts className="fill-foreground" />;
 		default:
 			return <FileIcon />;
 	}

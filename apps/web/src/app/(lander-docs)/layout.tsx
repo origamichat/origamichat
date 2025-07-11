@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import {
 	DashboardButton,
 	DashboardButtonSkeleton,
-} from "@/app/(lander-docs)/components/dashboard-button";
+} from "@/app/(lander-docs)/components/topbar/dashboard-button";
 import { Footer } from "./components/footer";
-import { TopBar } from "./components/top-bar";
+import { TopBar } from "./components/topbar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (

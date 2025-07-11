@@ -7,10 +7,12 @@ export function ComponentPreview({
 	className,
 	align = "center",
 	withOrnament,
+	sizeClasses,
 }: React.ComponentProps<"div"> & {
 	name: string;
 	align?: "center" | "start" | "end";
 	withOrnament?: boolean;
+	sizeClasses?: string;
 }) {
 	const Component = Index[name]?.component;
 
@@ -31,6 +33,7 @@ export function ComponentPreview({
 			align={align}
 			className={className}
 			component={<Component />}
+			sizeClasses={sizeClasses}
 			source={<ComponentSource name={name} />}
 			withOrnament={withOrnament}
 		/>
