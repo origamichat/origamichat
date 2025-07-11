@@ -1,1 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run formatter
 npx ultracite format
+
+# Stage any files that were modified by the formatter
+git add -u
