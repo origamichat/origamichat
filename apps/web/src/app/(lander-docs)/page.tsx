@@ -17,7 +17,7 @@ export default function Landing() {
 							Escape the iframe
 						</p>
 						<div className="my-auto flex flex-col gap-6">
-							<h1 className="font-f37-stout text-6xl leading-tight">
+							<h1 className="font-f37-stout text-4xl leading-tight lg:text-6xl">
 								Extraordinary AI and human
 								<br />
 								<span className="text-cossistant-blue">{"<Support /> "}</span>
@@ -27,7 +27,7 @@ export default function Landing() {
 								Cossistant is the open-source support framework that puts human
 								and AI help right in your React app with custom actions and UI.
 							</h3>
-							<div className="mt-10 flex items-center gap-6">
+							<div className="mt-10 flex flex-col items-center gap-6 lg:flex-row">
 								<Button
 									className="h-16 w-[280px] justify-between border border-transparent font-medium text-md has-[>svg]:px-4"
 									size="lg"
@@ -59,7 +59,7 @@ export default function Landing() {
 						</div>
 					</div>
 
-					<div className="flex items-center justify-start">
+					<div className="hidden items-center justify-start lg:flex">
 						<ComponentPreview
 							name="support-widget"
 							sizeClasses="h-[70vh] w-[600px] max-h-[800px]"

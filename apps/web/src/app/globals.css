@@ -189,7 +189,7 @@
 	}
 
 	.container-wrapper {
-		@apply max-w-[1400px] min-[1800px]:max-w-screen-2xl mx-auto w-full;
+		@apply max-w-[1400px] min-[1800px]:max-w-screen-2xl mx-auto w-full border-x border-primary/10 border-dashed;
 	}
 
 	.container {
