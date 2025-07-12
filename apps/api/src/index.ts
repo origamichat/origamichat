@@ -76,6 +76,11 @@ app.all("/api/auth/*", async (c) => {
 	return await auth.handler(c.req.raw);
 });
 
+// Also handle /auth/* routes for backward compatibility
+app.all("/auth/*", async (c) => {
+	return await auth.handler(c.req.raw);
+});
+
 // TRPC routes
 app.use(
 	"/trpc/*",

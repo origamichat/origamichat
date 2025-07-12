@@ -69,12 +69,9 @@ export const auth = betterAuth({
 		defaultCookieAttributes: {
 			secure: env.NODE_ENV === "production",
 			httpOnly: true,
-			// Use "none" for cross-origin subdomain setup
-			sameSite: env.NODE_ENV === "production" ? "none" : "lax",
-			// Enable partitioned for cross-origin cookies in production
-			...(env.NODE_ENV === "production" && {
-				partitioned: true,
-			}),
+			// Use "lax" for subdomain setup (api.cossistant.com to cossistant.com)
+			sameSite: "lax",
+			// Remove partitioned as it's for third-party cookies, not subdomains
 		},
 		crossSubDomainCookies: {
 			enabled: true,
