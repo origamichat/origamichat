@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
+import { generateSiteMetadata } from "@/lib/metadata";
 import { Providers } from "./providers";
 
 const geistSans = Geist({
@@ -31,50 +31,7 @@ const F37Stout = localFont({
 	display: "swap",
 });
 
-export const metadata: Metadata = {
-	metadataBase: new URL("https://cossistant.com"),
-	title: "Cossistant | AI-powered chat for your business",
-	description:
-		"Cossistant is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
-	twitter: {
-		title: "Cossistant | AI-powered chat for your business",
-		description:
-			"Cossistant is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
-		images: [
-			// {
-			//   url: "https://cdn.midday.ai/opengraph-image.jpg",
-			//   width: 800,
-			//   height: 600,
-			// },
-			// {
-			//   url: "https://cdn.midday.ai/opengraph-image.jpg",
-			//   width: 1800,
-			//   height: 1600,
-			// },
-		],
-	},
-	openGraph: {
-		title: "Cossistant | AI-powered chat for your business",
-		description:
-			"Cossistant is an AI-powered chat for your business. It's a tool that helps you manage your business and stay organized.",
-		url: "https://cossistant.com",
-		siteName: "Cossistant",
-		images: [
-			// {
-			//   url: "https://cdn.midday.ai/opengraph-image.jpg",
-			//   width: 800,
-			//   height: 600,
-			// },
-			// {
-			//   url: "https://cdn.midday.ai/opengraph-image.jpg",
-			//   width: 1800,
-			//   height: 1600,
-			// },
-		],
-		locale: "en_US",
-		type: "website",
-	},
-};
+export const metadata = generateSiteMetadata();
 
 export const viewport = {
 	width: "device-width",
