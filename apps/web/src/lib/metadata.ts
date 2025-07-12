@@ -43,8 +43,7 @@ const defaultMetadata: Metadata = {
 		locale: "en_US",
 		url: "/",
 		siteName: "Cossistant",
-		title:
-			"Cossistant - Extraordinary AI and Human <Support /> right in your app",
+		title: "Cossistant - AI and Human <Support /> right in your app",
 		description:
 			"Cossistant is the open-source support framework that puts human and AI help right in your React app with custom actions and UI.",
 		images: [
@@ -58,8 +57,7 @@ const defaultMetadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title:
-			"Cossistant - Extraordinary AI and Human <Support /> right in your app",
+		title: "Cossistant - AI and Human <Support /> right in your app",
 		description:
 			"Cossistant is the open-source support framework that puts human and AI help right in your React app with custom actions and UI.",
 		images: ["/og-image.png"],

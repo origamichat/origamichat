@@ -141,7 +141,11 @@ export function JoinWaitlistButton({ totalEntries }: { totalEntries: number }) {
 			</div>
 
 			<p className="mt-4 flex items-center gap-4 text-primary/60 text-sm">
-				<span>{totalEntries} people are already on the waitlist</span>
+				<span>
+					{totalEntries > 0
+						? `${totalEntries} people are already on the waitlist`
+						: "Join the waitlist now!"}
+				</span>
 			</p>
 		</div>
 	);

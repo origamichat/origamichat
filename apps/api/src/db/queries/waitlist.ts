@@ -10,8 +10,7 @@ export async function getWaitlistEntryByUserId(
 	try {
 		const totalEntries = await db
 			.select({ count: count() })
-			.from(waitingListEntry)
-			.$withCache();
+			.from(waitingListEntry);
 
 		if (!params.userId) {
 			return { entry: null, rank: null, totalEntries: totalEntries[0].count };
@@ -51,7 +50,12 @@ export async function getWaitlistEntryByUserId(
 			totalEntries: totalEntries[0].count,
 		};
 	} catch (err) {
-		console.error(err);
-		return { entry: null, rank: null, totalEntries: 666 };
+		console.error("Error in getWaitlistEntryByUserId:", err);
+		console.error(
+			"Stack trace:",
+			err instanceof Error ? err.stack : "No stack trace"
+		);
+		// Return 0 instead of 666 to make it clear there's an error
+		return { entry: null, rank: null, totalEntries: 0 };
 	}
 }
