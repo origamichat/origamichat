@@ -1,13 +1,17 @@
+import Link from "next/link";
+import { Suspense } from "react";
 import { ComponentPreview } from "@/components/component-preview";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icons";
 import { Logos } from "@/components/ui/logos";
+import { TooltipOnHover } from "@/components/ui/tooltip";
 import { GitHubLink } from "./components/github-link";
+import { WaitingListMessage } from "./components/waiting-list/message";
 
 // Force dynamic rendering since this page depends on user authentication
 export const dynamic = "force-dynamic";
 
-export default function Landing() {
+export default async function Landing() {
 	return (
 		<>
 			<div className="flex min-h-screen flex-col gap-8 pt-32 md:flex-row md:items-center md:pt-0">
@@ -46,16 +50,40 @@ export default function Landing() {
 									Star us on GitHub
 								</GitHubLink>
 							</div>
-							<p className="text-balance text-center font-mono text-foreground/60 text-xs md:text-left">
-								Already 28 people on the waitlist. Join them, be early.
-							</p>
+							<Suspense
+								fallback={
+									<p className="text-balance text-center font-mono text-foreground/20 text-xs md:text-left">
+										Already xxx people on the waitlist. Join them, be early.
+									</p>
+								}
+							>
+								<WaitingListMessage />
+							</Suspense>
 						</div>
 						<div className="mt-10 flex w-full items-center justify-center gap-2 px-6 md:justify-start lg:mt-auto lg:px-0">
 							<p className="font-mono text-foreground/60 text-xs">
 								Works well with
 							</p>
-							<Logos.react className="size-4" />
-							<Logos.tailwind className="size-4" />
+							<TooltipOnHover content="React">
+								<Link href="https://react.dev" target="_blank">
+									<Logos.react className="size-4" />
+								</Link>
+							</TooltipOnHover>
+							<TooltipOnHover content="Next.js">
+								<Link href="https://nextjs.org" target="_blank">
+									<Logos.nextjs className="size-4" />
+								</Link>
+							</TooltipOnHover>
+							<TooltipOnHover content="Tailwind">
+								<Link href="https://tailwindcss.com" target="_blank">
+									<Logos.tailwind className="size-4" />
+								</Link>
+							</TooltipOnHover>
+							<TooltipOnHover content="Shadcn/UI">
+								<Link href="https://ui.shadcn.com" target="_blank">
+									<Logos.shadcn className="size-4" />
+								</Link>
+							</TooltipOnHover>
 						</div>
 					</div>
 
