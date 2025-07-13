@@ -43,6 +43,7 @@
   "devDependencies": {
     "@types/bun": "^1.2.16",
     "@types/pg": "^8.15.4",
-    "drizzle-kit": "^0.31.4"
+    "drizzle-kit": "^0.31.4",
+    "react-email": "4.1.3"
   }
 }

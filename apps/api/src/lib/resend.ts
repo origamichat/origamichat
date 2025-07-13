@@ -1,4 +1,7 @@
+import { ANTHONY_EMAIL, TRANSACTIONAL_EMAIL_DOMAIN } from "@api/constants";
 import { env } from "@api/env";
+import { generateShortPrimaryId } from "@api/utils/db/ids";
+import type { ReactNode as ReactEmailNode } from "react";
 import { Resend } from "resend";
 
 export interface ContactData {
@@ -119,5 +122,52 @@ export const removeUserFromDefaultAudience = async (
 };
 
 const resend = new Resend(env.RESEND_API_KEY);
+
+export const sendEmail = async ({
+	to,
+	subject,
+	from,
+	marketing = false,
+	replyTo,
+	refId = generateShortPrimaryId(),
+	includeUnsubscribe = true,
+	...props
+}: {
+	to: string;
+	from?: string;
+	subject: string;
+	marketing?: boolean;
+	replyTo?: string;
+	refId?: string;
+	includeUnsubscribe?: boolean;
+} & {
+	content: ReactEmailNode;
+}) => {
+	// Build headers
+	const headers: Record<string, string> = {
+		"X-Entity-Ref-ID": refId,
+	};
+
+	// Add unsubscribe headers if requested and recipient email is provided
+	if (includeUnsubscribe) {
+		const unsubscribeUrl = `${env.PUBLIC_APP_URL}/email/unsubscribe?email=${encodeURIComponent(to)}`;
+		headers["List-Unsubscribe"] = `<${unsubscribeUrl}>`;
+		headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
+	}
+
+	return resend.emails.send({
+		from: from
+			? from
+			: marketing
+				? `Anthony from Cossistant <${ANTHONY_EMAIL}>`
+				: `Cossistant <system@${TRANSACTIONAL_EMAIL_DOMAIN}>`,
+		to,
+		subject: subject.replace("\\n", " "),
+		replyTo,
+		// This allows to not get the emails piles up or hidden in gmail threads
+		react: props.content,
+		headers,
+	});
+};
 
 export default resend;

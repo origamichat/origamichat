@@ -72,6 +72,7 @@
   },
   "devDependencies": {
     "@cossistant/typescript-config": "workspace:*",
+    "@cossistant/transactional": "workspace:*",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
