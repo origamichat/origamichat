@@ -71,13 +71,7 @@ app.use("/trpc/*", async (c, next) => {
 	return next();
 });
 
-// Better-Auth - Handle all auth routes
 app.all("/api/auth/*", async (c) => {
-	return await auth.handler(c.req.raw);
-});
-
-// Also handle /auth/* routes for backward compatibility
-app.all("/auth/*", async (c) => {
 	return await auth.handler(c.req.raw);
 });
 

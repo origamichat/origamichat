@@ -35,14 +35,14 @@ export function ComponentPreviewTabs({
 						{/* left */}
 						<motion.div
 							animate={{ scaleY: 1 }}
-							className="-top-10 -bottom-10 pointer-events-none absolute left-0 w-[1px] bg-primary/60"
+							className="-top-10 -bottom-10 pointer-events-none absolute left-0 w-[1px] bg-primary/40"
 							initial={{ scaleY: 0 }}
 							style={{ originY: 0.5 }}
 							transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
 						/>
 						<motion.div
 							animate={{ scaleY: 1 }}
-							className="-top-6 -bottom-6 pointer-events-none absolute left-4 z-[-1] w-[1px] bg-primary/60"
+							className="-top-6 -bottom-6 pointer-events-none absolute left-4 z-[-1] w-[1px] bg-primary/40"
 							initial={{ scaleY: 0 }}
 							style={{ originY: 0.5 }}
 							transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
@@ -66,14 +66,14 @@ export function ComponentPreviewTabs({
 						{/* right */}
 						<motion.div
 							animate={{ scaleY: 1 }}
-							className="-top-10 -bottom-10 pointer-events-none absolute right-[-1px] w-[1px] bg-primary/60"
+							className="-top-10 -bottom-10 pointer-events-none absolute right-[-1px] w-[1px] bg-primary/40"
 							initial={{ scaleY: 0 }}
 							style={{ originY: 0.5 }}
 							transition={{ duration: 0.8, delay: 0, ease: "easeOut" }}
 						/>
 						<motion.div
 							animate={{ scaleY: 1 }}
-							className="-top-6 -bottom-6 pointer-events-none absolute right-4 z-[-1] w-[1px] bg-primary/60"
+							className="-top-6 -bottom-6 pointer-events-none absolute right-4 z-[-1] w-[1px] bg-primary/40"
 							initial={{ scaleY: 0 }}
 							style={{ originY: 0.5 }}
 							transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -97,14 +97,14 @@ export function ComponentPreviewTabs({
 						{/* top */}
 						<motion.div
 							animate={{ scaleX: 1 }}
-							className="-left-6 -right-6 pointer-events-none absolute top-0 h-[1px] bg-primary/60"
+							className="-left-6 -right-6 pointer-events-none absolute top-0 h-[1px] bg-primary/40"
 							initial={{ scaleX: 0 }}
 							style={{ originX: 0.5 }}
 							transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
 						/>
 						<motion.div
 							animate={{ scaleX: 1 }}
-							className="-left-6 -right-6 pointer-events-none absolute top-4 z-[-1] h-[1px] bg-primary/60"
+							className="-left-6 -right-6 pointer-events-none absolute top-4 z-[-1] h-[1px] bg-primary/40"
 							initial={{ scaleX: 0 }}
 							style={{ originX: 0.5 }}
 							transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
@@ -128,14 +128,14 @@ export function ComponentPreviewTabs({
 						{/* bottom */}
 						<motion.div
 							animate={{ scaleX: 1 }}
-							className="-left-6 -right-6 pointer-events-none absolute bottom-0 h-[1px] bg-primary/60"
+							className="-left-6 -right-6 pointer-events-none absolute bottom-0 h-[1px] bg-primary/40"
 							initial={{ scaleX: 0 }}
 							style={{ originX: 0.5 }}
 							transition={{ duration: 0.8, delay: 1.6, ease: "easeOut" }}
 						/>
 						<motion.div
 							animate={{ scaleX: 1 }}
-							className="-left-6 -right-6 pointer-events-none absolute bottom-4 z-[-1] h-[1px] bg-primary/60"
+							className="-left-6 -right-6 pointer-events-none absolute bottom-4 z-[-1] h-[1px] bg-primary/40"
 							initial={{ scaleX: 0 }}
 							style={{ originX: 0.5 }}
 							transition={{ duration: 0.8, delay: 1.8, ease: "easeOut" }}

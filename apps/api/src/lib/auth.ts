@@ -64,14 +64,11 @@ export const auth = betterAuth({
 		},
 	},
 	advanced: {
-		// Force secure cookies in production
 		useSecureCookies: env.NODE_ENV === "production",
 		defaultCookieAttributes: {
 			secure: env.NODE_ENV === "production",
 			httpOnly: true,
-			// Use "lax" for subdomain setup (api.cossistant.com to cossistant.com)
 			sameSite: "lax",
-			// Remove partitioned as it's for third-party cookies, not subdomains
 		},
 		crossSubDomainCookies: {
 			enabled: true,
