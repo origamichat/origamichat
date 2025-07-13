@@ -8,7 +8,6 @@ import { TooltipOnHover } from "@/components/ui/tooltip";
 import { GitHubLink } from "./components/github-link";
 import { WaitingListMessage } from "./components/waiting-list/message";
 
-// Force dynamic rendering since this page depends on user authentication
 export const dynamic = "force-dynamic";
 
 export default async function Landing() {
