@@ -25,7 +25,7 @@ const JoinedWaitlistEmail = ({
 				<Body className="py-[40px] font-sans">
 					<Container className="mx-auto max-w-[600px] px-[40px] py-[40px]">
 						<Img
-							alt="Company Logo"
+							alt="Cossistant Logo"
 							className="mb-[40px] h-auto w-[120px] object-cover"
 							src={LOGO_URL}
 						/>

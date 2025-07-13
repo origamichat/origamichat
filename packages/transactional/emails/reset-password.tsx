@@ -29,7 +29,7 @@ const ResetPasswordEmail = ({
 				<Body className="py-[40px] font-sans">
 					<Container className="mx-auto max-w-[600px] px-[40px] py-[40px]">
 						<Img
-							alt="Company Logo"
+							alt="Cossistant Logo"
 							className="mb-[40px] h-auto w-[120px] object-cover"
 							src={LOGO_URL}
 						/>
@@ -59,16 +59,6 @@ const ResetPasswordEmail = ({
 						<Text className="mt-0 mb-[16px] text-[14px] text-gray-600">
 							If you didn&apos;t request this, you can safely ignore this email.
 							The link will expire in 1 hour.
-						</Text>
-
-						<Text className="mt-[40px] mb-[32px] text-[16px]">
-							Best regards,
-							<br />
-							The Cossistant Team
-						</Text>
-
-						<Text className="mt-0 text-[12px] text-gray-500">
-							© 2024 Cossistant. All rights reserved.
 						</Text>
 					</Container>
 				</Body>
