@@ -2,6 +2,7 @@
 
 import { useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
+import { BaseSubmitButton } from "@/components/ui/base-submit-button";
 import { signIn, signUp } from "@/lib/auth/client";
 import { Button } from "../../../../components/ui/button";
 import { Input } from "../../../../components/ui/input";
@@ -18,7 +19,7 @@ function generateRandomPassword(length = 16): string {
 	return password;
 }
 
-export function JoinWaitlistButton({ totalEntries }: { totalEntries: number }) {
+export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 	const [from] = useQueryState("from", { defaultValue: "" });
 	const [email, setEmail] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -71,14 +72,14 @@ export function JoinWaitlistButton({ totalEntries }: { totalEntries: number }) {
 		<div className="flex flex-col items-center justify-center gap-6">
 			{/* Email Signup Form - Primary Option */}
 			<div className="w-full max-w-md space-y-4">
-				<div className="text-center">
-					<h3 className="font-f37-stout text-lg">Join waitlist</h3>
-					<p className="text-primary/60 text-sm">
+				<div className="flex flex-col gap-2 text-center">
+					<h1 className="font-f37-stout text-5xl">Join waitlist</h1>
+					<p className="text-md text-primary/60">
 						Enter your email to get started
 					</p>
 				</div>
 
-				<form className="space-y-3" onSubmit={handleEmailSignup}>
+				<form className="mt-10 space-y-3" onSubmit={handleEmailSignup}>
 					<Input
 						disabled={isLoading}
 						onChange={(e) => setEmail(e.target.value)}
@@ -88,26 +89,26 @@ export function JoinWaitlistButton({ totalEntries }: { totalEntries: number }) {
 						value={email}
 						variant="lg"
 					/>
-					<Button
+					<BaseSubmitButton
 						className="w-full"
 						disabled={isLoading || !email.trim()}
+						isSubmitting={isLoading}
 						size="lg"
-						type="submit"
 					>
-						{isLoading ? "Joining..." : "Join Waitlist"}
-					</Button>
+						Join Waitlist
+					</BaseSubmitButton>
 				</form>
 			</div>
 
 			{/* Separator */}
-			<div className="flex w-full max-w-sm items-center gap-4">
+			<div className="flex w-full max-w-md items-center gap-4">
 				<Separator className="flex-1" />
 				<span className="text-primary/50 text-xs">OR CONTINUE WITH</span>
 				<Separator className="flex-1" />
 			</div>
 
 			{/* Social Login Options */}
-			<div className="flex w-full max-w-sm flex-col gap-3">
+			<div className="flex w-full max-w-md flex-col gap-3">
 				<Button
 					className="w-full"
 					onClick={() =>
@@ -141,11 +142,7 @@ export function JoinWaitlistButton({ totalEntries }: { totalEntries: number }) {
 			</div>
 
 			<p className="mt-4 flex items-center gap-4 text-primary/60 text-sm">
-				<span>
-					{totalEntries > 0
-						? `${totalEntries} people are already on the waitlist`
-						: "Join the waitlist now!"}
-				</span>
+				<span>{totalEntries} people are already on the waitlist</span>
 			</p>
 		</div>
 	);

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,6 @@ import { trpc } from "@/lib/trpc/server";
 import { getWaitlistUrl } from "@/lib/url";
 import { cn } from "@/lib/utils";
 import { DiscordIcon } from "../login-form";
-import { JoinWaitlistButton } from "./join-button";
 
 export async function WaitingList({ className }: { className?: string }) {
 	const { user } = await getAuth();
@@ -18,11 +18,7 @@ export async function WaitingList({ className }: { className?: string }) {
 		await trpc.waitlist.getWaitlistEntry.query({ userId: user?.id });
 
 	if (!entry) {
-		return (
-			<div className="mx-auto flex min-h-[500px] w-full max-w-[592px] flex-col items-center justify-center gap-4 rounded py-10 md:p-10">
-				<JoinWaitlistButton totalEntries={totalEntries} />
-			</div>
-		);
+		redirect("/waitlist");
 	}
 
 	const url = getWaitlistUrl(entry.uniqueReferralCode);

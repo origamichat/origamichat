@@ -76,7 +76,9 @@ export function LoginForm() {
 
 	return (
 		<div className="flex flex-col gap-2">
-			<h1 className="mx-auto mb-10 font-bold text-2xl">Log in Cossistant</h1>
+			<h1 className="mx-auto mb-10 font-bold font-f37-stout text-2xl">
+				Log in Cossistant
+			</h1>
 			<Button onClick={() => handleSignIn("google")} size="lg">
 				<GoogleIcon />
 				Sign in with google

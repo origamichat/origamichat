@@ -36,16 +36,18 @@ export default async function Landing() {
 								and AI help right in your React app with custom actions and UI.
 							</h3>
 							<div className="mt-10 flex w-full flex-col gap-3 md:max-w-[75%] md:gap-6 lg:max-w-full lg:flex-row lg:items-center">
-								<Button
-									className="h-16 w-full justify-between border border-transparent font-medium text-md has-[>svg]:px-4 lg:w-[280px]"
-									size="lg"
-								>
-									Join the waitlist
-									<Icon
-										className="size-4 transition-transform group-hover/btn:translate-x-1"
-										name="arrow-right"
-									/>
-								</Button>
+								<Link href="/waitlist">
+									<Button
+										className="h-16 w-full justify-between border border-transparent font-medium text-md has-[>svg]:px-4 lg:w-[280px]"
+										size="lg"
+									>
+										Join the waitlist
+										<Icon
+											className="size-4 transition-transform group-hover/btn:translate-x-1"
+											name="arrow-right"
+										/>
+									</Button>
+								</Link>
 								<GitHubLink
 									className="h-16 w-full justify-between px-4 font-medium text-md lg:w-[280px]"
 									size="lg"
