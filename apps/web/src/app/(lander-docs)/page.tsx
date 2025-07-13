@@ -24,15 +24,20 @@ export default async function Landing() {
 							<h1 className="text-center font-f37-stout text-4xl leading-tight md:text-5xl lg:text-left xl:text-6xl">
 								AI and human
 								<span className="text-cossistant-blue">{" <Support /> "}</span>
-								right within your app.
+								<br />
+								right within your{" "}
+								{/* <span className="hidden size-14 border border-foreground/20 border-dashed align-middle md:inline-block">
+                  <Logos.nextjs className="size-14" />
+                </span>{" "} */}
+								app.
 							</h1>
 							<h3 className="w-full text-center text-base text-primary/70 md:max-w-[75%] md:text-lg lg:max-w-full lg:text-balance lg:text-left">
 								Cossistant is the open-source support framework that puts human
 								and AI help right in your React app with custom actions and UI.
 							</h3>
-							<div className="mt-10 flex flex-col gap-3 md:items-center md:gap-6 lg:flex-row">
+							<div className="mt-10 flex w-full flex-col gap-3 md:max-w-[75%] md:gap-6 lg:max-w-full lg:flex-row lg:items-center">
 								<Button
-									className="h-16 w-full justify-between border border-transparent font-medium text-md has-[>svg]:px-4 md:w-[280px]"
+									className="h-16 w-full justify-between border border-transparent font-medium text-md has-[>svg]:px-4 lg:w-[280px]"
 									size="lg"
 								>
 									Join the waitlist
@@ -42,7 +47,7 @@ export default async function Landing() {
 									/>
 								</Button>
 								<GitHubLink
-									className="h-16 w-full justify-between px-4 font-medium text-md md:w-[280px]"
+									className="h-16 w-full justify-between px-4 font-medium text-md lg:w-[280px]"
 									size="lg"
 									variant="outline"
 								>
