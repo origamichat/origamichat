@@ -2,7 +2,7 @@ import { db } from "@api/db";
 import * as schema from "@api/db/schema";
 import { waitingListEntry } from "@api/db/schema/waiting-list";
 import { env } from "@api/env";
-import { resend } from "@api/lib/resend";
+import resend from "@api/lib/resend";
 import { slugify } from "@api/utils/db";
 import { generateULID } from "@api/utils/db/ids";
 import { betterAuth } from "better-auth";
