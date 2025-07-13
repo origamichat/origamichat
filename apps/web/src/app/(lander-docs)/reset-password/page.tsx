@@ -7,14 +7,6 @@ import { BaseSubmitButton } from "@/components/ui/base-submit-button";
 import { Input } from "@/components/ui/input";
 import { resetPassword } from "@/lib/auth/client";
 
-import { generateSiteMetadata } from "@/lib/metadata";
-
-export const dynamic = "force-dynamic";
-
-export const metadata = generateSiteMetadata({
-	title: "Reset your password",
-});
-
 export default function ResetPasswordPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();

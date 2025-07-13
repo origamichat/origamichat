@@ -5,13 +5,6 @@ import { useState } from "react";
 import { BaseSubmitButton } from "@/components/ui/base-submit-button";
 import { Input } from "@/components/ui/input";
 import { forgetPassword } from "@/lib/auth/client";
-import { generateSiteMetadata } from "@/lib/metadata";
-
-export const dynamic = "force-dynamic";
-
-export const metadata = generateSiteMetadata({
-	title: "Forgot password",
-});
 
 export default function ForgotPasswordPage() {
 	const [email, setEmail] = useState("");
