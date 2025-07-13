@@ -34,6 +34,7 @@
     "hono": "^4.7.10",
     "lru-cache": "^11.1.0",
     "pg": "^8.16.3",
+    "resend": "^4.6.0",
     "superjson": "^2.2.2",
     "trpc-to-openapi": "^2.3.0",
     "ulid": "^3.0.0",

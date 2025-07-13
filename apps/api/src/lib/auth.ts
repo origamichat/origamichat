@@ -2,9 +2,9 @@ import { db } from "@api/db";
 import * as schema from "@api/db/schema";
 import { waitingListEntry } from "@api/db/schema/waiting-list";
 import { env } from "@api/env";
+import { resend } from "@api/lib/resend";
 import { slugify } from "@api/utils/db";
 import { generateULID } from "@api/utils/db/ids";
-import resend from "@api/utils/resend";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
