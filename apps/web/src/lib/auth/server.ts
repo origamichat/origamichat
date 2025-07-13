@@ -53,7 +53,7 @@ export const ensureWaitlistAccess = async (userId: string) => {
 	const hasAccess = await checkWaitlistAccess(userId);
 
 	if (!hasAccess) {
-		redirect("/joined");
+		redirect("/waitlist/joined");
 	}
 
 	return hasAccess;

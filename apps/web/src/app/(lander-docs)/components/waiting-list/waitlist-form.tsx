@@ -52,7 +52,7 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 				email: email.trim(),
 				password: randomPassword,
 				name,
-				callbackURL: `${baseURL}/joined`,
+				callbackURL: `${baseURL}/waitlist/joined`,
 			});
 
 			if (signUpResult.error) {
@@ -114,8 +114,8 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 					onClick={() =>
 						signIn.social({
 							provider: "google",
-							callbackURL: `${baseURL}/joined`,
-							errorCallbackURL: `${baseURL}/joined/error`,
+							callbackURL: `${baseURL}/waitlist/joined`,
+							errorCallbackURL: `${baseURL}/waitlist/joined/error`,
 						})
 					}
 					size="lg"
@@ -129,8 +129,8 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 					onClick={() =>
 						signIn.social({
 							provider: "github",
-							callbackURL: `${baseURL}/joined`,
-							errorCallbackURL: `${baseURL}/joined/error`,
+							callbackURL: `${baseURL}/waitlist/joined`,
+							errorCallbackURL: `${baseURL}/waitlist/joined/error`,
 						})
 					}
 					size="lg"
