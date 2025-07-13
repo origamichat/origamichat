@@ -4,8 +4,13 @@ import { WaitingList } from "@/app/(lander-docs)/components/waiting-list";
 import RegisterReferral from "@/app/(lander-docs)/components/waiting-list/register-referral";
 import { WaitingListSkeleton } from "@/app/(lander-docs)/components/waiting-list/waiting-list-skeleton";
 import { TextEffect } from "@/components/ui/text-effect";
+import { generateSiteMetadata } from "@/lib/metadata";
 
 export const dynamic = "force-dynamic";
+
+export const metadata = generateSiteMetadata({
+	title: "You're on the waitlist",
+});
 
 function Page() {
 	return (

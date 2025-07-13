@@ -1,5 +1,10 @@
+import { generateSiteMetadata } from "@/lib/metadata";
 import { trpc } from "@/lib/trpc/server";
 import { WaitlistForm } from "../components/waiting-list/waitlist-form";
+
+export const metadata = generateSiteMetadata({
+	title: "Join the waitlist",
+});
 
 export default async function Page() {
 	const { totalEntries } = await trpc.waitlist.getWaitlistEntry.query({

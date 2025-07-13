@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { BaseSubmitButton } from "@/components/ui/base-submit-button";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { signIn } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
 
@@ -62,11 +67,57 @@ export const GithubIcon = ({ className }: { className?: string }) => {
 };
 
 export function LoginForm() {
+	const searchParams = useSearchParams();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
+	const [successMessage, setSuccessMessage] = useState("");
+
+	const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+	useEffect(() => {
+		const reset = searchParams.get("reset");
+		if (reset === "success") {
+			setSuccessMessage(
+				"Password reset successful! You can now sign in with your new password."
+			);
+		}
+	}, [searchParams]);
+
+	const handleEmailSignIn = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setError("");
+
+		if (!(email.trim() && password.trim())) {
+			setError("Please enter both email and password");
+			return;
+		}
+
+		setIsLoading(true);
+		try {
+			const result = await signIn.email({
+				email: email.trim(),
+				password,
+				callbackURL: `${baseURL}/auth`,
+			});
+
+			if (result.error) {
+				setError("Invalid email or password");
+			}
+		} catch (_error) {
+			console.error("Email sign-in error:", _error);
+			setError("An error occurred during sign-in. Please try again.");
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	const handleSignIn = async (provider: "google" | "github") => {
 		await signIn.social(
 			{
 				provider,
-				callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}/auth`,
+				callbackURL: `${baseURL}/auth`,
 			},
 			{
 				credentials: "include",
@@ -75,20 +126,89 @@ export function LoginForm() {
 	};
 
 	return (
-		<div className="flex flex-col gap-2">
-			<h1 className="mx-auto mb-10 font-bold font-f37-stout text-2xl">
-				Log in Cossistant
-			</h1>
-			<Button onClick={() => handleSignIn("google")} size="lg">
-				<GoogleIcon />
-				Sign in with google
-			</Button>
-			<Button onClick={() => handleSignIn("github")} size="lg">
-				<GithubIcon />
-				Sign in with github
-			</Button>
+		<div className="flex flex-col items-center justify-center gap-6">
+			{/* Email Sign-in Form - Primary Option */}
+			<div className="w-full max-w-md space-y-4">
+				<div className="flex flex-col gap-2 text-center">
+					<h1 className="font-f37-stout text-5xl">Log in</h1>
+					<p className="text-md text-primary/60">
+						Enter your email and password to sign in
+					</p>
+				</div>
 
-			<p className="text-muted-foreground text-sm">
+				<form className="mt-10 space-y-3" onSubmit={handleEmailSignIn}>
+					<Input
+						disabled={isLoading}
+						onChange={(e) => setEmail(e.target.value)}
+						placeholder="Email"
+						required
+						type="email"
+						value={email}
+						variant="lg"
+					/>
+					<Input
+						disabled={isLoading}
+						onChange={(e) => setPassword(e.target.value)}
+						placeholder="Password"
+						required
+						type="password"
+						value={password}
+						variant="lg"
+					/>
+					{successMessage && (
+						<p className="text-green-600 text-sm">{successMessage}</p>
+					)}
+					{error && <p className="text-destructive text-sm">{error}</p>}
+					<BaseSubmitButton
+						className="w-full"
+						disabled={isLoading || !email.trim() || !password.trim()}
+						isSubmitting={isLoading}
+						size="lg"
+					>
+						Sign In
+					</BaseSubmitButton>
+				</form>
+
+				<div className="text-center">
+					<Link
+						className="text-primary/60 text-sm underline"
+						href="/forgot-password"
+					>
+						Forgot your password?
+					</Link>
+				</div>
+			</div>
+
+			{/* Separator */}
+			<div className="flex w-full max-w-md items-center gap-4">
+				<Separator className="flex-1" />
+				<span className="text-primary/50 text-xs">OR CONTINUE WITH</span>
+				<Separator className="flex-1" />
+			</div>
+
+			{/* Social Login Options */}
+			<div className="flex w-full max-w-md flex-col gap-3">
+				<Button
+					className="w-full"
+					onClick={() => handleSignIn("google")}
+					size="lg"
+					variant="outline"
+				>
+					<GoogleIcon className="size-4" />
+					Continue with Google
+				</Button>
+				<Button
+					className="w-full"
+					onClick={() => handleSignIn("github")}
+					size="lg"
+					variant="outline"
+				>
+					<GithubIcon className="size-4" />
+					Continue with GitHub
+				</Button>
+			</div>
+
+			<p className="mt-4 text-muted-foreground text-sm">
 				By signing in, you agree to our{" "}
 				<Link className="underline" href="/terms">
 					Terms
