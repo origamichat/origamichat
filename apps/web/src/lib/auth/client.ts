@@ -7,9 +7,6 @@ const authClient = createAuthClient({
 		: "http://localhost:8787/api/auth",
 	fetchOptions: {
 		credentials: "include",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	},
 	plugins: [organizationClient(), adminClient()],
 });
