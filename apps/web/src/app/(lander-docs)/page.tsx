@@ -14,20 +14,19 @@ export const dynamic = "force-dynamic";
 export default async function Landing() {
 	return (
 		<>
-			<div className="flex min-h-screen flex-col gap-8 pt-32 md:flex-row md:items-center md:pt-0">
-				<div className="flex gap-20">
+			<div className="flex min-h-screen flex-col gap-8 pt-32 md:flex-row md:items-center lg:pt-0">
+				<div className="mb-20 flex flex-col gap-20 lg:mb-0 lg:flex-row">
 					<div className="flex flex-1 flex-col items-start justify-between gap-6 pt-11 ">
-						<p className="px-6 font-mono text-foreground/60 text-xs lg:px-0">
+						<p className="w-full px-6 text-center font-mono text-foreground/60 text-xs lg:px-0 lg:text-left">
 							Escape the iframe
 						</p>
-						<div className="my-auto flex flex-col gap-6 px-4">
-							<h1 className="font-f37-stout text-3xl leading-tight lg:text-6xl">
-								Extraordinary AI and human
-								<br />
-								<span className="text-cossistant-blue">{"<Support /> "}</span>
-								right in your app.
+						<div className="my-auto flex flex-col items-center gap-6 px-4 lg:items-start">
+							<h1 className="text-center font-f37-stout text-4xl leading-tight md:text-5xl lg:text-left xl:text-6xl">
+								AI and human
+								<span className="text-cossistant-blue">{" <Support /> "}</span>
+								right within your app.
 							</h1>
-							<h3 className="w-full text-base text-primary/70 md:text-balance md:text-lg">
+							<h3 className="w-full text-center text-base text-primary/70 md:max-w-[75%] md:text-lg lg:max-w-full lg:text-balance lg:text-left">
 								Cossistant is the open-source support framework that puts human
 								and AI help right in your React app with custom actions and UI.
 							</h3>
@@ -60,7 +59,7 @@ export default async function Landing() {
 								<WaitingListMessage />
 							</Suspense>
 						</div>
-						<div className="mt-10 flex w-full items-center justify-center gap-2 px-6 md:justify-start lg:mt-auto lg:px-0">
+						<div className="mt-10 flex w-full items-center justify-center gap-2 px-6 lg:mt-auto lg:justify-start lg:px-0">
 							<p className="font-mono text-foreground/60 text-xs">
 								Works well with
 							</p>
@@ -87,7 +86,7 @@ export default async function Landing() {
 						</div>
 					</div>
 
-					<div className="hidden items-center justify-start lg:flex">
+					<div className="hidden items-center justify-center md:flex lg:justify-start">
 						<ComponentPreview
 							name="support-widget"
 							sizeClasses="h-[70vh] w-[600px] max-h-[800px]"
