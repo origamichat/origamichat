@@ -6,6 +6,8 @@ import { notFound, redirect } from "next/navigation";
 import { SELECTED_WEBSITE_COOKIE_NAME } from "@/constants";
 import { ensurePageAuth, ensureWaitlistAccess } from "@/lib/auth/server";
 
+export const dynamic = "force-dynamic";
+
 const getDefaultWebsiteToRedirectTo = ({
 	selectedWebsiteId,
 	orgs,

@@ -2,6 +2,8 @@ import { generateSiteMetadata } from "@/lib/metadata";
 import { trpc } from "@/lib/trpc/server";
 import { WaitlistForm } from "../components/waiting-list/waitlist-form";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = generateSiteMetadata({
 	title: "Join the waitlist",
 });
