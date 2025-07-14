@@ -23,6 +23,7 @@
     "./queries": "./src/db/queries/index.ts"
   },
   "dependencies": {
+    "@cossistant/transactional": "workspace:*",
     "@hono/node-server": "^1.7.0",
     "@hono/swagger-ui": "^0.5.1",
     "@hono/trpc-server": "^0.3.4",
