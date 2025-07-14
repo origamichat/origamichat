@@ -37,3 +37,11 @@ yarn-error.log*
 .DS_Store
 *.pem
 apps/api/server
+
+# Terraform
+terraform.tfvars
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+crash.log
+*.tfplan

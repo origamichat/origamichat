@@ -21,7 +21,8 @@
         "RESEND_API_KEY",
         "RESEND_AUDIENCE_ID",
         "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET"
+        "GITHUB_CLIENT_SECRET",
+        "PUBLIC_APP_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",

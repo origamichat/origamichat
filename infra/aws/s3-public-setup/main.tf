@@ -12,12 +12,22 @@ variable "bucket_name" {
 
 variable "aws_region" {
   description = "AWS region to deploy in"
-  default     = "eu-west-1"
+  default     = "us-east-1"
+}
+
+variable "environment" {
+  description = "Environment to deploy in"
+  type        = string
+  default     = "dev"
 }
 
 resource "aws_s3_bucket" "cossistant" {
   bucket = var.bucket_name
   force_destroy = true
+
+  tags = {
+    Environment = var.environment
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "cossistant" {
@@ -31,6 +41,8 @@ resource "aws_s3_bucket_public_access_block" "cossistant" {
 
 resource "aws_s3_bucket_policy" "public_read" {
   bucket = aws_s3_bucket.cossistant.id
+
+  depends_on = [aws_s3_bucket_public_access_block.cossistant]
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -59,11 +71,15 @@ resource "aws_s3_bucket_cors_configuration" "cors" {
 
 # IAM user with PutObject permissions
 resource "aws_iam_user" "cossistant_uploader" {
-  name = "cossistant-uploader"
+  name = "cossistant-uploader-${var.environment}"
+
+  tags = {
+    Environment = var.environment
+  }
 }
 
 resource "aws_iam_policy" "cossistant_upload_policy" {
-  name = "cossistant-upload-policy"
+  name = "cossistant-upload-policy-${var.environment}"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -75,6 +91,10 @@ resource "aws_iam_policy" "cossistant_upload_policy" {
       }
     ]
   })
+
+  tags = {
+    Environment = var.environment
+  }
 }
 
 resource "aws_iam_user_policy_attachment" "upload_policy_attach" {

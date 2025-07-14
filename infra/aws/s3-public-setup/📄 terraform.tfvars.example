@@ -1,4 +1,0 @@
-# Rename this file to terraform.tfvars before applying
-
-bucket_name = "your-unique-cossistant-bucket-name"
-aws_region  = "eu-west-1"  # or your preferred AWS region
