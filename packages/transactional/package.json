@@ -1,9 +1,12 @@
 {
   "name": "@cossistant/transactional",
   "version": "1.0.0",
-  "main": "src/index.ts",
   "private": true,
   "sideEffects": false,
+  "exports": {
+    "./emails/joined-waitlist": "./emails/joined-waitlist.tsx",
+    "./emails/reset-password": "./emails/reset-password.tsx"
+  },
   "scripts": {
     "dev": "email dev --port 3001"
   },
