@@ -1,7 +1,8 @@
 import { ANTHONY_EMAIL, TRANSACTIONAL_EMAIL_DOMAIN } from "@api/constants";
 import { env } from "@api/env";
 import { generateShortPrimaryId } from "@api/utils/db/ids";
-import type { ReactNode as ReactEmailNode } from "react";
+import { render } from "@react-email/render";
+import type { ReactElement } from "react";
 import { Resend } from "resend";
 
 export interface ContactData {
@@ -141,7 +142,7 @@ export const sendEmail = async ({
 	refId?: string;
 	includeUnsubscribe?: boolean;
 } & {
-	content: ReactEmailNode;
+	content: ReactElement;
 }) => {
 	// Build headers
 	const headers: Record<string, string> = {
@@ -155,6 +156,9 @@ export const sendEmail = async ({
 		headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
 	}
 
+	// Render the React component to HTML
+	const html = await render(props.content);
+
 	return resend.emails.send({
 		from: from
 			? from
@@ -165,7 +169,7 @@ export const sendEmail = async ({
 		subject: subject.replace("\\n", " "),
 		replyTo,
 		// This allows to not get the emails piles up or hidden in gmail threads
-		react: props.content,
+		html,
 		headers,
 	});
 };
