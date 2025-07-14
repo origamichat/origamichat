@@ -1,1 +1,1 @@
-export const LOGO_URL = "https://cossistant.com/logo-email.png";
+export const LOGO_URL = "https://cdn.cossistant.com/logo.png";
