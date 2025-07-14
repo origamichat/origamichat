@@ -3,8 +3,8 @@ import * as schema from "@api/db/schema";
 import { waitingListEntry } from "@api/db/schema/waiting-list";
 import { env } from "@api/env";
 import { addUserToDefaultAudience, sendEmail } from "@api/lib/resend";
-import { slugify } from "@api/utils/db";
 import { generateULID } from "@api/utils/db/ids";
+import { generateUniqueReferralCode } from "@api/utils/referral-code";
 import { triggerWorkflow } from "@api/utils/workflow";
 import { WORKFLOW } from "@api/workflows/types";
 import { JoinedWaitlistEmail } from "@cossistant/transactional/emails/joined-waitlist";
@@ -80,11 +80,12 @@ export const auth = betterAuth({
 		google: {
 			clientId: env.GOOGLE_CLIENT_ID,
 			clientSecret: env.GOOGLE_CLIENT_SECRET,
-			scopes: ["identify", "email", "openid"],
+			scopes: ["openid", "email", "profile"],
 		},
 		github: {
 			clientId: env.GITHUB_CLIENT_ID,
 			clientSecret: env.GITHUB_CLIENT_SECRET,
+			scopes: ["user:email", "read:user"],
 		},
 	},
 	advanced: {
@@ -121,10 +122,17 @@ export const auth = betterAuth({
 			create: {
 				after: async (createdUser) => {
 					try {
+						// Generate unique referral code
+						const referralCode = await generateUniqueReferralCode({
+							name: createdUser.name || "",
+							email: createdUser.email,
+							image: createdUser.image || undefined,
+						});
+
 						// Add user to waiting list
 						await db.insert(waitingListEntry).values({
 							userId: createdUser.id,
-							uniqueReferralCode: slugify(createdUser.name),
+							uniqueReferralCode: referralCode,
 						});
 
 						await triggerWorkflow({
