@@ -5,6 +5,8 @@ import { env } from "@api/env";
 import { addUserToDefaultAudience, sendEmail } from "@api/lib/resend";
 import { slugify } from "@api/utils/db";
 import { generateULID } from "@api/utils/db/ids";
+import { triggerWorkflow } from "@api/utils/workflow";
+import { WORKFLOW } from "@api/workflows/types";
 import { JoinedWaitlistEmail } from "@cossistant/transactional/emails/joined-waitlist";
 import { ResetPasswordEmail } from "@cossistant/transactional/emails/reset-password";
 import { betterAuth } from "better-auth";
@@ -125,19 +127,14 @@ export const auth = betterAuth({
 							uniqueReferralCode: slugify(createdUser.name),
 						});
 
-						// Send email and add user to default audience
-						await Promise.all([
-							sendEmail({
-								to: createdUser.email,
-								subject: "Welcome to Cossistant",
-								content: JoinedWaitlistEmail({
-									name: createdUser.name || "",
-									email: createdUser.email,
-								}),
-								includeUnsubscribe: false,
-							}),
-							addUserToDefaultAudience(createdUser.email),
-						]);
+						await triggerWorkflow({
+							path: WORKFLOW.WAITLIST_JOIN,
+							data: {
+								userId: createdUser.id,
+								email: createdUser.email,
+								name: createdUser.name || "",
+							},
+						});
 					} catch (error) {
 						console.error("Error in user creation hook:", error);
 						// Don't throw error to avoid blocking user creation

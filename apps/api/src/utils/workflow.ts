@@ -1,35 +1,27 @@
 import { env } from "@api/env";
+import type { WorkflowDataMap } from "@api/workflows/types";
 import { Client } from "@upstash/workflow";
 
 const client = new Client({
 	token: env.QSTASH_TOKEN,
 });
 
-export const WORKFLOW = {
-	WAITLIST_JOIN: "waitlist/join",
-} as const;
-
-type DataMap = {
-	[WORKFLOW.WAITLIST_JOIN]: {
-		email: string;
-		name: string;
-		referralCode: string;
-	};
-};
-
-type TriggerWorkflowParams<T = keyof typeof WORKFLOW> = {
+type TriggerWorkflowParams<
+	T extends keyof WorkflowDataMap = keyof WorkflowDataMap,
+> = {
 	path: T;
-	data: DataMap[T];
+	data: WorkflowDataMap[T];
 };
 
-export const triggerWorkflow = async ({
+export const triggerWorkflow = async <T extends keyof WorkflowDataMap>({
 	path,
 	data,
-}: TriggerWorkflowParams) => {
+}: TriggerWorkflowParams<T>) => {
 	await client.trigger({
 		url: `${env.BETTER_AUTH_URL}/workflow/${path}`,
 		headers: {
 			"Content-Type": "application/json",
 		},
+		body: JSON.stringify(data),
 	});
 };
