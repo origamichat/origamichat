@@ -10,6 +10,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
+import { workflowsRouters } from "./workflows";
 
 const app = new OpenAPIHono<{
 	Variables: {
@@ -24,6 +25,8 @@ const acceptedOrigins = [
 	"https://www.cossistant.com",
 	"https://cossistant.com",
 	"https://www.cossistant.com",
+	"http://localhost:8081",
+	"https://qstash.upstash.io",
 ];
 
 // Logger middleware
@@ -85,6 +88,9 @@ app.use(
 );
 
 app.route("/v1", routers);
+
+// Upstash Workflows routes
+app.route("/workflow", workflowsRouters);
 
 app.doc("/openapi", {
 	openapi: "3.1.0",

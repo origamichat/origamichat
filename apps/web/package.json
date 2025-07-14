@@ -17,6 +17,7 @@
     "@cossistant/api": "workspace:*",
     "@cossistant/location": "workspace:*",
     "@cossistant/react": "workspace:*",
+    "@cossistant/transactional": "workspace:*",
     "@hookform/resolvers": "^5.1.1",
     "@openstatus/react": "^0.0.3",
     "@polar-sh/nextjs": "^0.4.0",

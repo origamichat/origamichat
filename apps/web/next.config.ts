@@ -6,7 +6,11 @@ const withMDX = createMDX();
 const nextConfig: NextConfig = {
 	/* config options here */
 	reactStrictMode: true,
-	transpilePackages: ["@cossistant/api", "@cossistant/location"],
+	transpilePackages: [
+		"@cossistant/api",
+		"@cossistant/location",
+		"@cossistant/transactional",
+	],
 	eslint: {
 		ignoreDuringBuilds: true,
 	},

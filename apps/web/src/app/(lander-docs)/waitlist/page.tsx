@@ -1,6 +1,6 @@
 import { generateSiteMetadata } from "@/lib/metadata";
 import { trpc } from "@/lib/trpc/server";
-import { WaitlistForm } from "../components/waiting-list/waitlist-form";
+import { WaitlistForm } from "../components/waiting-list-rank/waitlist-form";
 
 export const dynamic = "force-dynamic";
 

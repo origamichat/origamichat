@@ -38,4 +38,8 @@ export const env = {
 	RESEND_AUDIENCE_ID: getEnvVariable("RESEND_AUDIENCE_ID"),
 	PUBLIC_APP_URL: getEnvVariable("PUBLIC_APP_URL"),
 	PORT: +getEnvVariable("PORT", "8787"),
+	QSTASH_TOKEN: getEnvVariable("QSTASH_TOKEN"),
+	QSTASH_CURRENT_SIGNING_KEY: getEnvVariable("QSTASH_CURRENT_SIGNING_KEY"),
+	QSTASH_NEXT_SIGNING_KEY: getEnvVariable("QSTASH_NEXT_SIGNING_KEY"),
+	QSTASH_URL: getEnvVariable("QSTASH_URL"),
 };

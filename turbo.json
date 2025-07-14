@@ -22,7 +22,11 @@
         "RESEND_AUDIENCE_ID",
         "GITHUB_CLIENT_ID",
         "GITHUB_CLIENT_SECRET",
-        "PUBLIC_APP_URL"
+        "PUBLIC_APP_URL",
+        "QSTASH_TOKEN",
+        "QSTASH_URL",
+        "QSTASH_CURRENT_SIGNING_KEY",
+        "QSTASH_NEXT_SIGNING_KEY"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",

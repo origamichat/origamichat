@@ -2,10 +2,6 @@
   "name": "@cossistant/transactional",
   "version": "1.0.0",
   "private": true,
-  "sideEffects": false,
-  "exports": {
-    ".": "./emails/index.ts"
-  },
   "scripts": {
     "dev": "email dev --port 3001"
   },

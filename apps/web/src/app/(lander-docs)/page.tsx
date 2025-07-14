@@ -6,7 +6,7 @@ import Icon from "@/components/ui/icons";
 import { Logos } from "@/components/ui/logos";
 import { TooltipOnHover } from "@/components/ui/tooltip";
 import { GitHubLink } from "./components/github-link";
-import { WaitingListMessage } from "./components/waiting-list/message";
+import { WaitingListMessage } from "./components/waiting-list-rank/message";
 
 export const dynamic = "force-dynamic";
 

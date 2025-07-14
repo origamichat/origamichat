@@ -1,9 +1,8 @@
 import { db } from "@api/db";
 import { getWaitlistEntryByUserId } from "@api/db/queries/waitlist";
-import type { OrigamiSession, OrigamiUser } from "@api/lib/auth";
+import { auth, type OrigamiSession, type OrigamiUser } from "@api/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getAPIBaseUrl } from "@/lib/url";
 
 export async function getAuth(): Promise<{
 	user: OrigamiUser | null;
@@ -11,15 +10,9 @@ export async function getAuth(): Promise<{
 }> {
 	try {
 		const headersList = await headers();
-		const cookie = headersList.get("cookie");
-
-		const session = await fetch(getAPIBaseUrl("/auth/get-session"), {
-			headers: {
-				"Content-Type": "application/json",
-				cookie: cookie ?? "",
-			},
-			credentials: "include",
-		}).then((res) => res.json());
+		const session = await auth.api.getSession({
+			headers: headersList,
+		});
 
 		return session ?? { user: null, session: null };
 	} catch (error) {

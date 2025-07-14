@@ -5,10 +5,8 @@ import { env } from "@api/env";
 import { addUserToDefaultAudience, sendEmail } from "@api/lib/resend";
 import { slugify } from "@api/utils/db";
 import { generateULID } from "@api/utils/db/ids";
-import {
-	JoinedWaitlistEmail,
-	ResetPasswordEmail,
-} from "@cossistant/transactional";
+import { JoinedWaitlistEmail } from "@cossistant/transactional/emails/joined-waitlist";
+import { ResetPasswordEmail } from "@cossistant/transactional/emails/reset-password";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
@@ -32,7 +30,7 @@ export const auth = betterAuth({
 	}),
 	emailAndPassword: {
 		enabled: true,
-		autoSignIn: true, // Auto sign-in after email registration
+		autoSignIn: true,
 		sendResetPassword: async ({ user, url, token }, request) => {
 			try {
 				await sendEmail({
@@ -69,6 +67,7 @@ export const auth = betterAuth({
 	// Allow requests from the frontend development server and production domains
 	trustedOrigins: [
 		"http://localhost:3000",
+		"http://localhost:3001",
 		"https://cossistant.com",
 		"https://cossistant.com",
 		"https://www.cossistant.com",
@@ -91,7 +90,8 @@ export const auth = betterAuth({
 		defaultCookieAttributes: {
 			secure: env.NODE_ENV === "production",
 			httpOnly: true,
-			sameSite: "lax",
+			sameSite: env.NODE_ENV === "production" ? "none" : "lax",
+			path: "/",
 		},
 		crossSubDomainCookies: {
 			enabled: true,
