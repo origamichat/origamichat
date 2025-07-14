@@ -14,7 +14,7 @@ type WaitlistConfirmationEmailProps = {
 	email: string;
 };
 
-const JoinedWaitlistEmail = ({
+export const JoinedWaitlistEmail = ({
 	name,
 	email,
 }: WaitlistConfirmationEmailProps) => {
@@ -69,5 +69,3 @@ const JoinedWaitlistEmail = ({
 		</Html>
 	);
 };
-
-export default JoinedWaitlistEmail;

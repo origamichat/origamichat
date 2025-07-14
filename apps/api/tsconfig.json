@@ -11,8 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@api/*": ["src/*"],
-      "@transactional/*": ["../../packages/transactional/*"]
+      "@api/*": ["src/*"]
     },
     "declaration": true,
     "composite": true,

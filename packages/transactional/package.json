@@ -4,8 +4,7 @@
   "private": true,
   "sideEffects": false,
   "exports": {
-    "./emails/joined-waitlist": "./emails/joined-waitlist.tsx",
-    "./emails/reset-password": "./emails/reset-password.tsx"
+    ".": "./emails/index.ts"
   },
   "scripts": {
     "dev": "email dev --port 3001"

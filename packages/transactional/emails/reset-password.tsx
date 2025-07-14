@@ -17,7 +17,7 @@ type ResetPasswordEmailProps = {
 	resetUrl: string;
 };
 
-const ResetPasswordEmail = ({
+export const ResetPasswordEmail = ({
 	name,
 	email,
 	resetUrl,
@@ -66,5 +66,3 @@ const ResetPasswordEmail = ({
 		</Html>
 	);
 };
-
-export default ResetPasswordEmail;

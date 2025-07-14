@@ -5,8 +5,10 @@ import { env } from "@api/env";
 import { addUserToDefaultAudience, sendEmail } from "@api/lib/resend";
 import { slugify } from "@api/utils/db";
 import { generateULID } from "@api/utils/db/ids";
-import JoinedWaitlistEmail from "@cossistant/transactional/emails/joined-waitlist";
-import ResetPasswordEmail from "@cossistant/transactional/emails/reset-password";
+import {
+	JoinedWaitlistEmail,
+	ResetPasswordEmail,
+} from "@cossistant/transactional";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
