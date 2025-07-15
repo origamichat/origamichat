@@ -7,6 +7,7 @@ import {
 	Tailwind,
 	Text,
 } from "@react-email/components";
+
 import { LOGO_URL } from "../constants";
 
 type WaitlistConfirmationEmailProps = {

@@ -2,6 +2,10 @@ import { addUserToDefaultAudience, sendEmail } from "@api/lib/resend";
 import { JoinedWaitlistEmail } from "@cossistant/transactional/emails/joined-waitlist";
 import { serve } from "@upstash/workflow/hono";
 import { Hono } from "hono";
+
+// Needed for email templates, don't remove
+import React from "react";
+
 import type { WaitlistJoinData } from "./types";
 
 const waitlistWorkflow = new Hono();

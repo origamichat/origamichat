@@ -2,12 +2,11 @@ import { db } from "@api/db";
 import * as schema from "@api/db/schema";
 import { waitingListEntry } from "@api/db/schema/waiting-list";
 import { env } from "@api/env";
-import { addUserToDefaultAudience, sendEmail } from "@api/lib/resend";
+import { sendEmail } from "@api/lib/resend";
 import { generateULID } from "@api/utils/db/ids";
 import { generateUniqueReferralCode } from "@api/utils/referral-code";
 import { triggerWorkflow } from "@api/utils/workflow";
 import { WORKFLOW } from "@api/workflows/types";
-import { JoinedWaitlistEmail } from "@cossistant/transactional/emails/joined-waitlist";
 import { ResetPasswordEmail } from "@cossistant/transactional/emails/reset-password";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -16,6 +15,9 @@ import {
 	anonymous,
 	organization as organizationPlugin,
 } from "better-auth/plugins";
+
+// Needed for email templates, don't remove
+import React from "react";
 
 export const auth = betterAuth({
 	baseURL:
