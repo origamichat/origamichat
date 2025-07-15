@@ -4,6 +4,7 @@ export default defineConfig({
 	entry: {
 		index: "src/index.ts",
 		"support/index": "src/support/index.tsx",
+		"primitive/index": "src/primitive/index.ts",
 	},
 	format: ["esm", "cjs"],
 	dts: true,

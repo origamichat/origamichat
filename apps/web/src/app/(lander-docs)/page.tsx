@@ -25,9 +25,9 @@ export default async function Landing() {
 								<span className="text-cossistant-blue">{" <Support /> "}</span>
 								<br />
 								right within your{" "}
-								{/* <span className="hidden size-14 border border-foreground/20 border-dashed align-middle md:inline-block">
-                  <Logos.nextjs className="size-14" />
-                </span>{" "} */}
+								<span className="mr-3 inline-block size-8 border border-foreground/20 border-dashed align-middle md:size-14">
+									<Logos.nextjs className="size-8 md:size-14" />
+								</span>
 								app.
 							</h1>
 							<h3 className="w-full text-center text-base text-primary/70 md:max-w-[75%] md:text-lg lg:max-w-full lg:text-balance lg:text-left">

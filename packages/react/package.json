@@ -36,23 +36,25 @@
         "default": "./dist/index.cjs"
       }
     },
-    "./primitives": {
+    "./primitive": {
       "import": {
-        "types": "./dist/primitives/index.d.ts",
-        "default": "./dist/primitives/index.js"
+        "types": "./dist/primitive/index.d.ts",
+        "default": "./dist/primitive/index.js"
       },
       "require": {
-        "types": "./dist/primitives/index.d.cts",
-        "default": "./dist/primitives/index.cjs"
+        "types": "./dist/primitive/index.d.cts",
+        "default": "./dist/primitive/index.cjs"
       }
-    }
+    },
+    "./styles.css": "./dist/support/styles.css"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "build": "tsup"
+    "build:css": "bunx @tailwindcss/cli -i ./src/support/styles.css -o ./dist/support/styles.css --minify",
+    "build": "tsup && bun run build:css"
   },
   "files": [
     "dist"
@@ -61,7 +63,11 @@
     "access": "public"
   },
   "devDependencies": {
-    "@cossistant/typescript-config": "workspace:*"
+    "@cossistant/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.0.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/cli": "^4.1.11"
   },
   "peerDependencies": {
     "@types/react": "^17 || ^18 || ^19",

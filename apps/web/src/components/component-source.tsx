@@ -22,7 +22,7 @@ export async function ComponentSource({
 	const highlightedCode = await highlightCode(code, "tsx");
 
 	return (
-		<div className={cn("relative", className)}>
+		<div className={cn("relative my-auto", className)}>
 			<ComponentCode code={code} highlightedCode={highlightedCode} />
 		</div>
 	);

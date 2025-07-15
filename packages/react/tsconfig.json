@@ -7,7 +7,10 @@
     "jsx": "preserve",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "noEmit": true,
+    "noEmit": false,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "emitDeclarationOnly": true,
     "experimentalDecorators": true,
     "baseUrl": "./",
     "allowSyntheticDefaultImports": true,
@@ -20,11 +23,14 @@
       "@cossistant/react/*": ["./src/*"]
     }
   },
+  "include": ["src/**/*"],
   "exclude": [
     "**/.*/",
     "**/build",
     "**/build-tests",
     "**/node_modules",
-    "docs/export"
+    "docs/export",
+    "dist",
+    "*.config.*"
   ]
 }

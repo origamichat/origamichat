@@ -115,7 +115,7 @@ const SidebarHandle = ({
 							<>
 								<div
 									className={cn(
-										"-mb-[3px] h-4 w-[3px] rounded bg-background-500 transition-all group-hover:h-6 group-hover:rotate-6 group-hover:bg-background-600",
+										"-mb-[3px] h-4 w-[3px] rounded bg-border/80 transition-all group-hover:h-6 group-hover:rotate-6 group-hover:bg-border",
 										{
 											"group-hover:-rotate-6": isCollapsed,
 										}
@@ -123,7 +123,7 @@ const SidebarHandle = ({
 								/>
 								<div
 									className={cn(
-										"-mt-[3px] group-hover:-rotate-6 h-4 w-[3px] rounded bg-background-500 transition-all group-hover:h-6 group-hover:bg-background-600",
+										"-mt-[3px] group-hover:-rotate-6 h-4 w-[3px] rounded bg-border/80 transition-all group-hover:h-6 group-hover:bg-border",
 										{
 											"group-hover:rotate-6": isCollapsed,
 										}
@@ -134,7 +134,7 @@ const SidebarHandle = ({
 							<>
 								<div
 									className={cn(
-										"-mb-[3px] group-hover:-rotate-6 h-4 w-[3px] rounded bg-background-500 transition-all group-hover:h-6 group-hover:bg-background-600",
+										"-mb-[3px] group-hover:-rotate-6 h-4 w-[3px] rounded bg-border/80 transition-all group-hover:h-6 group-hover:bg-border",
 										{
 											"group-hover:-rotate-6": isCollapsed,
 										}
@@ -142,7 +142,7 @@ const SidebarHandle = ({
 								/>
 								<div
 									className={cn(
-										"-mt-[3px] h-4 w-[3px] rounded bg-background-500 transition-all group-hover:h-6 group-hover:rotate-6 group-hover:bg-background-600",
+										"-mt-[3px] h-4 w-[3px] rounded bg-border/80 transition-all group-hover:h-6 group-hover:rotate-6 group-hover:bg-border",
 										{
 											"group-hover:rotate-6": isCollapsed,
 										}

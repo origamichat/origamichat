@@ -1,5 +1,7 @@
 "use client";
 
+import "./styles.css";
+
 import { AnimatePresence, motion } from "motion/react";
 import React from "react";
 import * as Primitive from "../primitive";
