@@ -2,10 +2,10 @@ import { env } from "@api/env";
 import { updateContactSubscriptionStatus } from "@api/lib/resend";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
-import { createTRPCRouter, publicProcedure } from "../init";
+import { createTRPCRouter, rateLimitedPublicProcedure } from "../init";
 
 export const resendRouter = createTRPCRouter({
-	unsubscribe: publicProcedure
+	unsubscribe: rateLimitedPublicProcedure
 		.input(
 			z.object({
 				email: z.string().email(),

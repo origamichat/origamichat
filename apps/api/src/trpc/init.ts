@@ -7,6 +7,7 @@ import type { Context } from "hono";
 import superjson from "superjson";
 import { withPermission } from "./middleware/auth";
 import { withPrimaryDbMiddleware } from "./middleware/db";
+import { withRateLimitMiddleware } from "./middleware/rate-limit";
 
 export type TRPCContext = {
 	user: typeof auth.$Infer.Session.user;
@@ -50,4 +51,8 @@ const withPermissionMiddleware = t.middleware(async (opts) => {
 
 export const protectedProcedure = t.procedure
 	.use(withPermissionMiddleware)
+	.use(withPrimaryDbMiddleware);
+
+export const rateLimitedPublicProcedure = t.procedure
+	.use(withRateLimitMiddleware)
 	.use(withPrimaryDbMiddleware);

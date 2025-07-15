@@ -1,18 +1,36 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { BaseSubmitButton } from "@/components/ui/base-submit-button";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/ui/logo";
-import { unsubscribeAction } from "./actions";
+import { useTRPC } from "@/lib/trpc/client";
 
 export default function UnsubscribePage() {
 	const searchParams = useSearchParams();
-	const router = useRouter();
 	const emailFromUrl = searchParams.get("email");
 	const [email, setEmail] = useState(emailFromUrl || "");
-	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [isSuccess, setIsSuccess] = useState(false);
+
+	const trpc = useTRPC();
+
+	const { mutate: unsubscribe, isPending } = useMutation(
+		trpc.resend.unsubscribe.mutationOptions({
+			onSuccess: () => {
+				setIsSuccess(true);
+				setError(null);
+			},
+			onError: (err) => {
+				setError(err.message || "Failed to unsubscribe");
+			},
+		})
+	);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -21,52 +39,31 @@ export default function UnsubscribePage() {
 			return;
 		}
 
-		setIsLoading(true);
 		setError(null);
-
-		try {
-			const result = await unsubscribeAction(email);
-			if (result.success) {
-				setIsSuccess(true);
-			} else {
-				setError(result.error || "Failed to unsubscribe");
-			}
-		} catch {
-			setError("An unexpected error occurred");
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	const handleBack = () => {
-		router.back();
+		unsubscribe({ email });
 	};
 
 	if (isSuccess) {
 		return (
-			<div className="flex min-h-screen items-center justify-center bg-gray-50">
+			<div className="flex min-h-screen items-center justify-center">
 				<div className="w-full max-w-md p-8">
-					<div className="rounded-lg border-2 border-gray-200 bg-white p-8 shadow-sm">
+					<div className="p-8">
 						<div className="mb-6 flex justify-center">
 							<Logo className="h-12 w-12 text-primary" />
 						</div>
-						<h1 className="mb-4 text-center font-bold text-2xl text-gray-900">
+						<h1 className="mb-4 text-center font-bold font-f37-stout text-2xl text-primary">
 							Successfully Unsubscribed
 						</h1>
-						<p className="text-center text-gray-600">
-							You have been successfully unsubscribed from our mailing list.
-						</p>
-						<p className="mt-4 text-center text-gray-500 text-sm">
+
+						<p className="mt-4 mb-6 text-center text-primary/60 text-sm">
 							We're sorry to see you go. If you change your mind, you can always
 							sign up again.
 						</p>
-						<button
-							className="mt-6 w-full rounded-md border-2 border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-							onClick={handleBack}
-							type="button"
-						>
-							Go Back
-						</button>
+						<Link href="/">
+							<Button className="w-full" variant="outline">
+								Go Back
+							</Button>
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -74,36 +71,31 @@ export default function UnsubscribePage() {
 	}
 
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-gray-50">
+		<div className="flex min-h-screen items-center justify-center ">
 			<div className="w-full max-w-md p-8">
-				<div className="rounded-lg border-2 border-gray-200 bg-white p-8 shadow-sm">
+				<div className="p-8">
 					<div className="mb-6 flex justify-center">
 						<Logo className="h-12 w-12 text-primary" />
 					</div>
-					<h1 className="mb-6 text-center font-bold text-2xl text-gray-900">
+					<h1 className="mb-6 text-center font-bold font-f37-stout text-2xl text-primary">
 						Unsubscribe from Emails
 					</h1>
 					{emailFromUrl ? (
-						<p className="mb-6 text-center text-gray-600">
+						<p className="mb-6 text-center text-primary/60">
 							Are you sure you want to unsubscribe{" "}
 							<strong>{emailFromUrl}</strong> from our mailing list?
 						</p>
 					) : (
-						<p className="mb-6 text-center text-gray-600">
+						<p className="mb-6 text-center text-primary/60">
 							Enter your email address to unsubscribe from our mailing list.
 						</p>
 					)}
 					<form onSubmit={handleSubmit}>
 						{!emailFromUrl && (
 							<div className="mb-4">
-								<label
-									className="mb-2 block font-medium text-gray-700 text-sm"
-									htmlFor="email"
-								>
-									Email Address
-								</label>
-								<input
-									className="w-full rounded-md border-2 border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+								<Label htmlFor="email">Email Address</Label>
+								<Input
+									className="w-full"
 									id="email"
 									name="email"
 									onChange={(e) => setEmail(e.target.value)}
@@ -119,22 +111,21 @@ export default function UnsubscribePage() {
 								{error}
 							</div>
 						)}
-						<button
-							className="w-full rounded-md border-2 border-red-600 bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
-							disabled={isLoading}
-							type="submit"
+						<BaseSubmitButton
+							className="mb-2 w-full"
+							disabled={isPending}
+							isSubmitting={isPending}
+							variant="destructive"
 						>
-							{isLoading ? "Processing..." : "Unsubscribe"}
-						</button>
+							Unsubscribe
+						</BaseSubmitButton>
 					</form>
-					<button
-						className="mt-4 w-full rounded-md border-2 border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-						onClick={handleBack}
-						type="button"
-					>
-						Cancel
-					</button>
-					<p className="mt-4 text-center text-gray-500 text-sm">
+					<Link href="/">
+						<Button className="w-full" type="button" variant="outline">
+							Cancel
+						</Button>
+					</Link>
+					<p className="mt-4 text-center text-primary/60 text-sm">
 						You can resubscribe at any time by signing up again.
 					</p>
 				</div>
