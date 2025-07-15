@@ -8,11 +8,13 @@ const waitlistWorkflow = new Hono();
 
 waitlistWorkflow.post(
 	"/join",
-	serve<{ body: WaitlistJoinData }>(async (context) => {
-		const { email, name } = context.requestPayload.body;
+	serve<WaitlistJoinData>(async (context) => {
+		const { userId, email, name } = context.requestPayload;
 
 		await context.run("post-join-waitlist", async () => {
-			console.log(`Processing waitlist join for user email ${email}`);
+			console.log(
+				`Processing waitlist join for user ${userId} with email ${email}`
+			);
 
 			// Add user in resend audience
 			// Send email and add user to default audience
