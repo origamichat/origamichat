@@ -1,18 +1,11 @@
-"use client";
-
-// headless support lib from @cossistant/react
-import { Support, SupportProvider } from "@cossistant/react";
-
 import { AnimatePresence, motion } from "motion/react";
+import React from "react";
+import * as Primitive from "../primitive";
+import { SupportProvider } from "../provider";
+import Icon from "./components/icons";
+import { cn } from "./utils";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import Icon from "../ui/icons";
-import { TooltipOnHover } from "../ui/tooltip";
-
-// This is a demo widget that uses the headless support lib from @cossistant/react
-
-export function DemoSupportWidget() {
+export const Support = () => {
 	const [value, setValue] = React.useState("");
 
 	const handleSubmit = () => {
@@ -23,7 +16,7 @@ export function DemoSupportWidget() {
 	return (
 		<SupportProvider>
 			<div className="relative">
-				<Support.Bubble
+				<Primitive.Bubble
 					className={cn(
 						"group/btn flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground",
 						"group-data-[open=true]/btn:bg-primary/50"
@@ -86,8 +79,8 @@ export function DemoSupportWidget() {
 							)}
 						</>
 					)}
-				</Support.Bubble>
-				<Support.Window
+				</Primitive.Bubble>
+				<Primitive.Window
 					className={cn(
 						"absolute right-16 bottom-0 z-50 flex h-[400px] w-80 flex-col",
 						"rounded border bg-background shadow-lg"
@@ -101,23 +94,21 @@ export function DemoSupportWidget() {
 					</div>
 					<div className="flex flex-col">
 						<div className="flex items-end gap-2 border-t p-3">
-							<Support.Input
+							<Primitive.Input
 								className="flex-1 resize-none overflow-hidden rounded border px-2 py-1"
 								onChange={setValue}
 								onSubmit={handleSubmit}
 								value={value}
 							/>
-							<TooltipOnHover content="Send" shortcuts={["Enter"]}>
-								<Support.SendButton
-									className="group/btn flex size-8 items-center justify-center rounded text-primary"
-									onClick={handleSubmit}
-								>
-									<Icon className="size-4" filledOnHover name="send" />
-								</Support.SendButton>
-							</TooltipOnHover>
+							<Primitive.SendButton
+								className="group/btn flex size-8 items-center justify-center rounded text-primary"
+								onClick={handleSubmit}
+							>
+								<Icon className="size-4" filledOnHover name="send" />
+							</Primitive.SendButton>
 						</div>
 						<p className="h-8 text-center text-muted-foreground text-xs">
-							Powered by{" "}
+							We run on{" "}
 							<a
 								className="font-medium text-primary"
 								href="https://cossistant.com"
@@ -128,10 +119,12 @@ export function DemoSupportWidget() {
 							</a>
 						</p>
 					</div>
-				</Support.Window>
+				</Primitive.Window>
 			</div>
 		</SupportProvider>
 	);
-}
+};
 
-export default DemoSupportWidget;
+Support.name = "Support";
+
+export default Support;

@@ -42,7 +42,9 @@ export function SupportProvider({
 export function useSupport() {
 	const context = React.useContext(SupportContext);
 	if (!context) {
-		throw new Error("useSupport must be used within a SupportProvider");
+		throw new Error(
+			"useSupport must be used within a cossistant SupportProvider"
+		);
 	}
 	return context;
 }

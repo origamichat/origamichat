@@ -48,3 +48,16 @@ export const APIKeyType = {
 } as const;
 
 export type APIKeyType = (typeof APIKeyType)[keyof typeof APIKeyType];
+
+export const ConversationSource = {
+	WEBSITE: "website",
+	EMAIL: "email",
+	DISCORD: "discord",
+	SLACK: "slack",
+	TWITTER: "twitter",
+	TELEGRAM: "telegram",
+	WHATSAPP: "whatsapp",
+} as const;
+
+export type ConversationSource =
+	(typeof ConversationSource)[keyof typeof ConversationSource];

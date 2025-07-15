@@ -94,7 +94,7 @@ export default async function Landing() {
 
 					<div className="hidden items-center justify-center md:flex lg:justify-start">
 						<ComponentPreview
-							name="support-widget"
+							name="support"
 							sizeClasses="h-[70vh] w-[600px] max-h-[800px]"
 							withOrnament
 						/>

@@ -9,9 +9,9 @@ export const Index: Record<
 		path: string;
 	}
 > = {
-	"support-widget": {
-		name: "support-widget",
-		component: React.lazy(() => import("@/components/support/widget")),
-		path: "src/components/support/widget.tsx",
+	support: {
+		name: "support",
+		component: React.lazy(() => import("@/components/support")),
+		path: "src/components/support/index.tsx",
 	},
 };

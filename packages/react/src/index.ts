@@ -1,2 +1,3 @@
+export * as Primitives from "./primitive";
 export * from "./provider";
-export * as Support from "./support";
+export * from "./support";

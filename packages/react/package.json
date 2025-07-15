@@ -36,14 +36,14 @@
         "default": "./dist/index.cjs"
       }
     },
-    "./support": {
+    "./primitives": {
       "import": {
-        "types": "./dist/support/index.d.ts",
-        "default": "./dist/support/index.js"
+        "types": "./dist/primitives/index.d.ts",
+        "default": "./dist/primitives/index.js"
       },
       "require": {
-        "types": "./dist/support/index.d.cts",
-        "default": "./dist/support/index.cjs"
+        "types": "./dist/primitives/index.d.cts",
+        "default": "./dist/primitives/index.cjs"
       }
     }
   },
@@ -60,16 +60,17 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "zod": "^3.25.56"
-  },
   "devDependencies": {
     "@cossistant/typescript-config": "workspace:*"
   },
   "peerDependencies": {
     "@types/react": "^17 || ^18 || ^19",
     "react": "^17 || ^18 || ^19",
-    "react-dom": "^17 || ^18 || ^19"
+    "react-dom": "^17 || ^18 || ^19",
+    "motion": "^11.15.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.5.5",
+    "zod": "^3.25.56"
   },
   "peerDependenciesMeta": {
     "@types/react": {
