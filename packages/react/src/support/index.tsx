@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatePresence, motion } from "motion/react";
 import React from "react";
 import * as Primitive from "../primitive";
@@ -124,7 +126,5 @@ export const Support = () => {
 		</SupportProvider>
 	);
 };
-
-Support.name = "Support";
 
 export default Support;
