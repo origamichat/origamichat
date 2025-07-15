@@ -67,9 +67,9 @@
     "@types/react": "^17 || ^18 || ^19",
     "react": "^17 || ^18 || ^19",
     "react-dom": "^17 || ^18 || ^19",
-    "motion": "^11.15.0",
+    "motion": "^12.18.1",
     "clsx": "^2.1.1",
-    "tailwind-merge": "^2.5.5",
+    "tailwind-merge": "^3.3.0",
     "zod": "^3.25.56"
   },
   "peerDependenciesMeta": {

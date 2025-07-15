@@ -3,7 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig({
 	entry: {
 		index: "src/index.ts",
-		"support/index": "src/support/index.ts",
+		"support/index": "src/support/index.tsx",
 	},
 	format: ["esm", "cjs"],
 	dts: true,
@@ -14,4 +14,12 @@ export default defineConfig({
 	splitting: false,
 	sourcemap: true,
 	minify: false,
+	external: [
+		"react",
+		"react-dom",
+		"motion/react",
+		"clsx",
+		"tailwind-merge",
+		"zod",
+	],
 });
