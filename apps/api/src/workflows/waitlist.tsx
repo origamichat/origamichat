@@ -20,12 +20,9 @@ waitlistWorkflow.post(
 			// Send email and add user to default audience
 			await Promise.all([
 				sendEmail({
-					to: email,
+					to: [email],
 					subject: "Welcome to Cossistant",
-					content: JoinedWaitlistEmail({
-						name: name || "",
-						email,
-					}),
+					content: <JoinedWaitlistEmail email={email} name={name || ""} />,
 					includeUnsubscribe: false,
 				}),
 				addUserToDefaultAudience(email),

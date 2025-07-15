@@ -133,7 +133,7 @@ export const sendEmail = async ({
 	includeUnsubscribe = true,
 	...props
 }: {
-	to: string;
+	to: string[];
 	from?: string;
 	subject: string;
 	marketing?: boolean;
@@ -150,7 +150,10 @@ export const sendEmail = async ({
 
 	// Add unsubscribe headers if requested and recipient email is provided
 	if (includeUnsubscribe) {
-		const unsubscribeUrl = `${env.PUBLIC_APP_URL}/email/unsubscribe?email=${encodeURIComponent(to)}`;
+		const unsubscribeUrl =
+			to.length === 1
+				? `${env.PUBLIC_APP_URL}/email/unsubscribe?email=${encodeURIComponent(to[0])}`
+				: `${env.PUBLIC_APP_URL}/email/unsubscribe`;
 		headers["List-Unsubscribe"] = `<${unsubscribeUrl}>`;
 		headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
 	}
