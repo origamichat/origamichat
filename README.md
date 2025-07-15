@@ -1,49 +1,75 @@
-# Cossistant
+![hero](github.png)
 
-Cossistant is an open source chat support widget focused on the React ecosystem. This monorepo contains all the packages and applications that make up the Cossistant platform.
+<p align="center">
+    Open source chat &lt;Support /&gt; widget for React
+    <br />
+    <br />
+    <a href="https://github.com/cossistant/cossistant/issues">Issues</a>
+    ·
+    <a href="https://cossistant.com/docs">Docs</a>
+    ·
+    <a href="https://discord.gg/vQkPjgvzcc">Discord</a>
+</p>
 
-## Getting Started
+## About Cossistant
 
-Run the following command to install dependencies:
+Cossistant is an open source chat support widget focused on the React ecosystem. Built for developers who need a flexible, customizable chat solution that integrates with their applications. It provides headless components, real-time messaging, and a complete backend infrastructure.
+
+## Features
+
+**Headless Components**: Collection of unstyled, accessible React components to build your perfect chat interface.<br/>
+**Real-time Messaging**: WebSocket-powered live chat with instant message delivery and presence indicators.<br/>
+**Conversation Management**: Organize and track customer conversations with persistent chat history.<br/>
+**API-First Design**: RESTful and tRPC APIs for complete integration flexibility.<br/>
+**Self-Hosted**: Full control over your data with easy deployment options.<br/>
+**Developer-Friendly**: TypeScript-first with excellent DX and comprehensive documentation.<br/>
+
+## Get started
+
+Install dependencies and run the development environment:
 
 ```sh
 bun install --workspaces
+bun dev
 ```
 
-## What's inside?
+## App Architecture
 
-This monorepo includes the following packages/apps:
+- Monorepo
+- Bun
+- React
+- TypeScript
+- Next.js
+- Hono
+- tRPC
+- Drizzle ORM
+- TailwindCSS
+- WebSockets
 
-### Apps and Packages
+### Database
 
-- `@cossistant/web`: a Next.js application for the web frontend
-- `@cossistant/api`: a [Hono](https://hono.dev/) API server providing backend services
-- `@cossistant/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- PlanetScale (Production Postgres)
+- DBgin (Local Development)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Services
 
-### Utilities
-
-This monorepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-- [Drizzle ORM](https://orm.drizzle.team/) for database operations
+- Resend (Transactional Email)
+- Drizzle (Database ORM)
+- Better Auth (Authentication)
 
 ## Database Setup
 
-### Setting up PostgreSQL with Neon.tech
+### Production: PlanetScale Postgres
 
-1. Create a free account on [Neon.tech](https://neon.tech)
-2. Create a new project in the Neon dashboard
-3. Once your project is created, you'll get a connection string that looks like:
-   ```
-   postgresql://[user]:[password]@[endpoint]/[dbname]
-   ```
+1. Create an account on [PlanetScale](https://planetscale.com)
+2. Create a new Postgres database
+3. Get your connection string from the dashboard
 
-### Running database migrations
+### Local Development: DBgin
 
-After setting up your Neon.tech database:
+For local development, use [DBgin](https://dbgin.com/) for a quick PostgreSQL setup.
+
+### Configuration
 
 1. Configure your database connection in the `.env` file:
 
@@ -53,55 +79,20 @@ After setting up your Neon.tech database:
 
 2. Run the database migrations:
    ```
-   cd packages/database
-   pnpm db:migrate
+   cd apps/api
+   bun db:migrate
    ```
 
-### Database development
+### Schema Changes
 
 To make changes to the database schema:
 
-1. Update the schema files in `packages/database/src/schema`
+1. Update the schema files in `apps/api/src/db/schema`
 2. Generate migrations:
    ```
-   cd packages/database
-   pnpm db:generate
-   ```
-
-## API Server
-
-The `api` app provides HTTP endpoints and is built with [Hono](https://hono.dev/).
-
-### Setup
-
-1. Create a `.env` file in the `apps/api` directory:
-
-   ```
-   PORT=3001
-   DATABASE_URL=postgres://postgres:@127.0.0.1:5432/postgres
-   ```
-
-2. Start the API server:
-   ```
    cd apps/api
-   pnpm dev
+   bun db:generate
    ```
-
-## Development
-
-To develop all apps and packages, run the following command:
-
-```
-pnpm dev
-```
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-pnpm build
-```
 
 ## License
 
