@@ -15,12 +15,5 @@ export default defineConfig({
 	splitting: false,
 	sourcemap: true,
 	minify: false,
-	external: [
-		"react",
-		"react-dom",
-		"motion/react",
-		"clsx",
-		"tailwind-merge",
-		"zod",
-	],
+	external: ["react", "react-dom", "motion/react", "clsx", "zod"],
 });

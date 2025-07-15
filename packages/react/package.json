@@ -53,8 +53,7 @@
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "build:css": "bunx @tailwindcss/cli -i ./src/support/styles.css -o ./dist/support/styles.css --minify",
-    "build": "tsup && bun run build:css"
+    "build": "tsup"
   },
   "files": [
     "dist"
@@ -63,11 +62,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@cossistant/typescript-config": "workspace:*",
-    "@tailwindcss/postcss": "^4.0.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.0.0",
-    "@tailwindcss/cli": "^4.1.11"
+    "@cossistant/typescript-config": "workspace:*"
   },
   "peerDependencies": {
     "@types/react": "^17 || ^18 || ^19",
@@ -75,7 +70,6 @@
     "react-dom": "^17 || ^18 || ^19",
     "motion": "^12.18.1",
     "clsx": "^2.1.1",
-    "tailwind-merge": "^3.3.0",
     "zod": "^3.25.56"
   },
   "peerDependenciesMeta": {
