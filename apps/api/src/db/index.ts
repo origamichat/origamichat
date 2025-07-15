@@ -1,7 +1,7 @@
 import { env } from "@api/env";
 import { upstashCache } from "drizzle-orm/cache/upstash";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
-import type * as schema from "./schema";
+import * as schema from "./schema";
 
 let _db: NodePgDatabase<typeof schema> | null = null;
 
@@ -25,6 +25,7 @@ const createDb = (): NodePgDatabase<typeof schema> => {
 			token: env.UPSTASH_REDIS_REST_TOKEN,
 			config: { ex: 60 },
 		}),
+		schema,
 	});
 
 	return _db;
