@@ -4,7 +4,7 @@ import { WebsiteInstallationTarget } from "@api/db/enums";
 import {
 	type CreateWebsiteRequest,
 	createWebsiteRequestSchema,
-} from "@api/schemas/website";
+} from "@cossistant/types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";

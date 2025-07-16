@@ -1,11 +1,11 @@
 import { createDefaultWebsiteKeys } from "@api/db/queries/api-keys";
 import { website } from "@api/db/schema";
+import { domainToSlug } from "@api/utils/domain-slug";
 import {
 	checkWebsiteDomainRequestSchema,
 	createWebsiteRequestSchema,
 	createWebsiteResponseSchema,
-} from "@api/schemas/website";
-import { domainToSlug } from "@api/utils/domain-slug";
+} from "@cossistant/types";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";

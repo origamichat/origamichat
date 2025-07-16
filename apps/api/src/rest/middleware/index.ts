@@ -1,5 +1,5 @@
 import type { MiddlewareHandler } from "hono";
-import { withPublicApiKeyAuth } from "./auth";
+import { withApiKeyAuth, withPrivateApiKeyAuth } from "./auth";
 import { withDatabase } from "./db";
 
 /**
@@ -9,11 +9,21 @@ import { withDatabase } from "./db";
 export const publicMiddleware: MiddlewareHandler[] = [withDatabase];
 
 /**
- * Protected endpoint middleware - requires public API key authentication
+ * Protected endpoint middleware - requires public or private API key authentication
  * Includes database with smart routing and authentication
- * Note: withPublicApiKeyAuth must be first to set session in context
+ * Note: withApiKeyAuth must be first to set session in context
  */
-export const protectedMiddleware: MiddlewareHandler[] = [
+export const protectedPublicApiKeyMiddleware: MiddlewareHandler[] = [
 	withDatabase,
-	withPublicApiKeyAuth,
+	withApiKeyAuth,
+];
+
+/**
+ * Protected endpoint middleware - requires private API key authentication
+ * Includes database with smart routing and authentication
+ * Note: withPrivateApiKeyAuth must be first to set session in context
+ */
+export const protectedPrivateApiKeyMiddleware: MiddlewareHandler[] = [
+	withDatabase,
+	withPrivateApiKeyAuth,
 ];

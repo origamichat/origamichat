@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@cossistant/transactional": "workspace:*",
+    "@cossistant/types": "workspace:*",
     "@hono-rate-limiter/redis": "^0.1.4",
     "@hono/node-server": "^1.7.0",
     "@hono/swagger-ui": "^0.5.1",

@@ -1,6 +1,9 @@
-import { APIKeyType, WebsiteInstallationTarget } from "@api/db/enums";
 import { z } from "@hono/zod-openapi";
+import { APIKeyType, WebsiteInstallationTarget } from "../enums";
 
+/**
+ * Website creation request schema
+ */
 export const createWebsiteRequestSchema = z.object({
 	name: z
 		.string()
@@ -33,6 +36,9 @@ export const createWebsiteRequestSchema = z.object({
 
 export type CreateWebsiteRequest = z.infer<typeof createWebsiteRequestSchema>;
 
+/**
+ * Website creation response schema
+ */
 export const createWebsiteResponseSchema = z.object({
 	id: z.string().ulid().openapi({
 		description: "The website's unique identifier.",
@@ -96,6 +102,9 @@ export const createWebsiteResponseSchema = z.object({
 
 export type CreateWebsiteResponse = z.infer<typeof createWebsiteResponseSchema>;
 
+/**
+ * Website domain validation request schema
+ */
 export const checkWebsiteDomainRequestSchema = z.object({
 	domain: z
 		.string()
@@ -109,3 +118,63 @@ export const checkWebsiteDomainRequestSchema = z.object({
 export type CheckWebsiteDomainRequest = z.infer<
 	typeof checkWebsiteDomainRequestSchema
 >;
+
+/**
+ * Website information response schema
+ */
+export const websiteResponseSchema = z.object({
+	id: z.string().ulid().openapi({
+		description: "The website's unique identifier.",
+		example: "01JG000000000000000000000",
+	}),
+	name: z.string().openapi({
+		description: "The website's name.",
+		example: "Dub",
+	}),
+	slug: z.string().openapi({
+		description: "The website's slug.",
+		example: "dub",
+	}),
+	domain: z.string().openapi({
+		description: "The website's domain.",
+		example: "dub.co",
+	}),
+	isDomainOwnershipVerified: z.boolean().openapi({
+		description: "Whether the domain ownership is verified.",
+		example: true,
+	}),
+	description: z.string().nullable().openapi({
+		description: "The website's description.",
+		example: "Link management for modern marketing teams.",
+	}),
+	logoUrl: z.string().nullable().openapi({
+		description: "The website's logo URL.",
+		example: "https://dub.co/logo.png",
+	}),
+	whitelistedDomains: z.array(z.string()).openapi({
+		description: "The website's whitelisted domains.",
+		example: ["localhost:3000", "dub.co", "*.dub.co"],
+	}),
+	installationTarget: z.nativeEnum(WebsiteInstallationTarget).openapi({
+		description: "The website's library installation target.",
+		example: WebsiteInstallationTarget.NEXTJS,
+	}),
+	organizationId: z.string().ulid().openapi({
+		description: "The organization's unique identifier.",
+		example: "01JG000000000000000000000",
+	}),
+	status: z.string().openapi({
+		description: "The website's status.",
+		example: "active",
+	}),
+	createdAt: z.string().datetime().openapi({
+		description: "The website's creation date.",
+		example: "2021-01-01T00:00:00.000Z",
+	}),
+	updatedAt: z.string().datetime().openapi({
+		description: "The website's last update date.",
+		example: "2021-01-01T00:00:00.000Z",
+	}),
+});
+
+export type WebsiteResponse = z.infer<typeof websiteResponseSchema>;

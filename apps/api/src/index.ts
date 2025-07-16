@@ -48,13 +48,32 @@ app.get("/health", async (c) => {
 	}
 });
 
-// CORS middleware
+// CORS middleware for auth and TRPC endpoints (trusted domains only)
 app.use(
-	"/*",
+	"/api/auth/*",
 	cors({
 		origin: acceptedOrigins,
 		maxAge: 86_400,
 		credentials: true,
+	})
+);
+
+app.use(
+	"/trpc/*",
+	cors({
+		origin: acceptedOrigins,
+		maxAge: 86_400,
+		credentials: true,
+	})
+);
+
+// CORS middleware for V1 API (public access)
+app.use(
+	"/v1/*",
+	cors({
+		origin: "*",
+		maxAge: 86_400,
+		credentials: false,
 	})
 );
 
@@ -100,12 +119,12 @@ app.doc("/openapi", {
 		description: "Cossistant API",
 		license: {
 			name: "AGPL-3.0 license",
-			url: "https://github.com/origamichat/monorepo/blob/main/LICENSE",
+			url: "https://github.com/cossistantcom/cossistant/blob/main/LICENSE",
 		},
 	},
 	servers: [
 		{
-			url: "https://api.cossistant.com",
+			url: "https://api.cossistant.com/v1",
 			description: "Production server",
 		},
 	],
@@ -119,7 +138,7 @@ app.doc("/openapi", {
 app.get(
 	"/docs",
 	swaggerUI({
-		url: "/docs/openapi.json",
+		url: "/openapi",
 	})
 );
 

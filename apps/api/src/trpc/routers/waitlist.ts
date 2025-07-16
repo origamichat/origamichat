@@ -1,10 +1,15 @@
 import { db } from "@api/db";
+import { getWaitlistEntryByUserId } from "@api/db/queries/waitlist";
 import { waitingListEntry } from "@api/db/schema";
+import {
+	createTRPCRouter,
+	protectedProcedure,
+	publicProcedure,
+} from "@api/trpc/init";
+import { optionalUserIdSchema, referralCodeSchema } from "@cossistant/types";
 import { TRPCError } from "@trpc/server";
 import { eq, sql } from "drizzle-orm";
 import z from "zod";
-import { getWaitlistEntryByUserId } from "../../db/queries/waitlist";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../init";
 
 const TEST_REDEEM_CODE = "test-redeem-code-12345";
 
@@ -19,7 +24,7 @@ export const waitlistRouter = createTRPCRouter({
 	getWaitlistEntry: publicProcedure
 		.input(
 			z.object({
-				userId: z.string().optional(),
+				userId: optionalUserIdSchema,
 			})
 		)
 		.query(async ({ input }) => {
@@ -28,7 +33,7 @@ export const waitlistRouter = createTRPCRouter({
 	redeemReferralCode: protectedProcedure
 		.input(
 			z.object({
-				referralCode: z.string(),
+				referralCode: referralCodeSchema,
 			})
 		)
 		.mutation(async ({ input, ctx }) => {

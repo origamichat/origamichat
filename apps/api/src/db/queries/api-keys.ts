@@ -23,7 +23,7 @@ export async function getApiKeyByKey(
 	params: {
 		key: string;
 	}
-): Promise<ApiKeyWithWebsiteAndOrganization | undefined> {
+): Promise<ApiKeyWithWebsiteAndOrganization | null> {
 	const result = await db.query.apiKey.findFirst({
 		where: and(eq(apiKey.key, params.key), eq(apiKey.isActive, true)),
 		with: {
@@ -37,7 +37,7 @@ export async function getApiKeyByKey(
 		return result as ApiKeyWithWebsiteAndOrganization;
 	}
 
-	return;
+	return null;
 }
 
 // Get API key by ID with org check

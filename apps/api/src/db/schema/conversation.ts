@@ -26,7 +26,6 @@ import {
 
 import {
 	ConversationPriority,
-	ConversationSource,
 	ConversationStatus,
 	MessageType,
 	SenderType,
@@ -53,11 +52,6 @@ export const conversationPriorityEnum = pgEnum(
 	enumToPgEnum(ConversationPriority)
 );
 
-export const conversationSourceEnum = pgEnum(
-	"conversation_source",
-	enumToPgEnum(ConversationSource)
-);
-
 export const conversation = pgTable(
 	"conversation",
 	{
@@ -68,10 +62,6 @@ export const conversation = pgTable(
 		priority: conversationPriorityEnum("priority")
 			.default(ConversationPriority.NORMAL)
 			.notNull(),
-		source: conversationSourceEnum("source")
-			.default(ConversationSource.WEBSITE)
-			.notNull(),
-		externalId: text("external_id"),
 		assignedTeamMemberId: ulidNullableReference(
 			"assigned_team_member_id"
 		).references(() => user.id),

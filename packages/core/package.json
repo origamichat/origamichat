@@ -1,0 +1,46 @@
+{
+  "name": "@cossistant/core",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Cossistant Team",
+  "description": "Core library for connecting to Cossistant API and managing data fetching",
+  "keywords": [
+    "api",
+    "websocket",
+    "rest",
+    "core",
+    "typescript",
+    "support-ai"
+  ],
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@cossistant/typescript-config": "workspace:*",
+    "@cossistant/types": "workspace:*",
+    "tsup": "^8.5.0"
+  },
+  "dependencies": {
+    "zod": "^3.25.56"
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import type { CreateWebsiteResponse } from "@api/schemas";
+import type { CreateWebsiteResponse } from "@cossistant/types";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { useState } from "react";
