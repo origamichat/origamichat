@@ -3,7 +3,7 @@ import { z } from "zod";
 // Export all enums
 export * from "./enums";
 
-import { ConversationStatus, MessageType, SenderType } from "./enums";
+import { ConversationStatus, SenderType } from "./enums";
 
 // Export all API schemas and types
 export * from "./api";

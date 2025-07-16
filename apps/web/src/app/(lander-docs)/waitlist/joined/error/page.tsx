@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 async function Page() {
 	return (
-		<main className="flex h-screen flex-col items-center justify-center gap-6 px-6 pt-20 md:pt-6">
+		<main className="flex h-screen flex-col items-center justify-center gap-6 px-6 pt-48">
 			<div className="flex w-full max-w-lg flex-col gap-6">
 				<TextEffect
 					as="h1"

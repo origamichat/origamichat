@@ -14,7 +14,7 @@ export default async function Page() {
 	});
 
 	return (
-		<main className="flex min-h-[80vh] flex-col gap-6 px-6 pt-20 md:pt-48">
+		<main className="flex min-h-[80vh] flex-col gap-6 px-6 pt-48">
 			<WaitlistForm totalEntries={totalEntries} />
 		</main>
 	);

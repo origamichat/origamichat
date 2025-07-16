@@ -4,7 +4,7 @@ function getEnvVariable(name: string) {
 	const value = process.env[name];
 
 	if (!value) {
-		console.error(`environment variable ${name} not found`);
+		console.error(`environment variable ${name} not found or empty`);
 	}
 
 	return value || "";

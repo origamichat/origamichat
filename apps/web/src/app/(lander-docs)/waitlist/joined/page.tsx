@@ -14,7 +14,7 @@ export const metadata = generateSiteMetadata({
 
 function Page() {
 	return (
-		<main className="flex min-h-screen flex-col gap-6 px-6 pt-20 md:pt-48">
+		<main className="flex min-h-screen flex-col gap-6 px-6 pt-48">
 			<RegisterReferral />
 			<div className="mx-auto flex w-full max-w-lg flex-col gap-6">
 				<TextEffect

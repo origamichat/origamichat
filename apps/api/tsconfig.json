@@ -11,7 +11,8 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@api/*": ["src/*"]
+      "@api/*": ["src/*"],
+      "@cossistant/types/*": ["../../packages/types/src/*"]
     },
     "declaration": true,
     "composite": true,

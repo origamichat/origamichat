@@ -1,7 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { BaseSubmitButton } from "@/components/ui/base-submit-button";
 import { signIn, signUp } from "@/lib/auth/client";
 import { Button } from "../../../../components/ui/button";
@@ -23,6 +25,7 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 	const [from] = useQueryState("from", { defaultValue: "" });
 	const [email, setEmail] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
 
 	const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -48,21 +51,42 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 			const name = email.split("@")[0] as string;
 
 			// Sign up with email and random password
-			const signUpResult = await signUp.email({
-				email: email.trim(),
-				password: randomPassword,
-				name,
-				callbackURL: `${baseURL}/waitlist/joined`,
-			});
+			const signUpResult = await signUp.email(
+				{
+					email: email.trim(),
+					password: randomPassword,
+					name,
+					callbackURL: `${baseURL}/waitlist/joined`,
+				},
+				{
+					onSuccess: () => {
+						// Redirect to waitlist joined page
+						router.push("/waitlist/joined");
+					},
+					onError: (ctx) => {
+						// Handle specific error types
+						if (ctx.error.code === "USER_ALREADY_EXISTS") {
+							toast("You're already on the waitlist!");
+						} else {
+							console.error("Signup error:", ctx.error);
+							toast("An error occurred during signup. Please try again.");
+						}
+					},
+				}
+			);
 
 			if (signUpResult.error) {
-				console.error("Signup error:", signUpResult.error);
-				alert("An error occurred during signup. Please try again.");
+				// Handle specific error types
+				if (signUpResult.error.code === "USER_ALREADY_EXISTS") {
+					toast("You're already on the waitlist!");
+				} else {
+					console.error("Signup error:", signUpResult.error);
+					toast("An error occurred during signup. Please try again.");
+				}
 			}
-			// Note: autoSignIn is enabled in better-auth config, so user will be automatically logged in
 		} catch (error) {
 			console.error("Email signup error:", error);
-			alert("An error occurred during signup. Please try again.");
+			toast("An error occurred during signup. Please try again.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -112,11 +136,23 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 				<Button
 					className="w-full"
 					onClick={() =>
-						signIn.social({
-							provider: "google",
-							callbackURL: `${baseURL}/waitlist/joined`,
-							errorCallbackURL: `${baseURL}/waitlist/joined/error`,
-						})
+						signIn.social(
+							{
+								provider: "google",
+								callbackURL: `${baseURL}/waitlist/joined`,
+								errorCallbackURL: `${baseURL}/waitlist/joined/error`,
+							},
+							{
+								onSuccess: () => {
+									// Redirect to waitlist joined page
+									router.push("/waitlist/joined");
+								},
+								onError: (ctx) => {
+									// Redirect to error page
+									router.push("/waitlist/joined/error");
+								},
+							}
+						)
 					}
 					size="lg"
 					variant="outline"
@@ -127,11 +163,23 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 				<Button
 					className="w-full"
 					onClick={() =>
-						signIn.social({
-							provider: "github",
-							callbackURL: `${baseURL}/waitlist/joined`,
-							errorCallbackURL: `${baseURL}/waitlist/joined/error`,
-						})
+						signIn.social(
+							{
+								provider: "github",
+								callbackURL: `${baseURL}/waitlist/joined`,
+								errorCallbackURL: `${baseURL}/waitlist/joined/error`,
+							},
+							{
+								onSuccess: () => {
+									// Redirect to waitlist joined page
+									router.push("/waitlist/joined");
+								},
+								onError: (ctx) => {
+									// Redirect to error page
+									router.push("/waitlist/joined/error");
+								},
+							}
+						)
 					}
 					size="lg"
 					variant="outline"
@@ -143,6 +191,16 @@ export function WaitlistForm({ totalEntries }: { totalEntries: number }) {
 
 			<p className="mt-4 flex items-center gap-4 text-primary/60 text-sm">
 				<span>{totalEntries} people are already on the waitlist</span>
+			</p>
+
+			<p className="text-primary/60 text-sm">
+				Already on the waitlist?{" "}
+				<a
+					className="text-primary underline hover:text-primary/80"
+					href="/waitlist/joined"
+				>
+					Log in
+				</a>
 			</p>
 		</div>
 	);
