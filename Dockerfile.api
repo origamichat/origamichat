@@ -10,6 +10,7 @@ COPY package.json bun.lock turbo.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/transactional/package.json ./packages/transactional/
+COPY packages/types/package.json ./packages/types/
 
 # Install dependencies
 RUN bun install
