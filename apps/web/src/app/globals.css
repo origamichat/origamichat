@@ -5,6 +5,8 @@
 
 @plugin 'tailwind-scrollbar';
 
+@source "../../../../packages/react/src/support";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {

@@ -1,5 +1,4 @@
 import type React from "react";
-import { cn } from "../utils";
 
 export type IconVariant = "default" | "filled";
 
@@ -118,43 +117,53 @@ export const Icon: React.FC<IconProps> = ({
 		return null;
 	}
 
-	// If filledOnHover is true, render both variants with conditional visibility
+	// If filledOnHover is true, render both variants with CSS-only hover
 	if (filledOnHover && defaultPath && filledPath) {
 		return (
-			<svg
-				className={cn("size-4", className)}
-				fill="none"
-				height="24"
-				viewBox="0 0 24 24"
-				width="24"
-				xmlns="http://www.w3.org/2000/svg"
+			<span
+				className={`relative inline-block shrink-0 ${className || "h-4 w-4"}`}
 			>
-				<title>{name}</title>
-				{/* Default variant - hidden on group hover */}
-				<path
-					className="transition-opacity duration-200 group-hover/btn:opacity-0"
-					d={defaultPath}
-					stroke="currentColor"
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					strokeWidth="1.5"
-				/>
-				{/* Filled variant - shown on group hover */}
-				<path
-					className="opacity-0 transition-opacity duration-200 group-hover/btn:opacity-100"
-					clipRule="evenodd"
-					d={filledPath}
-					fill="currentColor"
-					fillRule="evenodd"
-				/>
-			</svg>
+				<svg
+					className="absolute inset-0 h-full w-full opacity-100 transition-opacity duration-200 group-hover:opacity-0"
+					fill="none"
+					height="24"
+					viewBox="0 0 24 24"
+					width="24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<title>{name}</title>
+					<path
+						d={defaultPath}
+						stroke="currentColor"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeWidth="1.5"
+					/>
+				</svg>
+				<svg
+					className="absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+					fill="none"
+					height="24"
+					viewBox="0 0 24 24"
+					width="24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<title>{name}</title>
+					<path
+						clipRule="evenodd"
+						d={filledPath}
+						fill="currentColor"
+						fillRule="evenodd"
+					/>
+				</svg>
+			</span>
 		);
 	}
 
 	// Standard rendering for non-hover variants
 	return (
 		<svg
-			className={cn("size-4", className)}
+			className={`inline-block shrink-0 ${className || "h-4 w-4"}`}
 			fill="none"
 			height="24"
 			viewBox="0 0 24 24"

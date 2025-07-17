@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icons";
 import { Logos } from "@/components/ui/logos";
 import { TooltipOnHover } from "@/components/ui/tooltip";
+import { EscapeIframeAnimation } from "./components/escape-iframe-animation";
 import { GitHubLink } from "./components/github-link";
 import { WaitingListMessage } from "./components/waiting-list-rank/message";
 
@@ -16,18 +17,16 @@ export default async function Landing() {
 			<div className="flex min-h-screen flex-col gap-8 pt-32 md:flex-row md:items-center lg:pt-0">
 				<div className="mb-20 flex flex-col gap-20 lg:mb-0 lg:flex-row">
 					<div className="flex flex-1 flex-col items-start justify-between gap-6 pt-11 ">
-						<p className="w-full px-6 text-center font-mono text-foreground/60 text-xs lg:px-0 lg:text-left">
-							Escape the iframe
-						</p>
+						<EscapeIframeAnimation />
 						<div className="my-auto flex flex-col items-center gap-6 px-4 lg:items-start">
 							<h1 className="text-center font-f37-stout text-4xl leading-tight md:text-5xl lg:text-left xl:text-6xl">
 								AI and human
 								<span className="text-cossistant-blue">{" <Support /> "}</span>
 								<br />
 								right within your{" "}
-								<span className="mr-3 inline-block size-8 border border-foreground/20 border-dashed align-middle md:size-14">
-									<Logos.nextjs className="size-8 md:size-14" />
-								</span>
+								{/* <span className="mr-3 inline-block size-8 border border-foreground/20 border-dashed align-middle md:size-14">
+                  <Logos.nextjs className="size-8 md:size-14" />
+                </span> */}
 								app.
 							</h1>
 							<h3 className="w-full text-center text-base text-primary/70 md:max-w-[75%] md:text-lg lg:max-w-full lg:text-balance lg:text-left">
