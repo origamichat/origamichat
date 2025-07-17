@@ -40,7 +40,7 @@ function ComponentCode({
 			className="shiki [&>pre]:max-h-96 [&>pre]:overflow-auto"
 			data-rehype-pretty-code-figure=""
 		>
-			<CopyButton className="absolute top-2 right-1" value={code} />
+			<CopyButton className="-right-5 -top-4 absolute" value={code} />
 			<div
 				className="[&_pre]:!bg-transparent dark:[&_pre]:!bg-transparent text-sm [&_pre]:border [&_pre]:border-transparent"
 				// biome-ignore lint/security/noDangerouslySetInnerHtml: ok

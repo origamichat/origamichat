@@ -42,7 +42,7 @@ export const Support: React.FC<SupportProps> = ({
 	};
 
 	return (
-		<div className={cn("", className)}>
+		<div className={cn("cossistant", className)}>
 			<Bubble />
 			<Window>
 				<Header title={title} />

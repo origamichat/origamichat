@@ -1,3 +1,120 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
+
+.cossistant {
+	--background: oklch(0.99 0 0);
+	--background-100: oklch(0.98 0 0);
+	--background-200: oklch(0.97 0 0);
+	--background-300: oklch(0.96 0 0);
+	--background-400: oklch(0.94 0 0);
+	--background-500: oklch(0.92 0 0);
+	--background-600: oklch(0.91 0 0);
+
+	--foreground: oklch(0.145 0 0);
+
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+	--primary: oklch(0.205 0 0);
+	--primary-foreground: oklch(0.985 0 0);
+	--secondary: oklch(0.97 0 0);
+	--secondary-foreground: oklch(0.205 0 0);
+	--muted: oklch(0.97 0 0);
+	--muted-foreground: oklch(0.556 0 0);
+	--accent: oklch(0.97 0 0);
+	--accent-foreground: oklch(0.205 0 0);
+	--destructive: oklch(0.577 0.245 27.325);
+	--destructive-foreground: oklch(0.577 0.245 27.325);
+	--border: oklch(0.922 0 0);
+	--input: oklch(0.922 0 0);
+	--ring: oklch(0.708 0 0);
+	--radius: 0.625rem;
+
+	--cossistant-pink: hsla(314, 100%, 75%, 1);
+	--cossistant-yellow: hsla(58, 92%, 70%, 1);
+	--cossistant-blue: hsla(218, 91%, 68%, 1);
+	--cossistant-orange: hsla(19, 99%, 65%, 1);
+}
+
+.dark .cossistant {
+	--background: oklch(0.145 0 0);
+	--background-100: oklch(0.155 0 0);
+	--background-200: oklch(0.165 0 0);
+	--background-300: oklch(0.175 0 0);
+	--background-400: oklch(0.185 0 0);
+	--background-500: oklch(0.195 0 0);
+	--background-600: oklch(0.205 0 0);
+
+	--foreground: oklch(0.985 0 0);
+
+	--popover: oklch(0.145 0 0);
+	--popover-foreground: oklch(0.985 0 0);
+
+	--primary: oklch(0.985 0 0);
+	--primary-foreground: oklch(0.205 0 0);
+
+	--secondary: oklch(0.269 0 0);
+	--secondary-foreground: oklch(0.985 0 0);
+
+	--muted: oklch(0.269 0 0);
+	--muted-foreground: oklch(0.708 0 0);
+
+	--accent: oklch(0.269 0 0);
+	--accent-foreground: oklch(0.985 0 0);
+
+	--destructive: oklch(0.396 0.141 25.723);
+	--destructive-foreground: oklch(0.637 0.237 25.331);
+
+	--border: oklch(0.269 0 0);
+	--input: oklch(0.269 0 0);
+
+	--cossistant-pink: hsla(314, 100%, 85%, 1);
+	--cossistant-yellow: hsla(58, 92%, 79%, 1);
+	--cossistant-blue: hsla(218, 91%, 78%, 1);
+	--cossistant-orange: hsla(19, 99%, 50%, 1);
+}
+
+@theme inline {
+	--font-sans: "Geist", "Inter", sans-serif;
+	--font-mono: "Geist Mono", "Inter Mono", monospace;
+	--color-background: var(--background);
+	--color-background-100: var(--background-100);
+	--color-background-200: var(--background-200);
+	--color-background-300: var(--background-300);
+	--color-background-400: var(--background-400);
+	--color-background-500: var(--background-500);
+	--color-background-600: var(--background-600);
+
+	--color-foreground: var(--foreground);
+
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--radius: 2px;
+
+	/* custom colors */
+	--color-cossistant-pink: var(--cossistant-pink);
+	--color-cossistant-yellow: var(--cossistant-yellow);
+	--color-cossistant-blue: var(--cossistant-blue);
+	--color-cossistant-orange: var(--cossistant-orange);
+}
+
+@layer base {
+	.cossistant * {
+		@apply border-border outline-ring/50;
+	}
+
+	.cossistant {
+		@apply scroll-smooth;
+	}
+}
