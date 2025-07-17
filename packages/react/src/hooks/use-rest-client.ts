@@ -9,18 +9,22 @@ export interface UseClientResult {
 
 export function useClient(
 	publicKey: string | undefined,
-	apiUrl = "https://api.cossistant.com",
+	apiUrl = "https://api.cossistant.com/v1",
 	wsUrl = "wss://api.cossistant.com"
 ): UseClientResult {
 	const [error, setError] = useState<Error | null>(null);
 
 	const client = useMemo(() => {
-		if (!publicKey) {
+		let keyToUse = publicKey;
+
+		if (!keyToUse) {
 			const envKey =
 				(typeof window !== "undefined" &&
 					window.process?.env?.NEXT_PUBLIC_COSSISSTANT_KEY) ||
 				(typeof window !== "undefined" &&
-					window.process?.env?.COSSISSTANT_PUBLIC_KEY);
+					window.process?.env?.COSSISSTANT_PUBLIC_KEY) ||
+				process.env.NEXT_PUBLIC_COSSISSTANT_KEY ||
+				process.env.COSSISSTANT_PUBLIC_KEY;
 
 			if (!envKey) {
 				setError(
@@ -30,12 +34,13 @@ export function useClient(
 				);
 				return null;
 			}
+			keyToUse = envKey;
 		}
 
 		const config: CossistantConfig = {
 			apiUrl,
 			wsUrl,
-			publicKey,
+			publicKey: keyToUse,
 		};
 
 		try {
