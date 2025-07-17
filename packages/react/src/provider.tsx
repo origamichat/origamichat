@@ -1,11 +1,17 @@
 "use client";
 
+import type { CossistantRestClient } from "@cossistant/core";
 import type { WebsiteResponse } from "@cossistant/types";
 import * as React from "react";
+import { useClient } from "./hooks/use-rest-client";
+import { useWebsiteData } from "./hooks/use-website-data";
 
 export interface CossistantProviderProps {
 	children: React.ReactNode;
 	defaultOpen?: boolean;
+	apiUrl?: string;
+	wsUrl?: string;
+	publicKey?: string;
 }
 
 export interface CossistantContextValue {
@@ -16,6 +22,9 @@ export interface CossistantContextValue {
 	toggle: () => void;
 	unreadCount: number;
 	setUnreadCount: (count: number) => void;
+	isLoading: boolean;
+	error: Error | null;
+	client: CossistantRestClient | null;
 }
 
 const SupportContext = React.createContext<CossistantContextValue | undefined>(
@@ -25,6 +34,9 @@ const SupportContext = React.createContext<CossistantContextValue | undefined>(
 export function SupportProvider({
 	children,
 	defaultOpen = false,
+	apiUrl = "https://api.cossistant.com/v1",
+	wsUrl = "wss://api.cossistant.com",
+	publicKey,
 }: CossistantProviderProps) {
 	const [isOpen, setIsOpen] = React.useState(defaultOpen);
 	const [unreadCount, setUnreadCount] = React.useState(0);
@@ -33,7 +45,10 @@ export function SupportProvider({
 	const close = React.useCallback(() => setIsOpen(false), []);
 	const toggle = React.useCallback(() => setIsOpen((o) => !o), []);
 
-	const website = null as WebsiteResponse | null;
+	const { client, error: clientError } = useClient(publicKey, apiUrl, wsUrl);
+	const { website, isLoading, error: websiteError } = useWebsiteData(client);
+
+	const error = clientError || websiteError;
 
 	const value = React.useMemo<CossistantContextValue>(
 		() => ({
@@ -44,8 +59,21 @@ export function SupportProvider({
 			toggle,
 			unreadCount,
 			setUnreadCount,
+			isLoading,
+			error,
+			client,
 		}),
-		[website, isOpen, open, close, toggle, unreadCount]
+		[
+			website,
+			isOpen,
+			unreadCount,
+			isLoading,
+			error,
+			client,
+			open,
+			close,
+			toggle,
+		]
 	);
 
 	return (

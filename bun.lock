@@ -160,6 +160,7 @@
       "name": "@cossistant/react",
       "version": "0.0.0",
       "dependencies": {
+        "@cossistant/core": "workspace:*",
         "@cossistant/types": "workspace:*",
       },
       "devDependencies": {

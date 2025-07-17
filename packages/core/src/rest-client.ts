@@ -7,6 +7,7 @@ import {
 	Message,
 	type SendMessageRequest,
 	type SendMessageResponse,
+	type WebsiteResponse,
 } from "./types";
 
 export class CossistantRestClient {
@@ -128,6 +129,10 @@ export class CossistantRestClient {
 		await this.request(`/conversations/${conversationId}`, {
 			method: "DELETE",
 		});
+	}
+
+	async getWebsite(): Promise<WebsiteResponse> {
+		return this.request<WebsiteResponse>("/website");
 	}
 
 	async updateConfiguration(config: Partial<CossistantConfig>): Promise<void> {

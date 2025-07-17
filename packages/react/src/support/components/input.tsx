@@ -104,9 +104,13 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
 	const { website } = useSupport();
 
 	const cossistantUrl = useMemo(() => {
-		const url = new URL(website?.url || "");
+		if (!website) {
+			return "https://cossistant.com";
+		}
+
+		const url = new URL("https://cossistant.com");
 		url.searchParams.set("ref", "chatbox");
-		url.searchParams.set("domain", website?.domain);
+		url.searchParams.set("domain", website.domain);
 		url.searchParams.set("name", website.name);
 
 		return url.toString();

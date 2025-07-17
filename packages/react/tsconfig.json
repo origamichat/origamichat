@@ -20,7 +20,11 @@
     "allowImportingTsExtensions": true,
     "paths": {
       "@cossistant/react": ["./src"],
-      "@cossistant/react/*": ["./src/*"]
+      "@cossistant/react/*": ["./src/*"],
+      "@cossistant/core": ["../core/src"],
+      "@cossistant/core/*": ["../core/src/*"],
+      "@cossistant/types": ["../types/src"],
+      "@cossistant/types/*": ["../types/src/*"]
     }
   },
   "include": ["src/**/*"],

@@ -63,7 +63,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@cossistant/types": "workspace:*"
+    "@cossistant/types": "workspace:*",
+    "@cossistant/core": "workspace:*"
   },
   "devDependencies": {
     "@cossistant/typescript-config": "workspace:*",

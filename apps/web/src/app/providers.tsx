@@ -11,9 +11,19 @@ type ProviderProps = {
 	children: ReactNode;
 };
 
+const API_URL =
+	process.env.NODE_ENV === "development"
+		? "http://localhost:8787/v1"
+		: "https://api.cossistant.com/v1";
+
+const WS_URL =
+	process.env.NODE_ENV === "development"
+		? "ws://localhost:8787"
+		: "wss://api.cossistant.com";
+
 export function Providers({ children }: ProviderProps) {
 	return (
-		<SupportProvider>
+		<SupportProvider apiUrl={API_URL} wsUrl={WS_URL}>
 			<NuqsAdapter>
 				<RootProvider
 					theme={{

@@ -97,8 +97,4 @@ export const Support: React.FC<SupportProps> = ({
 	);
 };
 
-// Export all components for flexible usage
-export * from "./components";
-export { cn } from "./utils";
-
 export default Support;
