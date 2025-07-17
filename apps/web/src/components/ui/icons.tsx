@@ -25,7 +25,7 @@ export interface IconProps {
 	filledOnHover?: boolean;
 }
 
-// Thanks to Aaon for the icons
+// Thanks to Anron Icons
 const iconRegistry: Record<IconName, Record<IconVariant, string>> = {
 	sidebar: {
 		default:

@@ -6,12 +6,14 @@ export const Index: Record<
 	{
 		name: string;
 		component: React.LazyExoticComponent<React.ComponentType<any>>;
+		demoComponent?: React.LazyExoticComponent<React.ComponentType<any>>;
 		path: string;
 	}
 > = {
 	support: {
 		name: "support",
 		component: React.lazy(() => import("@/components/support")),
+		demoComponent: React.lazy(() => import("@/components/support/demo")),
 		path: "src/components/support/index.tsx",
 	},
 };

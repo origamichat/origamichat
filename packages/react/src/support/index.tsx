@@ -22,6 +22,9 @@ export interface SupportProps {
 	placeholder?: string;
 	footer?: React.ReactNode;
 	onSubmit?: (message: string) => void;
+	position?: "top" | "bottom";
+	align?: "right" | "left";
+	mode?: "floating" | "responsive";
 }
 
 export const Support: React.FC<SupportProps> = ({
@@ -30,6 +33,9 @@ export const Support: React.FC<SupportProps> = ({
 	placeholder = "Type your message...",
 	footer,
 	onSubmit,
+	position = "bottom",
+	align = "right",
+	mode = "floating",
 }) => {
 	const [value, setValue] = React.useState("");
 
@@ -41,10 +47,37 @@ export const Support: React.FC<SupportProps> = ({
 		setValue("");
 	};
 
+	const containerClasses = cn(
+		"cossistant",
+		{
+			// Floating mode positioning
+			"fixed z-50": mode === "floating",
+			"bottom-4": mode === "floating" && position === "bottom",
+			"top-4": mode === "floating" && position === "top",
+			"right-4": mode === "floating" && align === "right",
+			"left-4": mode === "floating" && align === "left",
+			// Responsive mode
+			"relative h-full w-full": mode === "responsive",
+		},
+		className
+	);
+
+	const windowClasses = cn({
+		// Floating mode window positioning
+		"absolute z-[9999]": mode === "floating",
+		"bottom-16": mode === "floating" && position === "bottom",
+		"top-16": mode === "floating" && position === "top",
+		"right-0": mode === "floating" && align === "right",
+		"left-0": mode === "floating" && align === "left",
+		// Responsive mode window
+		"relative h-full w-full rounded-none border-0 shadow-none":
+			mode === "responsive",
+	});
+
 	return (
-		<div className={cn("cossistant", className)}>
-			<Bubble />
-			<Window>
+		<div className={containerClasses}>
+			{mode === "floating" && <Bubble />}
+			<Window className={windowClasses}>
 				<Header title={title} />
 				<Content>{/* messages go here */}</Content>
 				<InputContainer>

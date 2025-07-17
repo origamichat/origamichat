@@ -1,8 +1,11 @@
 "use client";
 
 import type React from "react";
+import { useMemo } from "react";
 import * as Primitive from "../../primitive";
+import { useSupport } from "../../provider";
 import { cn } from "../utils";
+import { CossistantLogo } from "./cossistant-branding";
 import Icon from "./icons";
 
 export interface InputContainerProps {
@@ -27,7 +30,12 @@ export const InputWrapper: React.FC<InputWrapperProps> = ({
 	children,
 }) => {
 	return (
-		<div className={cn("flex items-end gap-2 border-t p-3", className)}>
+		<div
+			className={cn(
+				"flex items-end gap-2 border-co-border border-t p-3",
+				className
+			)}
+		>
 			{children}
 		</div>
 	);
@@ -51,7 +59,7 @@ export const Input: React.FC<InputProps> = ({
 	return (
 		<Primitive.Input
 			className={cn(
-				"flex-1 resize-none overflow-hidden rounded-md border bg-background px-2 py-1 text-foreground text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+				"flex-1 resize-none overflow-hidden rounded-md border border-co-border bg-co-background px-2 py-1 text-co-foreground text-sm placeholder:text-co-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-co-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
 				className
 			)}
 			onChange={onChange}
@@ -76,7 +84,7 @@ export const SendButton: React.FC<SendButtonProps> = ({
 	return (
 		<Primitive.SendButton
 			className={cn(
-				"group flex h-8 w-8 items-center justify-center rounded-md text-primary hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50",
+				"group flex h-8 w-8 items-center justify-center rounded-md text-co-primary hover:bg-co-muted disabled:cursor-not-allowed disabled:opacity-50",
 				className
 			)}
 			disabled={disabled}
@@ -93,20 +101,29 @@ export interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ className, children }) => {
+	const { website } = useSupport();
+
+	const cossistantUrl = useMemo(() => {
+		const url = new URL(website?.url || "");
+		url.searchParams.set("ref", "chatbox");
+		url.searchParams.set("domain", website?.domain);
+		url.searchParams.set("name", website.name);
+
+		return url.toString();
+	}, [website]);
+
 	return (
 		<div className={cn("flex h-8 items-center justify-center px-3", className)}>
 			{children || (
-				<p className="text-muted-foreground text-xs">
-					We run on{" "}
-					<a
-						className="font-medium text-primary hover:underline"
-						href="https://cossistant.com"
-						rel="noopener noreferrer"
-						target="_blank"
-					>
-						Cossistant
-					</a>
-				</p>
+				<a
+					className="flex items-center gap-1 font-medium font-mono text-co-primary hover:text-co-cossistant-blue"
+					href={cossistantUrl}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					<span className="text-co-muted-foreground text-xs">We run on</span>
+					<CossistantLogo className="h-3" />
+				</a>
 			)}
 		</div>
 	);

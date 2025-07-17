@@ -14,7 +14,7 @@ export function ComponentPreview({
 	withOrnament?: boolean;
 	sizeClasses?: string;
 }) {
-	const Component = Index[name]?.component;
+	const Component = Index[name]?.demoComponent || Index[name]?.component;
 
 	if (!Component) {
 		return (

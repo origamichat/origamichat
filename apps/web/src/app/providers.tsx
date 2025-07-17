@@ -1,5 +1,6 @@
 "use client";
 
+import { SupportProvider } from "@cossistant/react";
 import { RootProvider } from "fumadocs-ui/provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
@@ -12,17 +13,19 @@ type ProviderProps = {
 
 export function Providers({ children }: ProviderProps) {
 	return (
-		<NuqsAdapter>
-			<RootProvider
-				theme={{
-					attribute: "class",
-					defaultTheme: "system",
-					enableSystem: true,
-					disableTransitionOnChange: true,
-				}}
-			>
-				<TRPCReactProvider>{children}</TRPCReactProvider>
-			</RootProvider>
-		</NuqsAdapter>
+		<SupportProvider>
+			<NuqsAdapter>
+				<RootProvider
+					theme={{
+						attribute: "class",
+						defaultTheme: "system",
+						enableSystem: true,
+						disableTransitionOnChange: true,
+					}}
+				>
+					<TRPCReactProvider>{children}</TRPCReactProvider>
+				</RootProvider>
+			</NuqsAdapter>
+		</SupportProvider>
 	);
 }

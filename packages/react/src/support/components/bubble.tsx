@@ -14,7 +14,7 @@ export const Bubble: React.FC<BubbleProps> = ({ className }) => {
 	return (
 		<Primitive.Bubble
 			className={cn(
-				"relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90 data-[open=true]:bg-primary/50",
+				"relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-co-primary text-co-primary-foreground transition-colors hover:bg-co-primary/90 data-[open=true]:bg-co-primary/50",
 				className
 			)}
 		>
@@ -66,7 +66,7 @@ export const Bubble: React.FC<BubbleProps> = ({ className }) => {
 					{unreadCount > 0 && (
 						<motion.span
 							animate={{ scale: 1, opacity: 1 }}
-							className="-top-1 -right-1 absolute flex h-4 w-4 items-center justify-center rounded-full bg-destructive font-medium text-destructive-foreground text-xs"
+							className="-top-1 -right-1 absolute flex h-4 w-4 items-center justify-center rounded-full bg-co-destructive font-medium text-co-destructive-foreground text-xs"
 							exit={{ scale: 0, opacity: 0 }}
 							initial={{ scale: 0, opacity: 0 }}
 						>

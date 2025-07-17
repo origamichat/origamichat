@@ -1,5 +1,6 @@
 "use client";
 
+import type { WebsiteResponse } from "@cossistant/types";
 import * as React from "react";
 
 export interface CossistantProviderProps {
@@ -8,6 +9,7 @@ export interface CossistantProviderProps {
 }
 
 export interface CossistantContextValue {
+	website: WebsiteResponse | null;
 	isOpen: boolean;
 	open: () => void;
 	close: () => void;
@@ -31,9 +33,19 @@ export function SupportProvider({
 	const close = React.useCallback(() => setIsOpen(false), []);
 	const toggle = React.useCallback(() => setIsOpen((o) => !o), []);
 
+	const website = null as WebsiteResponse | null;
+
 	const value = React.useMemo<CossistantContextValue>(
-		() => ({ isOpen, open, close, toggle, unreadCount, setUnreadCount }),
-		[isOpen, open, close, toggle, unreadCount]
+		() => ({
+			website,
+			isOpen,
+			open,
+			close,
+			toggle,
+			unreadCount,
+			setUnreadCount,
+		}),
+		[website, isOpen, open, close, toggle, unreadCount]
 	);
 
 	return (

@@ -1,10 +1,10 @@
-import { cn } from "@/lib/utils";
+import { cn } from "../utils";
 
 type Props = {
 	className?: string;
 };
 
-export function Logo({ className }: Props) {
+export function CossistantLogo({ className }: Props) {
 	return (
 		<svg
 			className={cn("h-5 w-5", className)}
@@ -20,19 +20,5 @@ export function Logo({ className }: Props) {
 				fillRule="evenodd"
 			/>
 		</svg>
-	);
-}
-
-export function LogoText({ className }: Props) {
-	return (
-		<span
-			className={cn(
-				"flex items-center gap-1 font-f37-stout text-[24px] text-primary leading-[24px]",
-				className
-			)}
-		>
-			<Logo className="mt-1 h-3.5" />
-			cossistant
-		</span>
 	);
 }

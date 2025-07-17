@@ -21,8 +21,6 @@ export default function GlobalError({
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center gap-8 px-6">
 			<div className="flex w-full max-w-lg flex-col items-center gap-6 text-center">
-				<Icon className="size-12 text-red-500" name="alert-circle" />
-
 				<TextEffect
 					as="h1"
 					className="font-f37-stout text-3xl leading-tight lg:text-5xl"
@@ -50,10 +48,6 @@ export default function GlobalError({
 						size="lg"
 					>
 						Try again
-						<Icon
-							className="size-4 transition-transform group-hover/btn:rotate-45"
-							name="refresh-cw"
-						/>
 					</Button>
 					<Link href="/">
 						<Button
