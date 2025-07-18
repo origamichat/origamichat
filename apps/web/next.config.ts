@@ -8,8 +8,11 @@ const nextConfig: NextConfig = {
 	reactStrictMode: true,
 	transpilePackages: [
 		"@cossistant/api",
+		"@cossistant/core",
 		"@cossistant/location",
+		"@cossistant/react",
 		"@cossistant/transactional",
+		"@cossistant/types",
 	],
 	eslint: {
 		ignoreDuringBuilds: true,
