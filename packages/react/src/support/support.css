@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+	/* Border radius - inherit from shadcn if available (safe to inherit) */
+	--co-radius: var(--radius, 0.625rem);
+	--co-font-sans: var(--font-sans, "Geist", "Inter", sans-serif);
+	--co-font-mono: var(--font-mono, "Geist Mono", "Inter Mono", monospace);
+
+	/* Colors - direct values, customizable via CSS variables */
+	--co-background: oklch(99% 0 0);
+	--co-background-100: oklch(98% 0 0);
+	--co-background-200: oklch(97% 0 0);
+	--co-background-300: oklch(96% 0 0);
+	--co-background-400: oklch(94% 0 0);
+	--co-background-500: oklch(92% 0 0);
+	--co-background-600: oklch(91% 0 0);
+
+	--co-foreground: oklch(14.5% 0 0);
+
+	--co-popover: oklch(100% 0 0);
+	--co-popover-foreground: oklch(14.5% 0 0);
+	--co-primary: oklch(20.5% 0 0);
+	--co-primary-foreground: oklch(98.5% 0 0);
+	--co-secondary: oklch(97% 0 0);
+	--co-secondary-foreground: oklch(20.5% 0 0);
+	--co-muted: oklch(97% 0 0);
+	--co-muted-foreground: oklch(55.6% 0 0);
+	--co-accent: oklch(97% 0 0);
+	--co-accent-foreground: oklch(20.5% 0 0);
+	--co-destructive: oklch(57.7% 0.245 27.325);
+	--co-destructive-foreground: oklch(57.7% 0.245 27.325);
+	--co-border: oklch(92.2% 0 0);
+	--co-input: oklch(92.2% 0 0);
+	--co-ring: oklch(70.8% 0 0);
+
+	--co-pink: hsla(314, 100%, 75%, 1);
+	--co-yellow: hsla(58, 92%, 70%, 1);
+	--co-blue: hsla(218, 91%, 68%, 1);
+	--co-orange: hsla(19, 99%, 65%, 1);
+}
+
+.dark {
+	/* Colors - direct values for dark mode */
+	--co-background: oklch(14.5% 0 0);
+	--co-background-100: oklch(15.5% 0 0);
+	--co-background-200: oklch(16.5% 0 0);
+	--co-background-300: oklch(17.5% 0 0);
+	--co-background-400: oklch(18.5% 0 0);
+	--co-background-500: oklch(19.5% 0 0);
+	--co-background-600: oklch(20.5% 0 0);
+
+	--co-foreground: oklch(98.5% 0 0);
+
+	--co-popover: oklch(14.5% 0 0);
+	--co-popover-foreground: oklch(98.5% 0 0);
+
+	--co-primary: oklch(98.5% 0 0);
+	--co-primary-foreground: oklch(20.5% 0 0);
+
+	--co-secondary: oklch(26.9% 0 0);
+	--co-secondary-foreground: oklch(98.5% 0 0);
+
+	--co-muted: oklch(26.9% 0 0);
+	--co-muted-foreground: oklch(70.8% 0 0);
+
+	--co-accent: oklch(26.9% 0 0);
+	--co-accent-foreground: oklch(98.5% 0 0);
+
+	--co-destructive: oklch(39.6% 0.141 25.723);
+	--co-destructive-foreground: oklch(63.7% 0.237 25.331);
+
+	--co-border: oklch(26.9% 0 0);
+	--co-input: oklch(26.9% 0 0);
+
+	--co-pink: hsla(314, 100%, 85%, 1);
+	--co-yellow: hsla(58, 92%, 79%, 1);
+	--co-blue: hsla(218, 91%, 78%, 1);
+	--co-orange: hsla(19, 99%, 50%, 1);
+}
+
+@theme inline {
+	--font-co-sans: var(--co-font-sans);
+	--font-co-mono: var(--co-font-mono);
+	--color-co-background: var(--co-background);
+	--color-co-background-100: var(--co-background-100);
+	--color-co-background-200: var(--co-background-200);
+	--color-co-background-300: var(--co-background-300);
+	--color-co-background-400: var(--co-background-400);
+	--color-co-background-500: var(--co-background-500);
+	--color-co-background-600: var(--co-background-600);
+
+	--color-co-foreground: var(--co-foreground);
+
+	--color-co-primary: var(--co-primary);
+	--color-co-primary-foreground: var(--co-primary-foreground);
+	--color-co-secondary: var(--co-secondary);
+	--color-co-secondary-foreground: var(--co-secondary-foreground);
+	--color-co-muted: var(--co-muted);
+	--color-co-muted-foreground: var(--co-muted-foreground);
+	--color-co-accent: var(--co-accent);
+	--color-co-accent-foreground: var(--co-accent-foreground);
+	--color-co-destructive: var(--co-destructive);
+	--color-co-destructive-foreground: var(--co-destructive-foreground);
+	--color-co-border: var(--co-border);
+	--color-co-input: var(--co-input);
+	--color-co-ring: var(--co-ring);
+	--radius-co: var(--co-radius);
+
+	/* custom colors */
+	--color-co-pink: var(--co-pink);
+	--color-co-yellow: var(--co-yellow);
+	--color-co-blue: var(--co-blue);
+	--color-co-orange: var(--co-orange);
+}
+
+@layer base {
+	.cossistant * {
+		@apply border-co-border outline-co-ring/50;
+	}
+
+	.cossistant {
+		@apply scroll-smooth;
+
+		/* Ensure co- variables are available within the component */
+		--co-radius: var(--co-radius, 0.625rem);
+		--co-font-sans: var(--co-font-sans, "Geist", "Inter", sans-serif);
+		--co-font-mono: var(--co-font-mono, "Geist Mono", "Inter Mono", monospace);
+	}
+}

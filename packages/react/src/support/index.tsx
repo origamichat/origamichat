@@ -1,7 +1,8 @@
 "use client";
 
-import "./styles.css";
+import "./support.css";
 
+import { motion } from "motion/react";
 import React from "react";
 import {
 	Bubble,
@@ -14,6 +15,7 @@ import {
 	SendButton,
 	Window,
 } from "./components";
+import { SupportConfigContext } from "./context/config";
 import { cn } from "./utils";
 
 export interface SupportProps {
@@ -51,7 +53,7 @@ export const Support: React.FC<SupportProps> = ({
 		"cossistant",
 		{
 			// Floating mode positioning
-			"fixed z-50": mode === "floating",
+			"fixed z-[9999]": mode === "floating",
 			"bottom-4": mode === "floating" && position === "bottom",
 			"top-4": mode === "floating" && position === "top",
 			"right-4": mode === "floating" && align === "right",
@@ -75,25 +77,27 @@ export const Support: React.FC<SupportProps> = ({
 	});
 
 	return (
-		<div className={containerClasses}>
-			{mode === "floating" && <Bubble />}
-			<Window className={windowClasses}>
-				<Header title={title} />
-				<Content>{/* messages go here */}</Content>
-				<InputContainer>
-					<InputWrapper>
-						<Input
-							onChange={setValue}
-							onSubmit={handleSubmit}
-							placeholder={placeholder}
-							value={value}
-						/>
-						<SendButton onClick={handleSubmit} />
-					</InputWrapper>
-					<Footer>{footer}</Footer>
-				</InputContainer>
-			</Window>
-		</div>
+		<SupportConfigContext.Provider value={{ mode }}>
+			<motion.div className={containerClasses}>
+				{mode === "floating" && <Bubble />}
+				<Window className={windowClasses}>
+					<Header title={title} />
+					<Content>{/* messages go here */}</Content>
+					<InputContainer>
+						<InputWrapper>
+							<Input
+								onChange={setValue}
+								onSubmit={handleSubmit}
+								placeholder={placeholder}
+								value={value}
+							/>
+							<SendButton onClick={handleSubmit} />
+						</InputWrapper>
+						<Footer>{footer}</Footer>
+					</InputContainer>
+				</Window>
+			</motion.div>
+		</SupportConfigContext.Provider>
 	);
 };
 

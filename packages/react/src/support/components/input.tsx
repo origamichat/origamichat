@@ -120,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({ className, children }) => {
 		<div className={cn("flex h-8 items-center justify-center px-3", className)}>
 			{children || (
 				<a
-					className="flex items-center gap-1 font-medium font-mono text-co-primary hover:text-co-cossistant-blue"
+					className="flex items-center gap-1 font-medium font-mono text-co-primary hover:text-co-blue"
 					href={cossistantUrl}
 					rel="noopener noreferrer"
 					target="_blank"

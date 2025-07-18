@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useSupport } from "../provider";
+import { useSupportConfig } from "../support/context/config";
 import { useRenderElement } from "../utils/use-render-element";
 
 export interface WindowRenderProps {
@@ -32,7 +33,14 @@ export const SupportWindow = React.forwardRef<HTMLDivElement, WindowProps>(
 		ref
 	) => {
 		const context = useSupport();
-		const isOpen = isOpenProp ?? context?.isOpen ?? false;
+		const supportConfig = useSupportConfig();
+
+		// In responsive mode, window is always open
+		// Otherwise use normal open/close logic
+		const isOpen =
+			supportConfig?.mode === "responsive"
+				? true
+				: (isOpenProp ?? context?.isOpen ?? false);
 
 		const close = React.useCallback(() => {
 			if (onOpenChange) {
