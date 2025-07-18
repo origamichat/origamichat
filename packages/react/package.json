@@ -46,7 +46,7 @@
         "default": "./dist/primitive/index.cjs"
       }
     },
-    "./styles.css": "./dist/support/styles.css"
+    "./support.css": "./dist/support/support.css"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -54,7 +54,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsup && bun run build:css",
-    "build:css": "bunx @tailwindcss/cli -i src/support/styles.css -o dist/support/styles.css --content 'src/**/*.{js,ts,jsx,tsx}' --minify"
+    "build:css": "bunx @tailwindcss/cli -i src/support/support.css -o dist/support/support.css --content 'src/**/*.{js,ts,jsx,tsx}' --minify"
   },
   "files": [
     "dist"
