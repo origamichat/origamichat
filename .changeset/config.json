@@ -7,10 +7,10 @@
     }
   ],
   "commit": true,
-  "fixed": [["@cossistant/core", "@cossistant/react"]],
+  "fixed": [["@cossistant/core", "@cossistant/react", "@cossistant/types"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["api", "web", "database", "location"]
+  "ignore": ["api", "web", "database", "location", "transactional"]
 }
