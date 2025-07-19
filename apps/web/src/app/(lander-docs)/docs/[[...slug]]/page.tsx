@@ -92,7 +92,7 @@ export default async function Page(props: {
 					<div className="flex flex-col gap-2">
 						<div className="flex flex-col gap-2">
 							<div className="flex items-start justify-between">
-								<h1 className="scroll-m-20 font-semibold text-4xl tracking-tight sm:text-3xl xl:text-4xl">
+								<h1 className="scroll-m-20 font-medium text-4xl tracking-tight sm:text-3xl xl:text-4xl">
 									{doc.title}
 								</h1>
 								<div className="flex items-center gap-2 pt-1.5">

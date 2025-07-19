@@ -1,16 +1,11 @@
 "use client";
 
-import { CheckIcon, ClipboardIcon, TerminalIcon } from "lucide-react";
+import { TerminalIcon } from "lucide-react";
 import * as React from "react";
 
-import { copyToClipboardWithMeta } from "@/components/copy-button";
-import { Button } from "@/components/ui/button";
+import { CopyButton, copyToClipboardWithMeta } from "@/components/copy-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import { useConfig } from "@/hooks/use-config";
 
 export function CodeBlockCommand({
@@ -44,19 +39,8 @@ export function CodeBlockCommand({
 		};
 	}, [__npm__, __pnpm__, __yarn__, __bun__]);
 
-	const copyCommand = React.useCallback(() => {
-		const command = tabs[packageManager];
-
-		if (!command) {
-			return;
-		}
-
-		copyToClipboardWithMeta(command);
-		setHasCopied(true);
-	}, [packageManager, tabs]);
-
 	return (
-		<div className="overflow-x-auto">
+		<div className="relative my-6 overflow-x-auto rounded bg-background-200">
 			<Tabs
 				className="gap-0"
 				onValueChange={(value) => {
@@ -68,14 +52,14 @@ export function CodeBlockCommand({
 				value={packageManager}
 			>
 				<div className="flex items-center gap-2 border-border/50 border-b px-3 py-1">
-					<div className="flex size-4 items-center justify-center rounded-[1px] bg-foreground opacity-70">
-						<TerminalIcon className="size-3 text-code" />
+					<div className="flex size-4 items-center justify-center rounded-[1px] bg-primary">
+						<TerminalIcon className="size-3 text-primary-foreground" />
 					</div>
 					<TabsList className="rounded-none bg-transparent p-0">
 						{Object.entries(tabs).map(([key]) => {
 							return (
 								<TabsTrigger
-									className="h-7 border border-transparent pt-0.5 data-[state=active]:border-input data-[state=active]:bg-accent data-[state=active]:shadow-none"
+									className="h-7 rounded border border-transparent pt-0.5 data-[state=active]:border-input data-[state=active]:bg-background data-[state=active]:shadow-none"
 									key={key}
 									value={key}
 								>
@@ -102,23 +86,10 @@ export function CodeBlockCommand({
 					})}
 				</div>
 			</Tabs>
-			<Tooltip>
-				<TooltipTrigger asChild>
-					<Button
-						className="absolute top-2 right-2 z-10 size-7 opacity-70 hover:opacity-100 focus-visible:opacity-100"
-						data-slot="copy-button"
-						onClick={copyCommand}
-						size="icon"
-						variant="ghost"
-					>
-						<span className="sr-only">Copy</span>
-						{hasCopied ? <CheckIcon /> : <ClipboardIcon />}
-					</Button>
-				</TooltipTrigger>
-				<TooltipContent>
-					{hasCopied ? "Copied" : "Copy to Clipboard"}
-				</TooltipContent>
-			</Tooltip>
+			<CopyButton
+				className="absolute top-2 right-2 z-10 size-7 opacity-70 hover:opacity-100 focus-visible:opacity-100"
+				value={tabs[packageManager] || ""}
+			/>
 		</div>
 	);
 }

@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/complexity/useLiteralKeys: ok */
 import type { ShikiTransformer } from "shiki";
 import { codeToHtml } from "shiki";
-import { cossistantDark, cossistantLight } from "./cossistant-theme";
 
 export const transformers = [
 	{
