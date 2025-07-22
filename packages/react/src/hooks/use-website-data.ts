@@ -1,9 +1,9 @@
 import type { CossistantRestClient } from "@cossistant/core";
-import type { WebsiteResponse } from "@cossistant/types";
+import type { PublicWebsiteResponse } from "@cossistant/types";
 import { useEffect, useRef, useState } from "react";
 
 export interface UseWebsiteDataResult {
-	website: WebsiteResponse | null;
+	website: PublicWebsiteResponse | null;
 	isLoading: boolean;
 	error: Error | null;
 }
@@ -11,7 +11,7 @@ export interface UseWebsiteDataResult {
 export function useWebsiteData(
 	client: CossistantRestClient | null
 ): UseWebsiteDataResult {
-	const [website, setWebsite] = useState<WebsiteResponse | null>(null);
+	const [website, setWebsite] = useState<PublicWebsiteResponse | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<Error | null>(null);
 	const hasFetched = useRef(false);
@@ -27,7 +27,7 @@ export function useWebsiteData(
 
 		client
 			.getWebsite()
-			.then((websiteData: WebsiteResponse) => {
+			.then((websiteData: PublicWebsiteResponse) => {
 				setWebsite(websiteData);
 				setIsLoading(false);
 			})

@@ -8,4 +8,4 @@ export {
 	InputWrapper,
 	SendButton,
 } from "./input";
-export { Content, Header, Window } from "./window";
+export { Window } from "./window";

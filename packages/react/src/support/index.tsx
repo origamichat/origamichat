@@ -3,52 +3,27 @@
 import "./support.css";
 
 import { motion } from "motion/react";
-import React from "react";
-import {
-	Bubble,
-	Content,
-	Footer,
-	Header,
-	Input,
-	InputContainer,
-	InputWrapper,
-	SendButton,
-	Window,
-} from "./components";
-import { SupportConfigContext } from "./context/config";
+import type React from "react";
+import { Bubble, Window } from "./components";
+import { SupportConfigProvider } from "./context/config";
+import { NavigationProvider } from "./context/navigation";
+import { SupportRouter } from "./router";
 import { cn } from "./utils";
 
 export interface SupportProps {
 	className?: string;
-	title?: string;
-	placeholder?: string;
-	footer?: React.ReactNode;
-	onSubmit?: (message: string) => void;
 	position?: "top" | "bottom";
 	align?: "right" | "left";
+	// Display the support widget in a floating window or in responsive mode (takes the full width / height of the parent)
 	mode?: "floating" | "responsive";
 }
 
 export const Support: React.FC<SupportProps> = ({
 	className,
-	title = "Support",
-	placeholder = "Type your message...",
-	footer,
-	onSubmit,
 	position = "bottom",
 	align = "right",
 	mode = "floating",
 }) => {
-	const [value, setValue] = React.useState("");
-
-	const handleSubmit = () => {
-		if (onSubmit) {
-			onSubmit(value);
-		}
-		// TODO: integrate with backend
-		setValue("");
-	};
-
 	const containerClasses = cn(
 		"cossistant",
 		{
@@ -77,28 +52,25 @@ export const Support: React.FC<SupportProps> = ({
 	});
 
 	return (
-		<SupportConfigContext.Provider value={{ mode }}>
-			<motion.div className={containerClasses}>
-				{mode === "floating" && <Bubble />}
-				<Window className={windowClasses}>
-					<Header title={title} />
-					<Content>{/* messages go here */}</Content>
-					<InputContainer>
-						<InputWrapper>
-							<Input
-								onChange={setValue}
-								onSubmit={handleSubmit}
-								placeholder={placeholder}
-								value={value}
-							/>
-							<SendButton onClick={handleSubmit} />
-						</InputWrapper>
-						<Footer>{footer}</Footer>
-					</InputContainer>
-				</Window>
-			</motion.div>
-		</SupportConfigContext.Provider>
+		<SupportConfigProvider mode={mode}>
+			<NavigationProvider>
+				<motion.div className={containerClasses}>
+					{mode === "floating" && <Bubble />}
+					<Window className={windowClasses}>
+						<SupportRouter />
+					</Window>
+				</motion.div>
+			</NavigationProvider>
+		</SupportConfigProvider>
 	);
 };
 
 export default Support;
+
+export { useSupportConfig } from "./context/config";
+// Export navigation types and hooks for advanced usage
+export {
+	type NavigationState,
+	type SUPPORT_PAGES,
+	useSupportNavigation,
+} from "./context/navigation";

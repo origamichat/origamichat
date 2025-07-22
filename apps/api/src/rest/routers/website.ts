@@ -1,4 +1,4 @@
-import { websiteResponseSchema } from "@cossistant/types";
+import { publicWebsiteResponseSchema } from "@cossistant/types";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { z } from "zod";
 import type { RestContext } from "../types";
@@ -66,7 +66,7 @@ websiteRouter.openapi(
 				description: "Website information successfully retrieved",
 				content: {
 					"application/json": {
-						schema: websiteResponseSchema,
+						schema: publicWebsiteResponseSchema,
 					},
 				},
 			},
@@ -106,10 +106,12 @@ websiteRouter.openapi(
 	},
 	async (c) => {
 		const website = c.get("website");
-
 		if (!website) {
 			return c.json({ error: "Website not found for this API key" }, 404);
 		}
+
+		// iso string indicating support activity
+		const lastOnlineAt = new Date().toISOString();
 
 		return c.json(
 			{
@@ -117,15 +119,12 @@ websiteRouter.openapi(
 				name: website.name,
 				slug: website.slug,
 				domain: website.domain,
-				isDomainOwnershipVerified: website.isDomainOwnershipVerified,
 				description: website.description,
 				logoUrl: website.logoUrl,
-				whitelistedDomains: website.whitelistedDomains,
-				installationTarget: website.installationTarget,
 				organizationId: website.organizationId,
 				status: website.status,
-				createdAt: website.createdAt.toISOString(),
-				updatedAt: website.updatedAt.toISOString(),
+				lastOnlineAt,
+				availableAgents: [],
 			},
 			200
 		);

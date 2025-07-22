@@ -119,10 +119,30 @@ export type CheckWebsiteDomainRequest = z.infer<
 	typeof checkWebsiteDomainRequestSchema
 >;
 
+export const availableAgentSchema = z.object({
+	id: z.string().ulid().openapi({
+		description: "The agent's unique identifier.",
+		example: "01JG000000000000000000000",
+	}),
+	name: z.string().openapi({
+		description: "The agent's name.",
+		example: "John Doe",
+	}),
+	image: z.string().nullable().openapi({
+		description: "The agent's avatar URL.",
+		example: "https://cossistant.com/avatar.png",
+	}),
+	lastOnlineAt: z.string().datetime().nullable().openapi({
+		description:
+			"The agent's last online timestamp, used to determine if the agent is online. If the agent is offline, this will be null or more than 5 minutes ago.",
+		example: "2021-01-01T00:00:00.000Z",
+	}),
+});
+
 /**
  * Website information response schema
  */
-export const websiteResponseSchema = z.object({
+export const publicWebsiteResponseSchema = z.object({
 	id: z.string().ulid().openapi({
 		description: "The website's unique identifier.",
 		example: "01JG000000000000000000000",
@@ -131,17 +151,9 @@ export const websiteResponseSchema = z.object({
 		description: "The website's name.",
 		example: "Dub",
 	}),
-	slug: z.string().openapi({
-		description: "The website's slug.",
-		example: "dub",
-	}),
 	domain: z.string().openapi({
 		description: "The website's domain.",
 		example: "dub.co",
-	}),
-	isDomainOwnershipVerified: z.boolean().openapi({
-		description: "Whether the domain ownership is verified.",
-		example: true,
 	}),
 	description: z.string().nullable().openapi({
 		description: "The website's description.",
@@ -151,14 +163,6 @@ export const websiteResponseSchema = z.object({
 		description: "The website's logo URL.",
 		example: "https://dub.co/logo.png",
 	}),
-	whitelistedDomains: z.array(z.string()).openapi({
-		description: "The website's whitelisted domains.",
-		example: ["localhost:3000", "dub.co", "*.dub.co"],
-	}),
-	installationTarget: z.nativeEnum(WebsiteInstallationTarget).openapi({
-		description: "The website's library installation target.",
-		example: WebsiteInstallationTarget.NEXTJS,
-	}),
 	organizationId: z.string().ulid().openapi({
 		description: "The organization's unique identifier.",
 		example: "01JG000000000000000000000",
@@ -167,14 +171,11 @@ export const websiteResponseSchema = z.object({
 		description: "The website's status.",
 		example: "active",
 	}),
-	createdAt: z.string().datetime().openapi({
-		description: "The website's creation date.",
+	lastOnlineAt: z.string().datetime().nullable().openapi({
+		description: "The website's support last online date.",
 		example: "2021-01-01T00:00:00.000Z",
 	}),
-	updatedAt: z.string().datetime().openapi({
-		description: "The website's last update date.",
-		example: "2021-01-01T00:00:00.000Z",
-	}),
+	availableAgents: z.array(availableAgentSchema),
 });
 
-export type WebsiteResponse = z.infer<typeof websiteResponseSchema>;
+export type PublicWebsiteResponse = z.infer<typeof publicWebsiteResponseSchema>;

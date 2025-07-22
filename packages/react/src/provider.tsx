@@ -1,7 +1,7 @@
 "use client";
 
 import type { CossistantRestClient } from "@cossistant/core";
-import type { WebsiteResponse } from "@cossistant/types";
+import type { PublicWebsiteResponse } from "@cossistant/types";
 import * as React from "react";
 import { useClient } from "./hooks/use-rest-client";
 import { useWebsiteData } from "./hooks/use-website-data";
@@ -12,10 +12,16 @@ export interface CossistantProviderProps {
 	apiUrl?: string;
 	wsUrl?: string;
 	publicKey?: string;
+	defaultMessages?: string[];
+	quickOptions?: string[];
 }
 
 export interface CossistantContextValue {
-	website: WebsiteResponse | null;
+	website: PublicWebsiteResponse | null;
+	defaultMessages: string[];
+	quickOptions: string[];
+	setDefaultMessages: (messages: string[]) => void;
+	setQuickOptions: (options: string[]) => void;
 	isOpen: boolean;
 	open: () => void;
 	close: () => void;
@@ -37,9 +43,15 @@ export function SupportProvider({
 	apiUrl = "https://api.cossistant.com/v1",
 	wsUrl = "wss://api.cossistant.com",
 	publicKey,
+	defaultMessages,
+	quickOptions,
 }: CossistantProviderProps) {
 	const [isOpen, setIsOpen] = React.useState(defaultOpen);
 	const [unreadCount, setUnreadCount] = React.useState(0);
+	const [_defaultMessages, _setDefaultMessages] = React.useState(
+		defaultMessages || []
+	);
+	const [_quickOptions, _setQuickOptions] = React.useState(quickOptions || []);
 
 	const open = React.useCallback(() => setIsOpen(true), []);
 	const close = React.useCallback(() => setIsOpen(false), []);
@@ -62,6 +74,10 @@ export function SupportProvider({
 			isLoading,
 			error,
 			client,
+			defaultMessages: _defaultMessages,
+			setDefaultMessages: _setDefaultMessages,
+			quickOptions: _quickOptions,
+			setQuickOptions: _setQuickOptions,
 		}),
 		[
 			website,
@@ -72,6 +88,8 @@ export function SupportProvider({
 			client,
 			open,
 			close,
+			_defaultMessages,
+			_quickOptions,
 			toggle,
 		]
 	);
