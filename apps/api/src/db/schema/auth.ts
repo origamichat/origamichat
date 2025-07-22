@@ -60,6 +60,7 @@ export const session = pgTable(
 			onDelete: "cascade",
 		}),
 		activeOrganizationId: ulidNullableReference("active_organization_id"),
+		activeTeamId: ulidNullableReference("active_team_id"),
 		impersonatedBy: ulidNullableReference("impersonated_by"),
 	},
 	(table) => [
@@ -69,6 +70,8 @@ export const session = pgTable(
 		index("session_user_idx").on(table.userId),
 		// Index for active organization
 		index("session_active_org_idx").on(table.activeOrganizationId),
+		// Index for active team
+		index("session_active_team_idx").on(table.activeTeamId),
 		// Index for expired sessions cleanup
 		index("session_expires_at_idx").on(table.expiresAt),
 	]
@@ -165,6 +168,55 @@ export const member = pgTable(
 	]
 );
 
+export const team = pgTable(
+	"team",
+	{
+		id: ulidPrimaryKey("id"),
+		name: text("name").notNull(),
+		organizationId: ulidReference("organization_id").references(
+			() => organization.id,
+			{ onDelete: "cascade" }
+		),
+		createdAt: timestamp("created_at")
+			.$defaultFn(() => new Date())
+			.notNull(),
+		updatedAt: timestamp("updated_at")
+			.$defaultFn(() => new Date())
+			.notNull(),
+	},
+	(table) => [
+		// Index for organization teams
+		index("team_org_idx").on(table.organizationId),
+		// Index for team name lookup within org
+		index("team_org_name_idx").on(table.organizationId, table.name),
+	]
+);
+
+export const teamMember = pgTable(
+	"teamMember",
+	{
+		id: ulidPrimaryKey("id"),
+		teamId: ulidReference("team_id").references(() => team.id, {
+			onDelete: "cascade",
+		}),
+		userId: ulidReference("user_id").references(() => user.id, {
+			onDelete: "cascade",
+		}),
+		createdAt: timestamp("created_at")
+			.$defaultFn(() => new Date())
+			.notNull(),
+		updatedAt: timestamp("updated_at")
+			.$defaultFn(() => new Date())
+			.notNull(),
+	},
+	(table) => [
+		// Index for team members lookup
+		index("team_member_team_idx").on(table.teamId),
+		// Index for user's teams lookup
+		index("team_member_user_idx").on(table.userId),
+	]
+);
+
 export const invitation = pgTable(
 	"invitation",
 	{
@@ -180,6 +232,9 @@ export const invitation = pgTable(
 		inviterId: ulidReference("inviter_id").references(() => user.id, {
 			onDelete: "cascade",
 		}),
+		teamId: ulidNullableReference("team_id").references(() => team.id, {
+			onDelete: "cascade",
+		}),
 	},
 	(table) => [
 		// Index for organization invitations
@@ -190,6 +245,8 @@ export const invitation = pgTable(
 		index("invitation_status_idx").on(table.status),
 		// Index for expired invitations cleanup
 		index("invitation_expires_at_idx").on(table.expiresAt),
+		// Index for team invitations
+		index("invitation_team_idx").on(table.teamId),
 	]
 );
 
@@ -209,9 +266,31 @@ export const organizationRelations = relations(organization, ({ many }) => ({
 	members: many(member),
 	invitations: many(invitation),
 	websites: many(website),
+	teams: many(team),
 }));
 
-export const memberRelations = relations(member, ({ one }) => ({
+export const teamRelations = relations(team, ({ one, many }) => ({
+	organization: one(organization, {
+		fields: [team.organizationId],
+		references: [organization.id],
+	}),
+	teamMembers: many(teamMember),
+	invitations: many(invitation),
+	websites: many(website),
+}));
+
+export const teamMemberRelations = relations(teamMember, ({ one }) => ({
+	team: one(team, {
+		fields: [teamMember.teamId],
+		references: [team.id],
+	}),
+	user: one(user, {
+		fields: [teamMember.userId],
+		references: [user.id],
+	}),
+}));
+
+export const memberRelations = relations(member, ({ one, many }) => ({
 	organization: one(organization, {
 		fields: [member.organizationId],
 		references: [organization.id],
@@ -230,6 +309,10 @@ export const invitationRelations = relations(invitation, ({ one }) => ({
 	inviter: one(user, {
 		fields: [invitation.inviterId],
 		references: [user.id],
+	}),
+	team: one(team, {
+		fields: [invitation.teamId],
+		references: [team.id],
 	}),
 }));
 
@@ -253,3 +336,9 @@ export type MemberInsert = InferInsertModel<typeof member>;
 
 export type InvitationSelect = InferSelectModel<typeof invitation>;
 export type InvitationInsert = InferInsertModel<typeof invitation>;
+
+export type TeamSelect = InferSelectModel<typeof team>;
+export type TeamInsert = InferInsertModel<typeof team>;
+
+export type TeamMemberSelect = InferSelectModel<typeof teamMember>;
+export type TeamMemberInsert = InferInsertModel<typeof teamMember>;

@@ -23,7 +23,7 @@ import {
 import { WebsiteInstallationTarget } from "../enums";
 import { aiAgent } from "./ai-agent";
 import { apiKey } from "./api-keys";
-import { organization, user } from "./auth";
+import { organization, team, user } from "./auth";
 import { conversation } from "./conversation";
 
 export const websiteInstallationTargetEnum = pgEnum(
@@ -51,6 +51,9 @@ export const website = pgTable(
 			() => organization.id,
 			{ onDelete: "cascade" }
 		),
+		teamId: ulidReference("team_id").references(() => team.id, {
+			onDelete: "cascade",
+		}),
 		status: text("status").default("active").notNull(),
 		createdAt: timestamp("created_at")
 			.$defaultFn(() => new Date())
@@ -63,6 +66,8 @@ export const website = pgTable(
 	(table) => [
 		// Index for filtering by organization and status
 		index("website_org_status_idx").on(table.organizationId, table.status),
+		// Index for filtering by team
+		index("website_team_idx").on(table.teamId),
 		// Index for soft delete queries
 		index("website_deleted_at_idx").on(table.deletedAt),
 		index("website_slug_idx").on(table.slug),
@@ -131,6 +136,10 @@ export const websiteRelations = relations(website, ({ many, one }) => ({
 	organization: one(organization, {
 		fields: [website.organizationId],
 		references: [organization.id],
+	}),
+	team: one(team, {
+		fields: [website.teamId],
+		references: [team.id],
 	}),
 	visitors: many(visitor),
 	aiAgents: many(aiAgent),

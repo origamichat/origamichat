@@ -17,7 +17,6 @@ import {
 } from "better-auth/plugins";
 
 // Needed for email templates, don't remove
-import React from "react";
 
 export const auth = betterAuth({
 	baseURL:
@@ -58,6 +57,11 @@ export const auth = betterAuth({
 	},
 	plugins: [
 		organizationPlugin({
+			teams: {
+				enabled: true,
+				maximumTeams: 100, // Allow up to 100 teams per organization
+				allowRemovingAllTeams: false, // Prevent removing the last team
+			},
 			organizationCreation: {
 				disabled: false,
 				afterCreate: async ({ organization, member, user }, request) => {

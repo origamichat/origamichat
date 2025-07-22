@@ -1,6 +1,7 @@
 import type { Database } from "@api/db";
 import type { WebsiteInsert } from "@api/db/schema";
 import { website } from "@api/db/schema";
+import { auth } from "@api/lib/auth";
 
 import { and, desc, eq, isNull } from "drizzle-orm";
 
@@ -9,14 +10,29 @@ export async function createWebsite(
 	db: Database,
 	params: {
 		orgId: string;
-		data: Omit<WebsiteInsert, "organizationId">;
+		data: Omit<WebsiteInsert, "organizationId" | "teamId">;
+		headers?: Headers;
 	}
 ) {
+	// Create a team for the website using better-auth API
+	const teamResponse = await auth.api.createTeam({
+		body: {
+			name: params.data.slug,
+			organizationId: params.orgId,
+		},
+	});
+
+	if (!teamResponse?.id) {
+		throw new Error("Failed to create team for website");
+	}
+
+	// Create the website with the team
 	const [newWebsite] = await db
 		.insert(website)
 		.values({
 			...params.data,
 			organizationId: params.orgId,
+			teamId: teamResponse.id,
 		})
 		.returning();
 

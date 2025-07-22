@@ -34,6 +34,6 @@
     "packages/*"
   ],
   "dependencies": {
-    "better-auth": "1.3.0-beta.7"
+    "better-auth": "^1.3.2"
   }
 }
