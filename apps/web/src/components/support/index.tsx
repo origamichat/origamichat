@@ -1,11 +1,18 @@
-import { Support, SupportProvider } from "@cossistant/react";
+import { Support, SupportConfig } from "@cossistant/react";
 import React from "react";
 
 function SupportWidget() {
 	return (
-		<SupportProvider>
+		<>
 			<Support />
-		</SupportProvider>
+
+			<SupportConfig
+				defaultMessages={[
+					"Hi! I'm Anthony the founder of Cossistant 👋",
+					"How can I help you?",
+				]}
+			/>
+		</>
 	);
 }
 

@@ -1,3 +1,4 @@
+export { SupportConfig as Config } from "../config";
 export { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 export { SupportBubble as Bubble } from "./bubble";
 export {

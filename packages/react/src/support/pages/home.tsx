@@ -50,7 +50,7 @@ export const HomePage: React.FC = () => {
 				<div className="flex flex-col gap-2.5 px-4">
 					{availableAgents.map((agent) => (
 						<Avatar
-							className="mb-10 flex size-12 items-center justify-center rounded-full border bg-co-background-200"
+							className="mb-10 flex size-14 items-center justify-center overflow-clip rounded-full border bg-co-background-200"
 							key={agent.id}
 						>
 							{agent.image && (
@@ -63,7 +63,7 @@ export const HomePage: React.FC = () => {
 						<h2 className="mb-2.5 font-medium text-2xl text-primary">
 							{content.home?.header || "Hi there! 👋"}
 						</h2>
-						<p className="mb-5 text-balance text-primary/60">
+						<p className="mb-5 text-balance text-primary/80">
 							{content.home?.subheader ||
 								"Need help? Our AI and human customer support is here to help you."}
 						</p>

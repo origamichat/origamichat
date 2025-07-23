@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSupport } from "../provider";
+import { useSupport } from "./provider";
 
 export type SupportConfigProps = {
 	defaultMessages?: string[];
