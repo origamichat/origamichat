@@ -13,11 +13,11 @@ export type {
 	GetMessagesResponse,
 	Message,
 	MessageReceivedEvent,
+	PublicWebsiteResponse,
 	SendMessageRequest,
 	SendMessageResponse,
 	TypingEvent,
 	WebSocketEvent,
-	WebsiteResponse,
 } from "@cossistant/types";
 // Schema exports for runtime validation
 export { ConversationSchema, MessageSchema } from "@cossistant/types";

@@ -5,9 +5,9 @@ import {
 	type GetConversationsResponse,
 	type GetMessagesResponse,
 	Message,
+	type PublicWebsiteResponse,
 	type SendMessageRequest,
 	type SendMessageResponse,
-	type WebsiteResponse,
 } from "./types";
 
 export class CossistantRestClient {
@@ -131,8 +131,8 @@ export class CossistantRestClient {
 		});
 	}
 
-	async getWebsite(): Promise<WebsiteResponse> {
-		return this.request<WebsiteResponse>("/website");
+	async getWebsite(): Promise<PublicWebsiteResponse> {
+		return this.request<PublicWebsiteResponse>("/website");
 	}
 
 	async updateConfiguration(config: Partial<CossistantConfig>): Promise<void> {
