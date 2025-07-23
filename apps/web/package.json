@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@cossistant/api": "workspace:*",
+    "@cossistant/core": "workspace:*",
     "@cossistant/location": "workspace:*",
     "@cossistant/react": "workspace:*",
     "@cossistant/transactional": "workspace:*",

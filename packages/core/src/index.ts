@@ -19,6 +19,7 @@ export type {
 	TypingEvent,
 	WebSocketEvent,
 } from "@cossistant/types";
+
 // Schema exports for runtime validation
 export { ConversationSchema, MessageSchema } from "@cossistant/types";
 export { CossistantClient, CossistantClient as default } from "./client";
