@@ -82,8 +82,15 @@ export const MultimodalInput = React.forwardRef<
 			if (!el) {
 				return;
 			}
+			// Reset height to auto to get the correct scrollHeight
 			el.style.height = "auto";
+			// Ensure overflow is visible during measurement
+			const originalOverflow = el.style.overflow;
+			el.style.overflow = "hidden";
+			// Set the new height
 			el.style.height = `${el.scrollHeight}px`;
+			// Restore original overflow
+			el.style.overflow = originalOverflow;
 		}, [value]);
 
 		return useRenderElement(
@@ -104,6 +111,11 @@ export const MultimodalInput = React.forwardRef<
 					disabled,
 					"aria-invalid": error ? "true" : undefined,
 					"aria-describedby": error ? "multimodal-input-error" : undefined,
+					style: {
+						...props.style,
+						minHeight: "1.5rem",
+						overflow: "hidden",
+					},
 				},
 			}
 		);

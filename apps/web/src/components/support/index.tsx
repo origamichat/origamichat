@@ -7,9 +7,10 @@ function SupportWidget() {
 			<Support />
 
 			<SupportConfig
-				defaultMessages={[
-					"Hi! I'm Anthony the founder of Cossistant 👋",
-					"How can I help you?",
+				quickOptions={[
+					"What is Cossistant?",
+					"How to get started?",
+					"Pricing options",
 				]}
 			/>
 		</>

@@ -1,9 +1,9 @@
+import { useMultimodalInput } from "@cossistant/react/hooks/use-multimodal-input";
 import type React from "react";
 import { useState } from "react";
-
 import { Container } from "../components/container";
 import { Header } from "../components/header";
-
+import { MultimodalInput } from "../components/multimodal-input";
 import { useSupportNavigation } from "../context/navigation";
 
 interface ConversationPageProps {
@@ -14,6 +14,27 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 	conversationId,
 }) => {
 	const { goBack, canGoBack } = useSupportNavigation();
+
+	const {
+		message,
+		files,
+		isSubmitting,
+		error,
+		setMessage,
+		addFiles,
+		removeFile,
+		submit,
+	} = useMultimodalInput({
+		onSubmit: async (data) => {
+			console.log("Submitting:", data);
+
+			console.log(`Message: ${data.message}`);
+			console.log(`Files: ${data.files.length} files attached`);
+		},
+		onError: (_error) => {
+			console.error("Multimodal input error:", _error);
+		},
+	});
 
 	return (
 		<>
@@ -34,11 +55,20 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 				</div>
 			</Header>
 			<Container>
-				<div className="flex flex-col gap-2.5">
-					<div className="flex flex-col gap-2.5">
-						<div className="flex flex-col gap-2.5" />
-					</div>
-				</div>
+				<div className="flex-1" />
+
+				<MultimodalInput
+					disabled={isSubmitting}
+					error={error}
+					files={files}
+					isSubmitting={isSubmitting}
+					onChange={setMessage}
+					onFileSelect={addFiles}
+					onRemoveFile={removeFile}
+					onSubmit={submit}
+					placeholder="Type your message or paste an image..."
+					value={message}
+				/>
 			</Container>
 		</>
 	);

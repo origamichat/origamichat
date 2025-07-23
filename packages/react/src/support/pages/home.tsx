@@ -1,9 +1,8 @@
 import type React from "react";
 import { useSupport } from "../..";
-import { useMultimodalInput } from "../../hooks/use-multimodal-input";
 import { Avatar, AvatarFallback, AvatarImage } from "../../primitive";
 import { Container } from "../components/container";
-import { MultimodalInput } from "../components/multimodal-input";
+import { Watermark } from "../components/watermark";
 import { useSupportConfig } from "../context/config";
 
 export const HomePage: React.FC = () => {
@@ -11,38 +10,6 @@ export const HomePage: React.FC = () => {
 	const { website } = useSupport();
 
 	const availableAgents = website?.availableAgents || [];
-
-	// Use the multimodal input hook
-	const {
-		message,
-		files,
-		isSubmitting,
-		error,
-		setMessage,
-		addFiles,
-		removeFile,
-		submit,
-	} = useMultimodalInput({
-		onSubmit: async (data) => {
-			console.log("Submitting:", data);
-
-			// Here you would typically:
-			// 1. Upload files to S3 (if any)
-			// 2. Create a conversation
-			// 3. Send the message
-			// 4. Navigate to the conversation page
-
-			// For now, just log the submission
-			console.log(`Message: ${data.message}`);
-			console.log(`Files: ${data.files.length} files attached`);
-
-			// TODO: Implement actual submission logic
-			// navigate("/conversation/new-conversation-id");
-		},
-		onError: (_error) => {
-			console.error("Multimodal input error:", _error);
-		},
-	});
 
 	return (
 		<>
@@ -69,21 +36,8 @@ export const HomePage: React.FC = () => {
 						</p>
 					</div>
 				</div>
-
 				<div className="flex-1" />
-
-				<MultimodalInput
-					disabled={isSubmitting}
-					error={error}
-					files={files}
-					isSubmitting={isSubmitting}
-					onChange={setMessage}
-					onFileSelect={addFiles}
-					onRemoveFile={removeFile}
-					onSubmit={submit}
-					placeholder="Type your message or paste an image..."
-					value={message}
-				/>
+				<Watermark className="mx-auto" />
 			</Container>
 		</>
 	);
