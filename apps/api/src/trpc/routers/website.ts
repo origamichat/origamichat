@@ -1,4 +1,5 @@
 import { createDefaultWebsiteKeys } from "@api/db/queries/api-keys";
+import { createWebsite } from "@api/db/queries/website";
 import { website } from "@api/db/schema";
 import { domainToSlug } from "@api/utils/domain-slug";
 import {
@@ -9,7 +10,6 @@ import {
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
-
 import { createTRPCRouter, protectedProcedure } from "../init";
 
 export const websiteRouter = createTRPCRouter({
@@ -38,11 +38,10 @@ export const websiteRouter = createTRPCRouter({
 			// Generate a unique slug by always adding a random suffix
 			const slug = domainToSlug(input.domain);
 
-			const [createdWebsite] = await db
-				.insert(website)
-				.values({
+			const createdWebsite = await createWebsite(db, {
+				organizationId: input.organizationId,
+				data: {
 					name: input.name,
-					organizationId: input.organizationId,
 					installationTarget: input.installationTarget,
 					domain: input.domain,
 					isDomainOwnershipVerified,
@@ -51,8 +50,8 @@ export const websiteRouter = createTRPCRouter({
 						"http://localhost:3000",
 					],
 					slug,
-				})
-				.returning();
+				},
+			});
 
 			const apiKeys = await createDefaultWebsiteKeys(db, {
 				websiteId: createdWebsite.id,

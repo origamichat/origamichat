@@ -54,7 +54,14 @@ export const Support: React.FC<SupportProps> = ({
 	return (
 		<SupportConfigProvider mode={mode}>
 			<NavigationProvider>
-				<motion.div className={containerClasses}>
+				<motion.div
+					className={containerClasses}
+					layout="position"
+					transition={{
+						default: { ease: "anticipate" },
+						layout: { duration: 0.3 },
+					}}
+				>
 					{mode === "floating" && <Bubble />}
 					<Window className={windowClasses}>
 						<SupportRouter />

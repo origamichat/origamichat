@@ -15,6 +15,13 @@
       "when": 1752141657803,
       "tag": "0001_peaceful_toxin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753199890560,
+      "tag": "0002_bumpy_living_tribunal",
+      "breakpoints": true
     }
   ]
 }

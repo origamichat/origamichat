@@ -1,5 +1,7 @@
+import { member, organization } from "@api/db/schema/auth";
 import { publicWebsiteResponseSchema } from "@cossistant/types";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { and, eq, or } from "drizzle-orm";
 import { z } from "zod";
 import type { RestContext } from "../types";
 
@@ -106,9 +108,33 @@ websiteRouter.openapi(
 	},
 	async (c) => {
 		const website = c.get("website");
+		const db = c.get("db");
+
 		if (!website) {
 			return c.json({ error: "Website not found for this API key" }, 404);
 		}
+
+		console.log("website", website);
+
+		// Get the organisation admin and owners, they have access to the website
+		// TODO: also get the team members associated with the website (they have access to the website)
+		const organizationMembers = await db.query.member.findMany({
+			where: and(
+				eq(member.organizationId, website.organizationId),
+				or(eq(member.role, "admin"), eq(member.role, "owner"))
+			),
+			with: {
+				user: true,
+			},
+		});
+
+		const availableAgents = organizationMembers.map((agent) => ({
+			id: agent.id,
+			name: agent.user.name,
+			email: agent.user.email,
+			image: agent.user.image,
+			lastOnlineAt: new Date().toISOString(),
+		}));
 
 		// iso string indicating support activity
 		const lastOnlineAt = new Date().toISOString();
@@ -124,7 +150,7 @@ websiteRouter.openapi(
 				organizationId: website.organizationId,
 				status: website.status,
 				lastOnlineAt,
-				availableAgents: [],
+				availableAgents,
 			},
 			200
 		);

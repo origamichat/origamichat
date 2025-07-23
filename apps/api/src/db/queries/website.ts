@@ -9,16 +9,15 @@ import { and, desc, eq, isNull } from "drizzle-orm";
 export async function createWebsite(
 	db: Database,
 	params: {
-		orgId: string;
+		organizationId: string;
 		data: Omit<WebsiteInsert, "organizationId" | "teamId">;
-		headers?: Headers;
 	}
 ) {
 	// Create a team for the website using better-auth API
 	const teamResponse = await auth.api.createTeam({
 		body: {
 			name: params.data.slug,
-			organizationId: params.orgId,
+			organizationId: params.organizationId,
 		},
 	});
 
@@ -31,7 +30,7 @@ export async function createWebsite(
 		.insert(website)
 		.values({
 			...params.data,
-			organizationId: params.orgId,
+			organizationId: params.organizationId,
 			teamId: teamResponse.id,
 		})
 		.returning();
