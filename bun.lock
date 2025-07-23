@@ -204,7 +204,6 @@
       },
       "devDependencies": {
         "@cossistant/typescript-config": "workspace:*",
-        "tsup": "^8.5.0",
       },
     },
     "packages/typescript-config": {
