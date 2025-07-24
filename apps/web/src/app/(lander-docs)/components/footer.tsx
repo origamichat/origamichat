@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LogoText } from "@/components/ui/logo";
+import { ThreeLogo } from "@/components/ui/three-logo";
 import { DISCORD_INVITE, X_URL } from "@/constants";
 import { GitHubLink } from "./github-link";
 import { StatusWidget } from "./status-widget";
@@ -83,7 +84,7 @@ export function Footer() {
 					</div>
 				</div>
 			</div>
-			<div className="flex flex-col items-center justify-between gap-6 border-primary/10 border-t border-dashed md:items-start">
+			<div className="flex flex-col items-center justify-between border-primary/10 border-t border-dashed md:items-start">
 				<div className="container-wrapper mx-auto flex flex-col items-center justify-between gap-6 px-4 pt-4 pb-20 md:flex-row md:items-start md:gap-0">
 					<div className="flex flex-col gap-4">
 						<p className="px-6 text-center font-mono text-foreground/60 text-sm md:text-left lg:px-0">
@@ -111,6 +112,9 @@ export function Footer() {
 						</div>
 					</div>
 					<ThemeToggle />
+				</div>
+				<div className="container-wrapper mx-auto flex flex-col items-center justify-between gap-6 px-4 pt-4 pb-4 md:flex-row md:items-start md:gap-0">
+					<ThreeLogo className="size-full w-full" />
 				</div>
 			</div>
 		</footer>
