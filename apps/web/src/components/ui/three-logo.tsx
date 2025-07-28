@@ -49,8 +49,8 @@ function LogoPlane() {
 			return;
 		}
 
-		canvas.width = 1355;
-		canvas.height = 210;
+		canvas.width = Math.floor(1355);
+		canvas.height = Math.floor(210);
 
 		const blob = new Blob([svgString], { type: "image/svg+xml" });
 		const url = URL.createObjectURL(blob);
@@ -101,7 +101,7 @@ export function ThreeLogo({ className }: ThreeLogoProps) {
 				// Maintain aspect ratio from viewBox (1355:210)
 				const aspectRatio = 1355 / 210;
 				const height = width / aspectRatio;
-				setDimensions({ width, height });
+				setDimensions({ width: Math.floor(width), height: Math.floor(height) });
 			}
 		};
 
@@ -120,9 +120,9 @@ export function ThreeLogo({ className }: ThreeLogoProps) {
 				<LogoPlane />
 				<AsciiRenderer
 					bgColor="transparent"
-					characters=" %%=*:+-% "
+					characters=" .%=*:+-# "
 					fgColor={resolvedTheme === "dark" ? "white" : "black"}
-					resolution={0.19}
+					resolution={0.2}
 				/>
 			</Canvas>
 		</div>

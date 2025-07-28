@@ -40,7 +40,7 @@
 	--border: oklch(92.2% 0 0);
 	--input: oklch(92.2% 0 0);
 	--ring: oklch(70.8% 0 0);
-	--radius: 0.625rem;
+	--radius: 0.25rem;
 	--sidebar: hsl(0 0% 98%);
 	--sidebar-foreground: hsl(240 5.3% 26.1%);
 	--sidebar-primary: hsl(240 5.9% 10%);
@@ -131,7 +131,7 @@
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
-	--radius: 2px;
+	--radius: var(--radius);
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -202,26 +202,5 @@
 
 	.container {
 		@apply px-4 mx-auto max-w-screen-2xl;
-	}
-
-	/* Shiki syntax highlighting theme switching */
-	.shiki,
-	.shiki span {
-		color: var(--shiki-light);
-		background-color: var(--shiki-light-bg);
-		--cossistant-pink: hsla(314, 100%, 50%, 1);
-		--cossistant-yellow: hsla(58, 92%, 55%, 1);
-		--cossistant-blue: hsla(218, 91%, 50%, 1);
-		--cossistant-orange: hsla(19, 99%, 50%, 1);
-	}
-
-	.dark .shiki,
-	.dark .shiki span {
-		color: var(--shiki-dark);
-		background-color: var(--shiki-dark-bg);
-		--cossistant-pink: hsla(314, 100%, 85%, 1);
-		--cossistant-yellow: hsla(58, 92%, 79%, 1);
-		--cossistant-blue: hsla(218, 91%, 78%, 1);
-		--cossistant-orange: hsla(19, 99%, 70%, 1);
 	}
 }
