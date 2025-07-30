@@ -1,5 +1,5 @@
+import { SidebarContainer } from "../layout/sidebars/container";
 import { Logo } from "../logo";
-import { SidebarContainer } from "../sidebars/container";
 
 export function AppLayoutSkeleton() {
 	return (

@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({
 	children,
 }) => {
 	return (
-		<div className={cn("flex h-14 items-center px-5", className)}>
+		<div className={cn("flex min-h-14 items-center px-5", className)}>
 			{children || (
 				<p className="font-medium text-co-foreground text-sm">{title}</p>
 			)}

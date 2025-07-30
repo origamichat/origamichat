@@ -27,7 +27,7 @@ export function DocsSidebar({
 			collapsible="none"
 			{...props}
 		>
-			<SidebarContent className="no-scrollbar px-2 pb-12">
+			<SidebarContent className="no-scrollbar px-0 pb-12">
 				<div className="h-(--top-spacing) shrink-0" />
 				{tree.children.map((item) => (
 					<SidebarGroup key={item.$id}>

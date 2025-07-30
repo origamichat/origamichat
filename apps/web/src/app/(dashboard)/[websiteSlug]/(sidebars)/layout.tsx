@@ -1,4 +1,6 @@
-import { NavigationSidebar } from "@/components/ui/sidebars/navigation-sidebar";
+import { CentralBlock } from "@/components/ui/layout";
+import { ConversationSidebar } from "@/components/ui/layout/sidebars/conversation-sidebar";
+import { NavigationSidebar } from "@/components/ui/layout/sidebars/navigation-sidebar";
 
 export default function Layout({
 	children,
@@ -6,9 +8,10 @@ export default function Layout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<section className="flex h-screen w-screen">
+		<div className="flex h-screen w-screen overflow-hidden">
 			<NavigationSidebar />
-			{children}
-		</section>
+			<CentralBlock>{children}</CentralBlock>
+			{/* <ConversationSidebar /> */}
+		</div>
 	);
 }

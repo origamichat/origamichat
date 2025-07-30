@@ -1,10 +1,13 @@
-import Icon from "@/components/ui/icons";
+import { Page } from "@/components/ui/layout";
+import { Header } from "@/components/ui/layout/header";
 
-export default function Page() {
+export default function DashboardPage() {
 	return (
-		<div>
-			Page
-			<Icon name="sidebar" variant="filled" />
-		</div>
+		<>
+			<Header />
+			<Page>
+				<p>This is the most beautiful page in the world</p>
+			</Page>
+		</>
 	);
 }

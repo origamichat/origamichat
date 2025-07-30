@@ -35,16 +35,24 @@ const statusDictionary = {
 type Status = keyof typeof statusDictionary;
 
 async function getStatus(slug: string): Promise<{ status: Status }> {
-	const res = await fetch(`https://api.openstatus.dev/public/status/${slug}`, {
-		cache: "no-cache",
-	});
+	try {
+		const res = await fetch(
+			`https://api.openstatus.dev/public/status/${slug}`,
+			{
+				cache: "no-cache",
+			}
+		);
 
-	if (res.ok) {
-		const data = await res.json();
-		return data;
+		if (res.ok) {
+			const data = await res.json();
+			return data;
+		}
+
+		return { status: "unknown" };
+	} catch (error) {
+		console.error(error);
+		return { status: "unknown" };
 	}
-
-	return { status: "unknown" };
 }
 
 interface StatusWidgetProps {

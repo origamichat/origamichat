@@ -8,7 +8,7 @@ import {
 	useSidebar,
 } from "@/hooks/use-sidebars";
 import { cn } from "@/lib/utils";
-import { TooltipOnHover } from "../tooltip";
+import { TooltipOnHover } from "../../tooltip";
 
 type ResizableSidebarProps = {
 	className?: string;
@@ -27,7 +27,7 @@ export const ResizableSidebar = ({
 		<>
 			<aside
 				className={cn(
-					"relative flex h-screen max-h-screen border-transparent p-0 transition-all duration-200 ease-in-out",
+					"relative flex border-transparent p-0 transition-all duration-200 ease-in-out",
 					className,
 					{
 						"ml-[3px] p-0": !open,
@@ -40,11 +40,23 @@ export const ResizableSidebar = ({
 				{open && (
 					<>
 						{children}
-						<SidebarHandle isCollapsed={!open} onToggle={toggle} />
+						<SidebarHandle
+							hotkeys={["shift", position === "right" ? "right" : "left"]}
+							isCollapsed={!open}
+							onToggle={toggle}
+							position={position === "right" ? "left" : "right"}
+						/>
 					</>
 				)}
 			</aside>
-			{!open && <SidebarHandle isCollapsed={!open} onToggle={toggle} />}
+			{!open && (
+				<SidebarHandle
+					hotkeys={["shift", position === "right" ? "right" : "left"]}
+					isCollapsed={!open}
+					onToggle={toggle}
+					position={position === "right" ? "left" : "right"}
+				/>
+			)}
 		</>
 	);
 };
@@ -66,7 +78,7 @@ const SidebarHandle = ({
 }: SidebarHandleProps) => {
 	// Open the open on key stroke
 	useHotkeys(
-		[hotkeys.join("+")],
+		hotkeys.join("+"), // Join with + for proper hotkey format (e.g., "shift+left")
 		() => {
 			onToggle();
 		},
@@ -92,11 +104,11 @@ const SidebarHandle = ({
 		<button
 			className={cn(
 				"relative z-10 hidden max-h-screen w-auto items-center justify-center bg-transparent md:flex",
-				position === "right" ? "-right-[6px]" : "-left-[6px]",
+				position === "right" ? "-right-[5px]" : "left-[6px]",
 				{
-					"-right-[14px] absolute top-0 bottom-0":
+					"-right-[26px] absolute top-0 bottom-0":
 						!isCollapsed && position === "right",
-					"-left-[10px] absolute top-0 bottom-0":
+					"-left-[14px] absolute top-0 bottom-0":
 						!isCollapsed && position === "left",
 				}
 			)}
@@ -106,7 +118,7 @@ const SidebarHandle = ({
 			<TooltipOnHover content={tooltipContent} shortcuts={hotkeys} side="right">
 				<div
 					className={cn(
-						"group flex h-full items-center justify-center border-transparent transition-all hover:cursor-pointer hover:border-background-100",
+						"group flex h-full items-center justify-center border-transparent transition-all hover:cursor-pointe",
 						position === "left" ? "border-r-4" : "border-l-4"
 					)}
 				>
