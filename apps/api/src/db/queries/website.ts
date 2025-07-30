@@ -1,9 +1,9 @@
 import type { Database } from "@api/db";
 import type { WebsiteInsert } from "@api/db/schema";
-import { website } from "@api/db/schema";
+import { member, teamMember, website } from "@api/db/schema";
 import { auth } from "@api/lib/auth";
 
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, or } from "drizzle-orm";
 
 // Create website
 export async function createWebsite(
@@ -162,4 +162,78 @@ export async function restoreWebsite(
 		.returning();
 
 	return restoredWebsite;
+}
+
+// Check if user has access to a website
+export async function checkUserWebsiteAccess(
+	db: Database,
+	params: {
+		userId: string;
+		websiteSlug: string;
+	}
+) {
+	// First, get the website by slug
+	const [site] = await db
+		.select()
+		.from(website)
+		.where(and(eq(website.slug, params.websiteSlug), isNull(website.deletedAt)))
+		.limit(1);
+
+	if (!site) {
+		return { hasAccess: false, website: null };
+	}
+
+	// Check if user is an owner or admin of the organization
+	const [orgMembership] = await db
+		.select()
+		.from(member)
+		.where(
+			and(
+				eq(member.userId, params.userId),
+				eq(member.organizationId, site.organizationId),
+				inArray(member.role, ["owner", "admin"])
+			)
+		)
+		.limit(1);
+
+	if (orgMembership) {
+		return { hasAccess: true, website: site };
+	}
+
+	// Check if user is a member of the team associated with this website
+	if (site.teamId) {
+		const [teamMembership] = await db
+			.select()
+			.from(teamMember)
+			.where(
+				and(
+					eq(teamMember.userId, params.userId),
+					eq(teamMember.teamId, site.teamId)
+				)
+			)
+			.limit(1);
+
+		if (teamMembership) {
+			return { hasAccess: true, website: site };
+		}
+	}
+
+	return { hasAccess: false, website: site };
+}
+
+// Get website by slug with access check
+export async function getWebsiteBySlugWithAccess(
+	db: Database,
+	params: {
+		userId: string;
+		websiteSlug: string;
+	}
+) {
+	const accessCheck = await checkUserWebsiteAccess(db, params);
+
+	if (!accessCheck.hasAccess) {
+		return null;
+	}
+
+	return accessCheck.website;
 }
