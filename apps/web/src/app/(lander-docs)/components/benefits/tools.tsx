@@ -14,7 +14,7 @@ const Circle = forwardRef<
 	return (
 		<div
 			className={cn(
-				"relative z-10 flex size-12 items-center justify-center rounded border border-primary/10 border-dashed bg-background-500 p-2",
+				"relative z-10 flex size-12 items-center justify-center rounded border border-primary/10 border-dashed bg-background-200 p-2 dark:bg-background-500",
 				className
 			)}
 			ref={ref}
@@ -74,10 +74,10 @@ export function CustomToolsGraphic() {
 
 	return (
 		<div
-			className="relative flex h-[300px] w-full items-start justify-center overflow-hidden"
+			className="relative flex h-[300px] w-full items-start justify-center"
 			ref={containerRef}
 		>
-			<div className="flex size-full max-h-[200px] max-w-lg flex-col items-stretch justify-between gap-10">
+			<div className="flex size-full max-h-[200px] flex-col items-stretch justify-between gap-10">
 				<div className="flex flex-row items-center justify-between">
 					<Circle ref={div1Ref}>
 						<p className="font-mono text-[10px]">LINEAR</p>
@@ -99,8 +99,8 @@ export function CustomToolsGraphic() {
 							<AvatarFallback>yin.yang</AvatarFallback>
 						</Avatar>
 						{showTyping && (
-							<div className="-bottom-1 fade-in slide-in-from-bottom-1 absolute flex w-[130px] animate-in gap-1 border border-primary/10 border-dashed bg-background-500 px-0.5 text-center text-xs duration-300">
-								Yin Yang is typing
+							<div className="-bottom-1 fade-in slide-in-from-bottom-1 absolute flex w-[130px] animate-in gap-1 border border-primary/10 border-dashed bg-background-200 px-0.5 text-center text-xs duration-300 dark:bg-background-500">
+								Yin Yang typing
 								<TypingDots />
 							</div>
 						)}

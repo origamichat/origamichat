@@ -1,21 +1,21 @@
 "use client";
 
-import { CheckCircleIcon } from "lucide-react";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 
 const lines = [
-	"Don't use `accessKey` attribute on any HTML element.",
-	'Don\'t set `aria-hidden="true"` on focusable elements.',
-	"Don't add ARIA roles, states, and properties to elements that don't support them.",
-	"Don't use distracting elements like `<marquee>` or `<blink>`.",
-	"Only use the`scope` prop on`<th>` elements.",
-	"Don't assign non-interactive ARIA roles to interactive HTML elements.",
-	"Make sure label elements have text content and are associated with an input.",
-	"Don't assign interactive ARIA roles to non-interactive HTML elements.",
-	"Don't assign `tabIndex` to non-interactive HTML elements.",
-	"Don't use positive integers for `tabIndex` property.",
-	'Don\'t include "image", "picture", or "photo" in img `alt` prop.',
+	"You are a friendly and professional support agent for Acme SaaS.",
+	"Always maintain a helpful, empathetic tone while being concise.",
+	"Prioritize solving customer problems quickly and efficiently.",
+	"",
+	"## Rules",
+	"- If you don't know the answer, escalate to human support immediately",
+	"- NEVER make up information or provide guesses",
+	"- Do not book a time with our founder if the user is not an enterprise customer",
+	"",
+	"## Available Tools",
+	"@updateUserEmail - Update customer email address",
+	"@check_status - Check service status and recent incidents",
 ];
 
 export const PromptToneGraphic = () => {
@@ -40,7 +40,6 @@ export const PromptToneGraphic = () => {
 							ease: "easeOut",
 						}}
 					>
-						<CheckCircleIcon className="size-3 shrink-0" />
 						<p className="truncate">{line}</p>
 					</motion.div>
 				))}

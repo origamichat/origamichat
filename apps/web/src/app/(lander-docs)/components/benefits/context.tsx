@@ -22,7 +22,7 @@ export const ContextGraphic = () => {
 	return (
 		<div className="relative">
 			<pre
-				className="grid bg-gradient-to-b from-foreground/2 to-transparent text-muted-foreground leading-relaxed"
+				className="grid text-muted-foreground text-sm leading-relaxed"
 				ref={ref}
 			>
 				{lines.map((line, index) => (

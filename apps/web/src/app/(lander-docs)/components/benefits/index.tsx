@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { AiAgentsGraphic } from "./ai-agents";
-import { CodeFirstGraphic } from "./code-first";
 import { ContextGraphic } from "./context";
+import { HumanAiGraphic } from "./human-ai";
 import { PromptToneGraphic } from "./prompt-tone";
 import { SelfLearningGraphic } from "./self-learning";
 import { CustomToolsGraphic } from "./tools";
@@ -10,6 +10,13 @@ export const HEADLINE =
 	"Wake up to zero support tickets, Cossistant keeps your users happy while you sleep.";
 
 const benefits = [
+	{
+		children: HumanAiGraphic,
+		className: "lg:col-span-3",
+		title: "Human + AI support",
+		description:
+			"AI agents don’t just spit answers, they join the conversation like a teammate, talking naturally and handing off smoothly when a human needs to step in.",
+	},
 	{
 		children: AiAgentsGraphic,
 		className: "lg:col-span-3",
@@ -23,13 +30,6 @@ const benefits = [
 		title: "Context-aware replies",
 		description:
 			"Agents read app logs, errors, user actions, past conversations and knowledge base to deliver precise answers—no generic chatbot fluff.",
-	},
-	{
-		children: CodeFirstGraphic,
-		className: "lg:col-span-3",
-		title: "React / Next.js ready, fully open",
-		description:
-			"Drop in a support widget built with open components — customise styling, layout, and behaviour like you would with ShadCN.",
 	},
 	{
 		children: SelfLearningGraphic,
@@ -59,12 +59,16 @@ export const Benefits = () => (
 		<p className="max-w-6xl text-balance px-4 font-f37-stout text-2xl sm:text-3xl md:text-4xl">
 			{HEADLINE}
 		</p>
-		<div className="isolate grid gap-0 lg:grid-cols-6">
-			{benefits.map((benefit) => (
+		<div className="isolate grid gap-0 border-primary/10 border-y border-dashed lg:grid-cols-6">
+			{benefits.map((benefit, index) => (
 				<div
 					className={cn(
-						"relative flex flex-col gap-2 overflow-hidden border border-primary/10 border-dashed p-4 sm:p-8",
-						benefit.className
+						"relative flex flex-col gap-2 overflow-hidden border-primary/10 border-dashed p-4 sm:p-8",
+						benefit.className,
+						// Add border-right for first column items (index 0, 2, 4)
+						index % 2 === 0 && "border-r",
+						// Add border-bottom for all items except last row (index 0, 1, 2, 3)
+						index < 4 && "border-b"
 					)}
 					key={benefit.title}
 				>
