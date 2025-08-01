@@ -122,7 +122,7 @@ export function ThreeLogo({ className }: ThreeLogoProps) {
 					bgColor="transparent"
 					characters=" .%=*:+-# "
 					fgColor={resolvedTheme === "dark" ? "white" : "black"}
-					resolution={0.2}
+					resolution={0.19}
 				/>
 			</Canvas>
 		</div>

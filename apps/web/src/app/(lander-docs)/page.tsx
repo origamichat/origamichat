@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icons";
 import { Logos } from "@/components/ui/logos";
 import { TooltipOnHover } from "@/components/ui/tooltip";
+import { Benefits } from "./components/benefits";
 import { EscapeIframeAnimation } from "./components/escape-iframe-animation";
 import { GitHubLink } from "./components/github-link";
 import { WaitingListMessage } from "./components/waiting-list-rank/message";
@@ -31,7 +32,7 @@ export default async function Landing() {
 							</h1>
 							<h3 className="w-full text-center text-base text-primary/70 md:max-w-[75%] md:text-lg lg:max-w-full lg:text-balance lg:text-left">
 								Cossistant is the open-source support framework that puts human
-								and AI help right in your React app with custom actions and UI.
+								and AI help right in your React code with custom actions and UI.
 							</h3>
 							<div className="mt-10 flex w-full flex-col gap-3 md:max-w-[75%] md:gap-6 lg:max-w-full lg:flex-row lg:items-center">
 								<Link href="/waitlist">
@@ -100,6 +101,7 @@ export default async function Landing() {
 					</div>
 				</div>
 			</div>
+			<Benefits />
 		</>
 	);
 }

@@ -16,7 +16,7 @@ export default async function Layout({ children, params }: LayoutProps) {
 
 	return (
 		<div className="flex h-screen w-screen overflow-hidden">
-			<NavigationSidebar />
+			<NavigationSidebar websiteSlug={websiteSlug} />
 			<CentralBlock>{children}</CentralBlock>
 			{/* <ConversationSidebar /> */}
 		</div>

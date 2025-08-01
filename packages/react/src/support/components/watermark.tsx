@@ -27,7 +27,7 @@ export const Watermark: React.FC<WatermarkProps> = ({ className }) => {
 	return (
 		<a
 			className={cn(
-				"flex items-center gap-1.5 font-medium font-mono text-co-primary hover:text-co-blue",
+				"mb-1 flex items-center gap-1.5 font-medium font-mono text-co-primary hover:text-co-blue",
 				className
 			)}
 			href={cossistantUrl}

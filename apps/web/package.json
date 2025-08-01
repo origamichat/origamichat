@@ -51,6 +51,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "cobe": "^0.6.4",
+    "date-fns": "^4.1.0",
     "drizzle-orm": "0.44.0",
     "fumadocs-core": "^15.6.1",
     "fumadocs-mdx": "^11.6.10",
