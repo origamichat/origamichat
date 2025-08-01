@@ -6,13 +6,13 @@ import { useRef } from "react";
 const lines = [
 	'◼ Anonymous user ID38d9sj visited "/sign-up"',
 	"◼ Anonymous user ID38d9sj signed up",
-	'✔ User identified as "John Doe" (john.doe@example.com)',
-	'◼ "John Doe" visited "/onboarding"',
-	'◼ "John Doe" completed onboarding',
-	'⚠ "John Doe" faced an error',
+	'✔ User identified as "Yin Yang" (yin.yang@example.com)',
+	'◼ "Yin Yang" visited "/onboarding"',
+	'◼ "Yin Yang" completed onboarding',
+	'⚠ "Yin Yang" faced an error',
 	"  ❯ 'JS Error: TypeError:",
 	"  ❯ Cannot read property 'theme' of undefined'",
-	`◼ "John Doe" opened support widget`,
+	`◼ "Yin Yang" opened support widget`,
 ];
 
 export const ContextGraphic = () => {

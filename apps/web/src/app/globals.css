@@ -203,4 +203,30 @@
 	.container {
 		@apply px-4 mx-auto max-w-screen-2xl;
 	}
+
+	@keyframes bounce-dot {
+		0%,
+		80%,
+		100% {
+			transform: translateY(0);
+		}
+		40% {
+			transform: translateY(-6px);
+		}
+	}
+
+	.dot-bounce-1 {
+		animation: bounce-dot 1.4s infinite;
+		animation-delay: 0s;
+	}
+
+	.dot-bounce-2 {
+		animation: bounce-dot 1.4s infinite;
+		animation-delay: 0.16s;
+	}
+
+	.dot-bounce-3 {
+		animation: bounce-dot 1.4s infinite;
+		animation-delay: 0.32s;
+	}
 }

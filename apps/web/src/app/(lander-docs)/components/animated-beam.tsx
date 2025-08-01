@@ -35,7 +35,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
 	duration = Math.random() * 3 + 4,
 	delay = 0,
 	pathColor = "gray",
-	pathWidth = 2,
+	pathWidth = 1,
 	pathOpacity = 0.2,
 	gradientStartColor = "#ffaa40",
 	gradientStopColor = "#9c40ff",
@@ -63,6 +63,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
 				y2: ["0%", "0%"],
 			};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: ok
 	useEffect(() => {
 		const updatePath = () => {
 			if (containerRef.current && fromRef.current && toRef.current) {
@@ -83,10 +84,9 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
 				const endY =
 					rectB.top - containerRect.top + rectB.height / 2 + endYOffset;
 
-				const controlY = startY - curvature;
-				const d = `M ${startX},${startY} Q ${
-					(startX + endX) / 2
-				},${controlY} ${endX},${endY}`;
+				// Create straight line path with angle in the middle
+				const midX = (startX + endX) / 2;
+				const d = `M ${startX},${startY} L ${midX},${startY} L ${midX},${endY} L ${endX},${endY}`;
 				setPathD(d);
 			}
 		};
@@ -138,6 +138,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
 			<path
 				d={pathD}
 				stroke={pathColor}
+				strokeDasharray="5 5"
 				strokeLinecap="round"
 				strokeOpacity={pathOpacity}
 				strokeWidth={pathWidth}
@@ -145,6 +146,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
 			<path
 				d={pathD}
 				stroke={`url(#${id})`}
+				strokeDasharray="5 5"
 				strokeLinecap="round"
 				strokeOpacity="1"
 				strokeWidth={pathWidth}

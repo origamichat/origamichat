@@ -43,7 +43,7 @@ const benefits = [
 		className: "lg:col-span-3",
 		title: "Default & Custom tools",
 		description:
-			"Empower your agents with founder-built tools — from health checks to billing lookups — so they can solve customer issues without you touching a single ticket.",
+			"Out-of-the-box support for tools like Linear to log tickets, Stripe to check subscriptions, and Cal.com to book calls, plus the freedom to wire up your own APIs for truly custom actions.",
 	},
 	{
 		children: PromptToneGraphic,
@@ -72,7 +72,7 @@ export const Benefits = () => (
 						{benefit.children && <benefit.children />}
 					</div>
 					<h3 className="z-10 mt-4 font-semibold text-xl">{benefit.title}</h3>
-					<p className="max-w-sm text-pretty text-muted-foreground">
+					<p className="w-full max-w-sm text-pretty text-muted-foreground">
 						{benefit.description}
 					</p>
 				</div>
