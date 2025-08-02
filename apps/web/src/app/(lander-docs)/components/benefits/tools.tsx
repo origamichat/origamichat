@@ -99,7 +99,7 @@ export function CustomToolsGraphic() {
 							<AvatarFallback>yin.yang</AvatarFallback>
 						</Avatar>
 						{showTyping && (
-							<div className="-bottom-1 fade-in slide-in-from-bottom-1 absolute flex w-[130px] animate-in gap-1 border border-primary/10 border-dashed bg-background-200 px-0.5 text-center text-xs duration-300 dark:bg-background-500">
+							<div className="-bottom-1 fade-in slide-in-from-bottom-1 absolute flex w-[115px] animate-in gap-1 border border-primary/10 border-dashed bg-background-200 px-0.5 text-center text-xs duration-300 dark:bg-background-500">
 								Yin Yang typing
 								<TypingDots />
 							</div>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icons";
+import { ThreeLogo } from "@/components/ui/three-logo";
 import { source } from "@/lib/source";
 import { absoluteUrl } from "@/lib/utils";
 import { DocsTableOfContents } from "../../components/docs/docs-toc";
@@ -89,6 +90,7 @@ export default async function Page(props: {
 			<div className="flex min-w-0 flex-1 flex-col">
 				<div className="h-(--top-spacing) shrink-0" />
 				<div className="mx-auto flex w-full min-w-0 max-w-2xl flex-1 flex-col gap-8 px-4 py-6 text-neutral-800 md:px-0 lg:py-8 dark:text-neutral-300">
+					{!params.slug && <ThreeLogo />}
 					<div className="flex flex-col gap-2">
 						<div className="flex flex-col gap-2">
 							<div className="flex items-start justify-between">

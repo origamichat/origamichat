@@ -1,23 +1,78 @@
+import type { Message as MessageType } from "@cossistant/types";
 import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSupport } from "../..";
 import { Avatar, AvatarFallback, AvatarImage } from "../../primitive";
 import { Container } from "../components/container";
-import { Watermark } from "../components/watermark";
+import { MessageList } from "../components/message-list";
+import { MultimodalInput } from "../components/multimodal-input";
 import { useSupportConfig } from "../context/config";
+import { cn } from "../utils";
 
-export const HomePage: React.FC = () => {
-	const { content } = useSupportConfig();
+export interface HomePageProps {
+	message: string;
+	files: File[];
+	isSubmitting: boolean;
+	error: Error | null;
+	setMessage: (message: string) => void;
+	addFiles: (files: File[]) => void;
+	removeFile: (index: number) => void;
+	submit: () => void;
+	messages?: MessageType[];
+	events?: { id: string; event: string; timestamp?: Date }[];
+	isTyping?: boolean;
+}
+
+export const HomePage: React.FC<HomePageProps> = ({
+	message,
+	files,
+	isSubmitting,
+	error,
+	setMessage,
+	addFiles,
+	removeFile,
+	submit,
+	messages = [],
+	events = [],
+	isTyping = false,
+}) => {
 	const { website } = useSupport();
+	const [isScrolled, setIsScrolled] = useState(false);
 
 	const availableAgents = website?.availableAgents || [];
 
+	// Set up scroll listener for the message-list element
+	useEffect(() => {
+		const messageListElement = document.getElementById("message-list");
+
+		if (!messageListElement) {
+			return;
+		}
+
+		const handleScroll = () => {
+			setIsScrolled(messageListElement.scrollTop > 0);
+		};
+
+		messageListElement.addEventListener("scroll", handleScroll);
+
+		// Cleanup listener on unmount
+		return () => {
+			messageListElement.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
+
 	return (
-		<>
-			<Container className="flex h-full flex-col px-2 pt-6 pb-2">
-				<div className="flex flex-col gap-2.5 px-4">
+		<div className="flex h-full flex-col gap-0 overflow-hidden">
+			<div
+				className={cn(
+					"flex-shrink-0 bg-co-background px-2 pt-0 transition-all duration-200",
+					isScrolled && "border-co-border border-b shadow-xs"
+				)}
+			>
+				<div className="flex items-center gap-2 px-2 py-3">
 					{availableAgents.map((agent) => (
 						<Avatar
-							className="mb-10 flex size-14 items-center justify-center overflow-clip rounded-full border bg-co-background-200"
+							className="flex size-8 items-center justify-center overflow-clip rounded bg-co-background-200"
 							key={agent.id}
 						>
 							{agent.image && (
@@ -26,19 +81,36 @@ export const HomePage: React.FC = () => {
 							<AvatarFallback className="text-xs" name={agent.name} />
 						</Avatar>
 					))}
-					<div className="flex flex-col gap-2.5 px-1">
-						<h2 className="mb-2.5 font-medium text-2xl text-primary">
-							{content.home?.header || "Hi there! 👋"}
-						</h2>
-						<p className="mb-5 text-balance text-primary/80">
-							{content.home?.subheader ||
-								"Need help? Our AI and human customer support is here to help you."}
-						</p>
+					<div className="flex flex-col">
+						<p className="font-medium text-sm">{website?.name}</p>
+						<p className="text-muted-foreground text-sm">Online</p>
 					</div>
 				</div>
-				<div className="flex-1" />
-				<Watermark className="mx-auto" />
-			</Container>
-		</>
+			</div>
+
+			<MessageList
+				availableAgents={availableAgents}
+				className="min-h-0 flex-1"
+				events={events}
+				isTyping={isTyping}
+				messages={messages}
+				typingSenderName="Support"
+			/>
+
+			<div className="flex-shrink-0 px-2 pb-2">
+				<MultimodalInput
+					disabled={isSubmitting}
+					error={error}
+					files={files}
+					isSubmitting={isSubmitting}
+					onChange={setMessage}
+					onFileSelect={addFiles}
+					onRemoveFile={removeFile}
+					onSubmit={submit}
+					placeholder="Type your message..."
+					value={message}
+				/>
+			</div>
+		</div>
 	);
 };

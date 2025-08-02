@@ -1,40 +1,46 @@
 import { useMultimodalInput } from "@cossistant/react/hooks/use-multimodal-input";
+import type { Message as MessageType } from "@cossistant/types";
 import type React from "react";
 import { useState } from "react";
+import { useSupport } from "../..";
 import { Container } from "../components/container";
 import { Header } from "../components/header";
+import { MessageList } from "../components/message-list";
 import { MultimodalInput } from "../components/multimodal-input";
 import { useSupportNavigation } from "../context/navigation";
 
 interface ConversationPageProps {
 	conversationId: string;
+	message: string;
+	files: File[];
+	isSubmitting: boolean;
+	error: Error | null;
+	setMessage: (message: string) => void;
+	addFiles: (files: File[]) => void;
+	removeFile: (index: number) => void;
+	submit: () => void;
+	messages?: MessageType[];
+	events?: { id: string; event: string; timestamp?: Date }[];
+	isTyping?: boolean;
 }
 
 export const ConversationPage: React.FC<ConversationPageProps> = ({
 	conversationId,
+	message,
+	files,
+	isSubmitting,
+	error,
+	setMessage,
+	addFiles,
+	removeFile,
+	submit,
+	messages = [],
+	events = [],
+	isTyping = false,
 }) => {
 	const { goBack, canGoBack } = useSupportNavigation();
-
-	const {
-		message,
-		files,
-		isSubmitting,
-		error,
-		setMessage,
-		addFiles,
-		removeFile,
-		submit,
-	} = useMultimodalInput({
-		onSubmit: async (data) => {
-			console.log("Submitting:", data);
-
-			console.log(`Message: ${data.message}`);
-			console.log(`Files: ${data.files.length} files attached`);
-		},
-		onError: (_error) => {
-			console.error("Multimodal input error:", _error);
-		},
-	});
+	const { website } = useSupport();
+	const availableAgents = website?.availableAgents || [];
 
 	return (
 		<>
@@ -54,21 +60,30 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 					</span>
 				</div>
 			</Header>
-			<Container>
-				<div className="flex-1" />
-
-				<MultimodalInput
-					disabled={isSubmitting}
-					error={error}
-					files={files}
-					isSubmitting={isSubmitting}
-					onChange={setMessage}
-					onFileSelect={addFiles}
-					onRemoveFile={removeFile}
-					onSubmit={submit}
-					placeholder="Type your message or paste an image..."
-					value={message}
+			<Container className="flex h-full flex-col px-2 pt-0 pb-2">
+				<MessageList
+					availableAgents={availableAgents}
+					className="flex-1"
+					events={events}
+					isTyping={isTyping}
+					messages={messages}
+					typingSenderName="Support"
 				/>
+
+				<div className="px-2 pt-2">
+					<MultimodalInput
+						disabled={isSubmitting}
+						error={error}
+						files={files}
+						isSubmitting={isSubmitting}
+						onChange={setMessage}
+						onFileSelect={addFiles}
+						onRemoveFile={removeFile}
+						onSubmit={submit}
+						placeholder="Type your message or paste an image..."
+						value={message}
+					/>
+				</div>
 			</Container>
 		</>
 	);

@@ -129,3 +129,15 @@
 		--co-font-mono: var(--co-font-mono, "Geist Mono", "Inter Mono", monospace);
 	}
 }
+
+@layer utilities {
+	.animation-delay-0 {
+		animation-delay: 0ms;
+	}
+	.animation-delay-200 {
+		animation-delay: 200ms;
+	}
+	.animation-delay-400 {
+		animation-delay: 400ms;
+	}
+}
