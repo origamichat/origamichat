@@ -63,7 +63,7 @@ export const Benefits = () => (
 			{benefits.map((benefit, index) => (
 				<div
 					className={cn(
-						"relative flex flex-col gap-2 overflow-hidden border-primary/10 border-dashed p-4 sm:p-8",
+						"relative flex flex-col gap-2 overflow-hidden border-primary/10 border-dashed p-4 pt-20 sm:p-8 sm:pt-20",
 						benefit.className,
 						// Add border-right for first column items (index 0, 2, 4)
 						index % 2 === 0 && "border-r",
@@ -76,7 +76,7 @@ export const Benefits = () => (
 						{benefit.children && <benefit.children />}
 					</div>
 					<h3 className="z-10 mt-4 font-semibold text-xl">{benefit.title}</h3>
-					<p className="w-full max-w-sm text-pretty text-muted-foreground">
+					<p className="w-full max-w-lg text-balance text-muted-foreground">
 						{benefit.description}
 					</p>
 				</div>

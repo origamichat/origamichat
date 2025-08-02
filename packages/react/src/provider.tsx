@@ -1,6 +1,6 @@
 "use client";
 
-import type { CossistantRestClient } from "@cossistant/core";
+import type { CossistantClient } from "@cossistant/core";
 import type { PublicWebsiteResponse } from "@cossistant/types";
 import * as React from "react";
 import { useClient } from "./hooks/use-rest-client";
@@ -30,7 +30,7 @@ export interface CossistantContextValue {
 	setUnreadCount: (count: number) => void;
 	isLoading: boolean;
 	error: Error | null;
-	client: CossistantRestClient | null;
+	client: CossistantClient | null;
 }
 
 const SupportContext = React.createContext<CossistantContextValue | undefined>(

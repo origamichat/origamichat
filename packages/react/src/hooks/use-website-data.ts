@@ -1,4 +1,4 @@
-import type { CossistantRestClient } from "@cossistant/core";
+import type { CossistantClient } from "@cossistant/core";
 import type { PublicWebsiteResponse } from "@cossistant/types";
 import { useEffect, useRef, useState } from "react";
 
@@ -9,7 +9,7 @@ export interface UseWebsiteDataResult {
 }
 
 export function useWebsiteData(
-	client: CossistantRestClient | null
+	client: CossistantClient | null
 ): UseWebsiteDataResult {
 	const [website, setWebsite] = useState<PublicWebsiteResponse | null>(null);
 	const [isLoading, setIsLoading] = useState(false);

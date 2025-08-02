@@ -1,4 +1,5 @@
-import { member, organization } from "@api/db/schema/auth";
+import { getOrCreateVisitor } from "@api/db/queries";
+import { member } from "@api/db/schema/auth";
 import { publicWebsiteResponseSchema } from "@cossistant/types";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { and, eq, or } from "drizzle-orm";
@@ -62,6 +63,18 @@ websiteRouter.openapi(
 					example: "https://example.com",
 				},
 			},
+			{
+				name: "X-Visitor-Id",
+				in: "header",
+				description:
+					"Visitor ID from localStorage. If provided, returns existing visitor data. If not provided, creates a new visitor.",
+				required: false,
+				schema: {
+					type: "string",
+					pattern: "^[0-9A-HJKMNP-TV-Z]{26}$",
+					example: "01JG000000000000000000000",
+				},
+			},
 		],
 		responses: {
 			200: {
@@ -116,6 +129,14 @@ websiteRouter.openapi(
 
 		console.log("website", website);
 
+		// Handle visitor tracking
+		const visitorIdHeader = c.req.header("X-Visitor-Id");
+		const visitorData = await getOrCreateVisitor(db, {
+			websiteId: website.id,
+			organizationId: website.organizationId,
+			visitorId: visitorIdHeader,
+		});
+
 		// Get the organisation admin and owners, they have access to the website
 		// TODO: also get the team members associated with the website (they have access to the website)
 		const organizationMembers = await db.query.member.findMany({
@@ -151,6 +172,10 @@ websiteRouter.openapi(
 				status: website.status,
 				lastOnlineAt,
 				availableAgents,
+				visitor: {
+					id: visitorData.id,
+					createdAt: visitorData.createdAt.toISOString(),
+				},
 			},
 			200
 		);

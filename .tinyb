@@ -1,0 +1,14 @@
+{
+    "host": "https://api.us-east.aws.tinybird.co",
+    "id": "2407b3fd-8054-4cc8-a753-8e70f52a1f79",
+    "name": "cossistant",
+    "scope": "user",
+    "token": "p.eyJ1IjogIjI0MDdiM2ZkLTgwNTQtNGNjOC1hNzUzLThlNzBmNTJhMWY3OSIsICJpZCI6ICJkMDgyMzMwYS1mZWM4LTRiYzAtYjJkMy01NzZjNmY4ZTQwZGUiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.bBlG4TAHF88SPTYdHUOznFQ1sm9oRvMgegCfDMP7Dh8",
+    "tokens": {
+        "https://api.us-east.aws.tinybird.co": "p.eyJ1IjogIjI0MDdiM2ZkLTgwNTQtNGNjOC1hNzUzLThlNzBmNTJhMWY3OSIsICJpZCI6ICJkMDgyMzMwYS1mZWM4LTRiYzAtYjJkMy01NzZjNmY4ZTQwZGUiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.bBlG4TAHF88SPTYdHUOznFQ1sm9oRvMgegCfDMP7Dh8"
+    },
+    "user_email": "anthony@cossistant.com",
+    "user_id": "f5b6a189-3ddf-4081-b797-e2485727dc66",
+    "user_token": "p.eyJ1IjogImY1YjZhMTg5LTNkZGYtNDA4MS1iNzk3LWUyNDg1NzI3ZGM2NiIsICJpZCI6ICIyMWZmOTU3ZS1iNGQzLTRmYzItYWU3ZS03ODFmODBjNTcxMDIiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.4HSUIShOB8F8KUvsiJnn-JApzT5DedUI3jiIZIGcJTc",
+    "version": "0.0.1.dev280"
+}

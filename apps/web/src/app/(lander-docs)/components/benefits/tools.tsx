@@ -90,10 +90,10 @@ export function CustomToolsGraphic() {
 					<Circle ref={div2Ref}>
 						<p className="font-mono text-[10px]">CAL</p>
 					</Circle>
-					<Circle className="size-16" ref={div4Ref}>
+					<Circle className="ml-16 size-16" ref={div4Ref}>
 						<Logo className="size-8 text-primary/90" />
 					</Circle>
-					<Circle ref={div6Ref}>
+					<Circle className="mr-16" ref={div6Ref}>
 						<Avatar>
 							<AvatarImage src="https://cdn.cossistant.com/yin-yang.png" />
 							<AvatarFallback>yin.yang</AvatarFallback>

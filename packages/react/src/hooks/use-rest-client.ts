@@ -1,9 +1,9 @@
-import { CossistantRestClient } from "@cossistant/core";
+import { CossistantClient } from "@cossistant/core";
 import type { CossistantConfig } from "@cossistant/types";
 import { useEffect, useMemo, useState } from "react";
 
 export interface UseClientResult {
-	client: CossistantRestClient | null;
+	client: CossistantClient | null;
 	error: Error | null;
 }
 
@@ -44,7 +44,7 @@ export function useClient(
 		};
 
 		try {
-			return new CossistantRestClient(config);
+			return new CossistantClient(config);
 		} catch (err: unknown) {
 			setError(
 				err instanceof Error

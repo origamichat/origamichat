@@ -1,3 +1,4 @@
+import { APIKeyType } from "@cossistant/types";
 import {
 	type InferInsertModel,
 	type InferSelectModel,
@@ -18,7 +19,6 @@ import {
 	ulidPrimaryKey,
 	ulidReference,
 } from "../../utils/db/ids";
-import { APIKeyType } from "../enums";
 import { organization, user } from "./auth";
 import { website } from "./website";
 

@@ -9,11 +9,13 @@ import {
 	type SendMessageRequest,
 	type SendMessageResponse,
 } from "./types";
+import { getVisitorId, setVisitorId } from "./visitor-tracker";
 
 export class CossistantRestClient {
 	private config: CossistantConfig;
 	private baseHeaders: Record<string, string>;
 	private publicKey: string;
+	private websiteId: string | null = null;
 
 	constructor(config: CossistantConfig) {
 		this.config = config;
@@ -132,7 +134,30 @@ export class CossistantRestClient {
 	}
 
 	async getWebsite(): Promise<PublicWebsiteResponse> {
-		return this.request<PublicWebsiteResponse>("/website");
+		// Make the request with visitor ID if we have one stored
+		const headers: Record<string, string> = {};
+
+		// If we already know the website ID, try to get the visitor ID
+		if (this.websiteId) {
+			const storedVisitorId = getVisitorId(this.websiteId);
+			if (storedVisitorId) {
+				headers["X-Visitor-Id"] = storedVisitorId;
+			}
+		}
+
+		const response = await this.request<PublicWebsiteResponse>("/website", {
+			headers,
+		});
+
+		// Store the website ID for future requests
+		this.websiteId = response.id;
+
+		// Store the visitor ID if we got one
+		if (response.visitor?.id) {
+			setVisitorId(response.id, response.visitor.id);
+		}
+
+		return response;
 	}
 
 	async updateConfiguration(config: Partial<CossistantConfig>): Promise<void> {

@@ -1,9 +1,9 @@
+import { WebsiteInstallationTarget } from "@cossistant/types";
 import {
 	type InferInsertModel,
 	type InferSelectModel,
 	relations,
 } from "drizzle-orm";
-
 import {
 	boolean,
 	index,
@@ -20,7 +20,6 @@ import {
 	ulidPrimaryKey,
 	ulidReference,
 } from "../../utils/db/ids";
-import { WebsiteInstallationTarget } from "../enums";
 import { aiAgent } from "./ai-agent";
 import { apiKey } from "./api-keys";
 import { organization, team, user } from "./auth";

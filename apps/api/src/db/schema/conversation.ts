@@ -1,9 +1,14 @@
 import {
+	ConversationPriority,
+	ConversationStatus,
+	MessageType,
+	SenderType,
+} from "@cossistant/types";
+import {
 	type InferInsertModel,
 	type InferSelectModel,
 	relations,
 } from "drizzle-orm";
-
 import {
 	index,
 	integer,
@@ -13,9 +18,7 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
-
 import { enumToPgEnum } from "../../utils/db";
-
 import {
 	nanoidPrimaryKey,
 	nanoidReference,
@@ -23,13 +26,6 @@ import {
 	ulidPrimaryKey,
 	ulidReference,
 } from "../../utils/db/ids";
-
-import {
-	ConversationPriority,
-	ConversationStatus,
-	MessageType,
-	SenderType,
-} from "../enums";
 
 import { aiAgent } from "./ai-agent";
 import { organization, user } from "./auth";

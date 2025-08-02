@@ -41,4 +41,10 @@ export {
 	sortConversationsByUpdatedAt,
 	sortMessagesByTimestamp,
 } from "./utils";
+export {
+	clearAllVisitorIds,
+	clearVisitorId,
+	getVisitorId,
+	setVisitorId,
+} from "./visitor-tracker";
 export { CossistantWebSocketClient } from "./websocket-client";

@@ -176,6 +176,21 @@ export const publicWebsiteResponseSchema = z.object({
 		example: "2021-01-01T00:00:00.000Z",
 	}),
 	availableAgents: z.array(availableAgentSchema),
+	visitor: z
+		.object({
+			id: z.string().ulid().openapi({
+				description: "The visitor's unique identifier (ULID).",
+				example: "01JG000000000000000000000",
+			}),
+			createdAt: z.string().datetime().openapi({
+				description: "When the visitor was first seen.",
+				example: "2021-01-01T00:00:00.000Z",
+			}),
+		})
+		.openapi({
+			description:
+				"The visitor information. Either existing visitor data or newly created visitor.",
+		}),
 });
 
 export type PublicWebsiteResponse = z.infer<typeof publicWebsiteResponseSchema>;

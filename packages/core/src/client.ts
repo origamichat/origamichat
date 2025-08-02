@@ -7,6 +7,7 @@ import {
 	type GetConversationsResponse,
 	type GetMessagesResponse,
 	Message,
+	type PublicWebsiteResponse,
 	type SendMessageRequest,
 	type SendMessageResponse,
 } from "./types";
@@ -134,6 +135,11 @@ export class CossistantClient {
 		}
 
 		return this.getConversations(page, limit);
+	}
+
+	// Website information
+	async getWebsite(): Promise<PublicWebsiteResponse> {
+		return this.restClient.getWebsite();
 	}
 
 	// Cleanup method
