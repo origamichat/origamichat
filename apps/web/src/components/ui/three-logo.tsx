@@ -49,15 +49,15 @@ function LogoPlane() {
 			return;
 		}
 
-		canvas.width = Math.floor(1355);
-		canvas.height = Math.floor(210);
+		canvas.width = 1355;
+		canvas.height = 210;
 
 		const blob = new Blob([svgString], { type: "image/svg+xml" });
 		const url = URL.createObjectURL(blob);
 
 		img.onload = () => {
 			if (ctx) {
-				ctx.drawImage(img, 0, 0);
+				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 				texture.image = canvas;
 				texture.needsUpdate = true;
 				URL.revokeObjectURL(url);
@@ -101,7 +101,7 @@ export function ThreeLogo({ className }: ThreeLogoProps) {
 				// Maintain aspect ratio from viewBox (1355:210)
 				const aspectRatio = 1355 / 210;
 				const height = width / aspectRatio;
-				setDimensions({ width: Math.floor(width), height: Math.floor(height) });
+				setDimensions({ width: Math.round(width), height: Math.round(height) });
 			}
 		};
 
