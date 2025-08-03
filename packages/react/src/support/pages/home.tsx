@@ -98,15 +98,6 @@ export const HomePage: React.FC<HomePageProps> = ({
 				events={events}
 				isTyping={isTyping}
 				messages={messages}
-				typingSenderName={
-					currentTypingUser === "visitor"
-						? "You"
-						: currentTypingUser === "ai"
-							? "AI Assistant"
-							: currentTypingUser === "team_member"
-								? "Support Agent"
-								: "Support"
-				}
 			/>
 
 			<div className="flex-shrink-0 px-2 pb-2">

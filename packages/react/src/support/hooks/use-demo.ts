@@ -53,7 +53,7 @@ const demoSequence: DemoStep[] = [
 		type: "message",
 		delay: 3100,
 		sender: SenderType.AI,
-		content: "Did you wrap your app with the SupportProvider?",
+		content: "Did you wrap your app with the `SupportProvider`?",
 		senderName: "AI Assistant",
 	},
 	{
@@ -74,22 +74,23 @@ const demoSequence: DemoStep[] = [
 		delay: 5000,
 		sender: SenderType.TEAM_MEMBER,
 		content:
-			"Hey! You probably forgot to add SupportProvider in your root layout.tsx, Cossistant can you share the snippet?",
+			"Hey! You probably forgot to add `SupportProvider` in your root layout.tsx, Cossistant can you share the snippet?",
 		senderName: "Anthony",
 	},
 	{
 		type: "message",
-		delay: 2200,
+		delay: 4000,
 		sender: SenderType.AI,
-		content: "Of course, here you go:",
+		content: "Of course! Here you go:",
 		senderName: "Cossistant AI",
 	},
 	{
 		type: "message",
 		delay: 2200,
 		sender: SenderType.AI,
-		content: "```tsx\n<SupportProvider>\n  {children}\n</SupportProvider>```",
-		senderName: "Anthony",
+		content:
+			'```tsx\nimport { SupportProvider } from "@cossistant/react";\n\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <html lang="en">\n      <body>\n        <SupportProvider>\n          {children}\n        </SupportProvider>\n      </body>\n    </html>\n  );\n}\n```',
+		senderName: "Cossistant AI",
 	},
 	{
 		type: "message",
