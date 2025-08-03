@@ -57,6 +57,7 @@ export const Support: React.FC<SupportProps> = ({
 
 	// Determine which state to use based on demo mode
 	const messages = demo ? demoState.messages : regularMessages;
+	const events = demo ? demoState.events : conversationEvents;
 	const isTyping = demo ? demoState.isTyping : regularIsTyping;
 	const currentTypingUser = demo
 		? demoState.currentTypingUser
@@ -155,7 +156,7 @@ export const Support: React.FC<SupportProps> = ({
 								addFiles={addFiles}
 								currentTypingUser={currentTypingUser}
 								error={error}
-								events={conversationEvents}
+								events={events}
 								files={files}
 								isSubmitting={isSubmitting}
 								isTyping={isTyping}

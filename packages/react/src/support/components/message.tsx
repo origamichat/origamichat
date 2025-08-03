@@ -70,6 +70,7 @@ export function Message({
 							hour: "2-digit",
 							minute: "2-digit",
 						})}
+						{isAI && " • AI agent"}
 					</span>
 				)}
 			</div>

@@ -16,6 +16,7 @@ function CossistantLandingSupport() {
 	return (
 		<Support
 			defaultMessages={defaultMessages}
+			demo
 			mode={hasScrolled ? "floating" : "responsive"}
 		/>
 	);

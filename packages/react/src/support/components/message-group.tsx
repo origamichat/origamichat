@@ -3,6 +3,7 @@ import { SenderType } from "@cossistant/types";
 import type React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../primitive";
 import { cn } from "../utils";
+import { CossistantLogo } from "./cossistant-branding";
 import { Message } from "./message";
 
 export interface MessageGroupProps {
@@ -21,6 +22,7 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 	}
 
 	const isVisitor = messages[0]?.sender === SenderType.VISITOR;
+	const isAI = messages[0]?.sender === SenderType.AI;
 	const showAvatar = !isVisitor;
 
 	return (
@@ -34,13 +36,21 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 			{/* Avatar positioned at bottom of group for non-visitor messages */}
 			{showAvatar && (
 				<div className="flex flex-col justify-end">
-					<Avatar className="size-8 flex-shrink-0 overflow-clip rounded">
-						{senderImage && <AvatarImage alt={senderName} src={senderImage} />}
-						<AvatarFallback
-							className="text-xs"
-							name={senderName || "Support"}
-						/>
-					</Avatar>
+					{isAI ? (
+						<div className="flex size-8 items-center justify-center rounded bg-primary/10">
+							<CossistantLogo className="h-5 w-5 text-primary" />
+						</div>
+					) : (
+						<Avatar className="size-8 flex-shrink-0 overflow-clip rounded">
+							{senderImage && (
+								<AvatarImage alt={senderName} src={senderImage} />
+							)}
+							<AvatarFallback
+								className="text-xs"
+								name={senderName || "Support"}
+							/>
+						</Avatar>
+					)}
 				</div>
 			)}
 
@@ -50,9 +60,9 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 			{/* Messages column */}
 			<div className={cn("flex flex-col gap-1", isVisitor && "items-end")}>
 				{/* Sender name shown at top of group */}
-				{showAvatar && senderName && (
+				{showAvatar && (senderName || isAI) && (
 					<span className="px-1 text-muted-foreground text-xs">
-						{senderName}
+						{isAI ? "Cossistant AI" : senderName}
 					</span>
 				)}
 

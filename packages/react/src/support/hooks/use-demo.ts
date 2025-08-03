@@ -2,96 +2,143 @@ import type { Message } from "@cossistant/types";
 import { SenderType } from "@cossistant/types";
 import { useEffect, useState } from "react";
 
-const demoSequence = [
+type DemoStep =
+	| { type: "message"; delay: number; sender: SenderType; content: string }
+	| { type: "event"; delay: number; event: string };
+
+const demoSequence: DemoStep[] = [
 	{
+		type: "message",
 		delay: 1000,
 		sender: SenderType.VISITOR,
 		content:
 			"Hi, I'm having trouble integrating the payment system. The webhooks don't seem to be working properly.",
 	},
 	{
+		type: "event",
+		delay: 500,
+		event: "AI agent analyzing issue",
+	},
+	{
+		type: "message",
+		delay: 1500,
+		sender: SenderType.AI,
+		content:
+			"Hello! I'm Cossistant AI, and I'm here to help you with your payment integration issue. I see you're experiencing problems with webhooks.",
+	},
+	{
+		type: "message",
 		delay: 2000,
 		sender: SenderType.AI,
 		content:
-			"I understand you're having issues with payment webhook integration. Let me help you troubleshoot this.",
+			"Let me analyze this for you. Webhook issues are often related to configuration or signature validation. Can you tell me which payment provider you're using?",
 	},
 	{
-		delay: 2500,
-		sender: SenderType.AI,
-		content:
-			"Can you tell me which payment provider you're using and if you're seeing any error messages in your logs?",
-	},
-	{
-		delay: 3000,
+		type: "message",
+		delay: 2000,
 		sender: SenderType.VISITOR,
 		content:
 			"I'm using Stripe, and I'm getting 400 errors when the webhook fires. The signature validation seems to be failing.",
 	},
 	{
+		type: "message",
 		delay: 2000,
 		sender: SenderType.AI,
 		content:
-			"Webhook signature validation errors are common. Let me check our documentation for the proper setup...",
+			"I see the issue. Stripe webhook signature validation failures typically occur when the raw request body is modified before validation. Let me check our knowledge base...",
 	},
 	{
-		delay: 3000,
+		type: "message",
+		delay: 2500,
 		sender: SenderType.AI,
 		content:
-			"I see this might be related to the webhook secret configuration. Let me get a human expert to help you with the specific Stripe integration details.",
+			"Based on your error, this is likely a framework-specific issue. However, for the best assistance with your specific setup, I'll connect you with Sarah from our technical team who specializes in Stripe integrations.",
 	},
 	{
-		delay: 2000,
+		type: "event",
+		delay: 1000,
+		event: "Sarah joined the conversation",
+	},
+	{
+		type: "message",
+		delay: 1500,
 		sender: SenderType.TEAM_MEMBER,
 		content:
-			"Hi! I'm Sarah from the technical team. I see you're having Stripe webhook validation issues.",
+			"Hi! I'm Sarah from the technical team. Thanks for the detailed context, AI. I can definitely help with your Stripe webhook validation issue.",
 	},
 	{
+		type: "message",
 		delay: 2500,
 		sender: SenderType.TEAM_MEMBER,
 		content:
-			"The most common cause is using the wrong webhook secret. Make sure you're using the webhook endpoint secret from your Stripe dashboard, not the API key.",
+			"The AI is correct - this is usually about raw body handling. First, make sure you're using the webhook endpoint secret from your Stripe dashboard, not the API key.",
 	},
 	{
-		delay: 3000,
-		sender: SenderType.TEAM_MEMBER,
-		content:
-			"Also, ensure you're getting the raw request body for signature validation. Some frameworks parse it automatically which breaks the validation.",
-	},
-	{
+		type: "message",
 		delay: 2000,
 		sender: SenderType.VISITOR,
 		content:
-			"Oh, that might be it! I think my framework is parsing the body. How do I get the raw body?",
+			"Yes, I'm using the webhook secret. But I think my framework might be parsing the body automatically.",
 	},
 	{
-		delay: 2500,
+		type: "message",
+		delay: 1500,
 		sender: SenderType.TEAM_MEMBER,
 		content:
-			"Which framework are you using? I can give you the specific code snippet.",
+			"That's exactly the issue! Which framework are you using? I can provide the specific code to handle the raw body correctly.",
 	},
 	{
-		delay: 1500,
+		type: "message",
+		delay: 1000,
 		sender: SenderType.VISITOR,
 		content: "I'm using Express.js",
 	},
 	{
-		delay: 3000,
-		sender: SenderType.TEAM_MEMBER,
+		type: "message",
+		delay: 2000,
+		sender: SenderType.AI,
 		content:
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: ok
-			"Perfect! For Express, you need to get the raw body before any middleware parses it. Here's what you need:\n\n```javascript\napp.post('/webhook', \n  express.raw({type: 'application/json'}),\n  (req, res) => {\n    const sig = req.headers['stripe-signature'];\n    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;\n    \n    try {\n      const event = stripe.webhooks.constructEvent(\n        req.body, // raw body\n        sig,\n        webhookSecret\n      );\n      // Handle the event\n    } catch (err) {\n      console.error('Webhook signature verification failed');\n      return res.status(400).send(`Webhook Error: ${err.message}`);\n    }\n  }\n);\n```",
+			"I can help with that! For Express.js, you need to capture the raw body before any JSON parsing middleware. Sarah, shall I share the code snippet?",
 	},
 	{
+		type: "message",
+		delay: 1500,
+		sender: SenderType.TEAM_MEMBER,
+		content: "Please do! The AI has the right solution for this.",
+	},
+	{
+		type: "message",
+		delay: 2500,
+		sender: SenderType.AI,
+		content:
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: ok
+			"Here's the Express.js configuration you need:\n\n```javascript\napp.post('/webhook', \n  express.raw({type: 'application/json'}),\n  (req, res) => {\n    const sig = req.headers['stripe-signature'];\n    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;\n    \n    try {\n      const event = stripe.webhooks.constructEvent(\n        req.body, // raw body\n        sig,\n        webhookSecret\n      );\n      // Handle the event\n    } catch (err) {\n      console.error('Webhook signature verification failed');\n      return res.status(400).send(`Webhook Error: ${err.message}`);\n    }\n  }\n);\n```",
+	},
+	{
+		type: "message",
 		delay: 2000,
 		sender: SenderType.VISITOR,
 		content:
-			"Thank you so much! That's exactly what I needed. I'll try this right away.",
+			"Wow, this is perfect! Thank you both - the AI for the quick diagnosis and Sarah for confirming the solution.",
 	},
 	{
+		type: "message",
 		delay: 1500,
 		sender: SenderType.TEAM_MEMBER,
 		content:
-			"You're welcome! Feel free to reach out if you need any more help. Good luck with your integration! 🚀",
+			"Great teamwork! That's exactly how Cossistant works - AI provides instant support and we humans jump in when needed. Feel free to reach out if you have any issues implementing this.",
+	},
+	{
+		type: "message",
+		delay: 1500,
+		sender: SenderType.AI,
+		content:
+			"I'll be here 24/7 if you need any follow-up assistance. Good luck with your integration! 🚀",
+	},
+	{
+		type: "event",
+		delay: 1000,
+		event: "Conversation resolved by AI & Human collaboration",
 	},
 ];
 
@@ -101,8 +148,15 @@ export interface UseDemoProps {
 	onDemoMessage?: (message: Message) => void;
 }
 
+export interface ConversationEvent {
+	id: string;
+	event: string;
+	timestamp?: Date;
+}
+
 export interface UseDemoReturn {
 	messages: Message[];
+	events: ConversationEvent[];
 	isTyping: boolean;
 	currentTypingUser: SenderType | null;
 	demoStarted: boolean;
@@ -115,6 +169,7 @@ export function useDemo({
 	onDemoMessage,
 }: UseDemoProps): UseDemoReturn {
 	const [messages, setMessages] = useState<Message[]>([]);
+	const [events, setEvents] = useState<ConversationEvent[]>([]);
 	const [isTyping, setIsTyping] = useState(false);
 	const [currentTypingUser, setCurrentTypingUser] = useState<SenderType | null>(
 		null
@@ -131,29 +186,41 @@ export function useDemo({
 			demoSequence.forEach((step, index) => {
 				cumulativeDelay += step.delay;
 
-				// Show typing indicator before message
-				setTimeout(() => {
-					setIsTyping(true);
-					setCurrentTypingUser(step.sender);
-				}, cumulativeDelay - 1000);
+				if (step.type === "message") {
+					// Show typing indicator before message
+					setTimeout(() => {
+						setIsTyping(true);
+						setCurrentTypingUser(step.sender);
+					}, cumulativeDelay - 1000);
 
-				// Add message
-				setTimeout(() => {
-					const message: Message = {
-						id: `demo-${index}`,
-						content: step.content,
-						timestamp: new Date(),
-						sender: step.sender,
-						conversationId: "demo",
-					};
-					setMessages((prev) => {
-						const newMessages = [...prev, message];
-						onDemoMessage?.(message);
-						return newMessages;
-					});
-					setIsTyping(false);
-					setCurrentTypingUser(null);
-				}, cumulativeDelay);
+					// Add message
+					setTimeout(() => {
+						const message: Message = {
+							id: `demo-message-${index}`,
+							content: step.content,
+							timestamp: new Date(),
+							sender: step.sender,
+							conversationId: "demo",
+						};
+						setMessages((prev) => {
+							const newMessages = [...prev, message];
+							onDemoMessage?.(message);
+							return newMessages;
+						});
+						setIsTyping(false);
+						setCurrentTypingUser(null);
+					}, cumulativeDelay);
+				} else if (step.type === "event") {
+					// Add event
+					setTimeout(() => {
+						const event: ConversationEvent = {
+							id: `demo-event-${index}`,
+							event: step.event,
+							timestamp: new Date(),
+						};
+						setEvents((prev) => [...prev, event]);
+					}, cumulativeDelay);
+				}
 			});
 		} else if (defaultMessages.length > 0 && !enabled) {
 			const initialMessages: Message[] = defaultMessages.map((msg, index) => ({
@@ -190,6 +257,7 @@ export function useDemo({
 
 	return {
 		messages,
+		events,
 		isTyping,
 		currentTypingUser,
 		demoStarted,
