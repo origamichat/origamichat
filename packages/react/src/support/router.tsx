@@ -16,9 +16,18 @@ export const SupportRouter: React.FC<{
 	removeFile: (index: number) => void;
 	submit: () => void;
 	messages?: Message[];
-	events?: { id: string; event: string; timestamp?: Date }[];
-	isTyping?: boolean;
+	events?: {
+		id: string;
+		event: string;
+		timestamp?: Date;
+		agentAvatar?: string;
+		agentName?: string;
+	}[];
+	isTyping?: {
+		type: SenderType;
+	};
 	currentTypingUser?: SenderType | null;
+	currentTypingAvatar?: string;
 }> = ({
 	message,
 	files,
@@ -32,6 +41,7 @@ export const SupportRouter: React.FC<{
 	events,
 	isTyping,
 	currentTypingUser,
+	currentTypingAvatar,
 }) => {
 	const { current } = useSupportNavigation();
 
@@ -63,7 +73,6 @@ export const SupportRouter: React.FC<{
 				<ConversationPage
 					addFiles={addFiles}
 					conversationId={current.params.conversationId}
-					currentTypingUser={currentTypingUser}
 					error={error}
 					events={events}
 					files={files}

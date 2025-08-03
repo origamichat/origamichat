@@ -19,7 +19,9 @@ interface ConversationPageProps {
 	submit: () => void;
 	messages?: MessageType[];
 	events?: { id: string; event: string; timestamp?: Date }[];
-	isTyping?: boolean;
+	isTyping?: {
+		type: SenderType;
+	};
 	currentTypingUser?: SenderType | null;
 }
 
@@ -35,7 +37,7 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 	submit,
 	messages = [],
 	events = [],
-	isTyping = false,
+	isTyping,
 	currentTypingUser,
 }) => {
 	const { goBack, canGoBack } = useSupportNavigation();
@@ -67,15 +69,6 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 					events={events}
 					isTyping={isTyping}
 					messages={messages}
-					typingSenderName={
-						currentTypingUser === "visitor"
-							? "You"
-							: currentTypingUser === "ai"
-								? "AI Assistant"
-								: currentTypingUser === "team_member"
-									? "Support Agent"
-									: "Support"
-					}
 				/>
 
 				<div className="px-2 pt-2">

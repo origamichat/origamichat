@@ -20,7 +20,9 @@ export interface HomePageProps {
 	submit: () => void;
 	messages?: MessageType[];
 	events?: { id: string; event: string; timestamp?: Date }[];
-	isTyping?: boolean;
+	isTyping?: {
+		type: SenderType;
+	};
 	currentTypingUser?: SenderType | null;
 }
 
@@ -35,7 +37,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 	submit,
 	messages = [],
 	events = [],
-	isTyping = false,
+	isTyping,
 	currentTypingUser,
 }) => {
 	const { website } = useSupport();
@@ -67,8 +69,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 		<div className="flex h-full flex-col gap-0 overflow-hidden">
 			<div
 				className={cn(
-					"flex-shrink-0 bg-co-background px-2 pt-0 transition-all duration-200",
-					isScrolled && "border-co-border border-b shadow-xs"
+					"flex-shrink-0 border-co-border border-b bg-co-background px-2 pt-0 shadow-xs transition-all duration-200",
+					isScrolled && ""
 				)}
 			>
 				<div className="flex items-center gap-2 px-2 py-3">

@@ -15,11 +15,20 @@ export interface ConversationEventItem {
 	id: string;
 	event: string;
 	timestamp?: Date;
+	senderType?: SenderType;
+	senderName?: string;
+	senderImage?: string;
 }
 
 export interface UseGroupedMessagesProps {
 	messages: MessageType[];
-	events?: { id: string; event: string; timestamp?: Date }[];
+	events?: {
+		id: string;
+		event: string;
+		timestamp?: Date;
+		senderType?: SenderType;
+		agentName?: string;
+	}[];
 	availableAgents: {
 		id: string;
 		name: string;
@@ -114,10 +123,39 @@ export const useGroupedMessages = ({
 		// Group messages by sender
 		const groupedMessages = groupMessagesBySender(messages, availableAgents);
 
-		// Add events to the list
+		// Add events to the list with sender information
+		const eventsWithSenderInfo = events.map((event) => {
+			// Determine sender type and info for event
+			let senderType = event.senderType || SenderType.AI; // Default to AI for system events
+			let senderName = "Support";
+			let senderImage: string | undefined;
+
+			// If agentName is provided, it's a team member event
+			if (event.agentName) {
+				senderType = SenderType.TEAM_MEMBER;
+				senderName = event.agentName;
+				// Try to find the agent's image
+				const agent = availableAgents.find((a) => a.name === event.agentName);
+				senderImage = agent?.image || undefined;
+			} else {
+				// Use getSenderInfo for other types
+				const senderInfo = getSenderInfo(senderType, availableAgents);
+				senderName = senderInfo.senderName;
+				senderImage = senderInfo.senderImage;
+			}
+
+			return {
+				type: "event" as const,
+				...event,
+				senderType,
+				senderName,
+				senderImage,
+			};
+		});
+
 		const allItems: (GroupedMessage | ConversationEventItem)[] = [
 			...groupedMessages,
-			...events.map((event) => ({ type: "event" as const, ...event })),
+			...eventsWithSenderInfo,
 		];
 
 		// Sort by timestamp

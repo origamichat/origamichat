@@ -1,4 +1,4 @@
-import type { Message as MessageType } from "@cossistant/types";
+import { type Message as MessageType, SenderType } from "@cossistant/types";
 import type React from "react";
 import { useRef } from "react";
 import { useGroupedMessages } from "../hooks";
@@ -9,10 +9,16 @@ import { TypingIndicator } from "./typing-indicator";
 
 export interface MessageListProps {
 	messages: MessageType[];
-	events?: { id: string; event: string; timestamp?: Date }[];
-	isTyping?: boolean;
-	typingSenderName?: string;
-	typingSenderImage?: string;
+	events?: {
+		id: string;
+		event: string;
+		timestamp?: Date;
+		agentAvatar?: string;
+		agentName?: string;
+	}[];
+	isTyping?: {
+		type: SenderType;
+	};
 	className?: string;
 	availableAgents: {
 		id: string;
@@ -25,9 +31,7 @@ export interface MessageListProps {
 export const MessageList: React.FC<MessageListProps> = ({
 	messages,
 	events = [],
-	isTyping = false,
-	typingSenderName,
-	typingSenderImage,
+	isTyping,
 	className,
 	availableAgents = [],
 }) => {
@@ -58,6 +62,9 @@ export const MessageList: React.FC<MessageListProps> = ({
 							<ConversationEvent
 								event={item.event}
 								key={item.id}
+								senderImage={item.senderImage}
+								senderName={item.senderName}
+								senderType={item.senderType}
 								timestamp={item.timestamp}
 							/>
 						);
@@ -73,12 +80,9 @@ export const MessageList: React.FC<MessageListProps> = ({
 				})}
 				{isTyping && (
 					<TypingIndicator
-						senderImage={
-							typingSenderImage || availableAgents[0]?.image || undefined
-						}
-						senderName={
-							typingSenderName || availableAgents[0]?.name || "Support"
-						}
+						isAI={isTyping.type === SenderType.AI}
+						senderImage={availableAgents[0]?.image || undefined}
+						senderName={availableAgents[0]?.name || "Support"}
 					/>
 				)}
 			</div>

@@ -41,10 +41,12 @@ export const Support: React.FC<SupportProps> = ({
 	demo = false,
 }) => {
 	const [regularMessages, setRegularMessages] = useState<Message[]>([]);
-	const [regularIsTyping, setRegularIsTyping] = useState(showTypingIndicator);
-	const [regularTypingUser, setRegularTypingUser] = useState<SenderType | null>(
-		null
-	);
+	const [isTypingState, setIsTypingState] = useState<
+		| {
+				type: SenderType;
+		  }
+		| undefined
+	>(undefined);
 
 	// Use demo hook for demo logic
 	const demoState = useDemo({
@@ -58,10 +60,11 @@ export const Support: React.FC<SupportProps> = ({
 	// Determine which state to use based on demo mode
 	const messages = demo ? demoState.messages : regularMessages;
 	const events = demo ? demoState.events : conversationEvents;
-	const isTyping = demo ? demoState.isTyping : regularIsTyping;
-	const currentTypingUser = demo
+	const isTyping = demo
 		? demoState.currentTypingUser
-		: regularTypingUser;
+			? { type: demoState.currentTypingUser }
+			: undefined
+		: isTypingState;
 
 	const {
 		message,
@@ -90,21 +93,21 @@ export const Support: React.FC<SupportProps> = ({
 			setRegularMessages((prev) => [...prev, userMessage]);
 
 			// Simulate typing
-			setRegularIsTyping(true);
-			setRegularTypingUser(SenderType.AI);
+			setIsTypingState({ type: SenderType.AI });
+
 			setTimeout(() => {
 				// Add AI response
 				const aiMessage: Message = {
 					id: `msg-${Date.now() + 1}`,
-					content: "Thanks for your message! This is a demo response.",
+					content:
+						"Thanks for your message! This is a demo response, don't forget to join the waitlist to not miss the real stuff soon.",
 					timestamp: new Date(),
 					sender: SenderType.AI,
 					conversationId: "default",
 				};
 				setRegularMessages((prev) => [...prev, aiMessage]);
-				setRegularIsTyping(false);
-				setRegularTypingUser(null);
-			}, 1500);
+				setIsTypingState(undefined);
+			}, 3000);
 		},
 		onError: (_error) => {
 			console.error("Multimodal input error:", _error);
@@ -154,7 +157,6 @@ export const Support: React.FC<SupportProps> = ({
 						<Window className={windowClasses}>
 							<SupportRouter
 								addFiles={addFiles}
-								currentTypingUser={currentTypingUser}
 								error={error}
 								events={events}
 								files={files}

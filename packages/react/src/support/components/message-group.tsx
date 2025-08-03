@@ -54,9 +54,6 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 				</div>
 			)}
 
-			{/* Spacer for visitor messages to maintain alignment */}
-			{!showAvatar && isVisitor && <div className="w-8" />}
-
 			{/* Messages column */}
 			<div className={cn("flex flex-col gap-1", isVisitor && "items-end")}>
 				{/* Sender name shown at top of group */}
@@ -72,8 +69,6 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 						isLast={index === messages.length - 1}
 						key={message.id}
 						message={message}
-						showAvatar={false} // Avatar is handled by the group
-						showSenderName={false} // Sender name is handled by the group
 					/>
 				))}
 			</div>

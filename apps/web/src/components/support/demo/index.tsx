@@ -7,19 +7,7 @@ import { useHasScrolled } from "../../../hooks/use-has-scrolled";
 function CossistantLandingSupport() {
 	const hasScrolled = useHasScrolled(250);
 
-	const defaultMessages = [
-		"Hi there! I'm Anthony 👋",
-		"This is a demo, it's not fully functional yet.",
-		"Join the waitlist to get early access!",
-	];
-
-	return (
-		<Support
-			defaultMessages={defaultMessages}
-			demo
-			mode={hasScrolled ? "floating" : "responsive"}
-		/>
-	);
+	return <Support demo mode={hasScrolled ? "floating" : "responsive"} />;
 }
 
 export default CossistantLandingSupport;
