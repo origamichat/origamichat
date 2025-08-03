@@ -1,5 +1,6 @@
 import type { Message as MessageType } from "@cossistant/types";
 import { SenderType } from "@cossistant/types";
+import { motion } from "motion/react";
 import type React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../primitive";
 import { cn } from "../utils";
@@ -26,12 +27,15 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 	const showAvatar = !isVisitor;
 
 	return (
-		<div
+		<motion.div
+			animate={{ opacity: 1, y: 0 }}
 			className={cn(
 				"flex gap-2",
 				isVisitor && "flex-row-reverse",
 				!isVisitor && "flex-row"
 			)}
+			initial={{ opacity: 0, y: 20 }}
+			transition={{ duration: 0.3, ease: "easeOut" }}
 		>
 			{/* Avatar positioned at bottom of group for non-visitor messages */}
 			{showAvatar && (
@@ -72,6 +76,6 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 					/>
 				))}
 			</div>
-		</div>
+		</motion.div>
 	);
 };

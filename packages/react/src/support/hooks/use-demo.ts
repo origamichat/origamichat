@@ -212,7 +212,7 @@ export function useDemo({
 								senderType = SenderType.AI;
 								break;
 							case "ai_analyzing":
-								eventText = "AI is analyzing your request";
+								eventText = "Cossistant is analyzing your request";
 								senderType = SenderType.AI;
 								break;
 							case "ai_struggling":

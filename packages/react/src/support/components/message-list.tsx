@@ -1,6 +1,6 @@
 import { type Message as MessageType, SenderType } from "@cossistant/types";
 import type React from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGroupedMessages } from "../hooks";
 import { cn } from "../utils";
 import { ConversationEvent } from "./conversation-event";
@@ -43,6 +43,17 @@ export const MessageList: React.FC<MessageListProps> = ({
 		events,
 		availableAgents,
 	});
+
+	// Auto-scroll to bottom when new messages or events are added
+	// biome-ignore lint/correctness/useExhaustiveDependencies: ok here
+	useEffect(() => {
+		if (scrollRef.current) {
+			scrollRef.current.scrollTo({
+				top: scrollRef.current.scrollHeight,
+				behavior: "smooth",
+			});
+		}
+	}, [messages.length, events.length, isTyping]);
 
 	return (
 		<div

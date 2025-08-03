@@ -4,6 +4,7 @@ import {
 	AvatarImage,
 } from "@cossistant/react/primitive/avatar";
 import { SenderType } from "@cossistant/types";
+import { motion } from "motion/react";
 import type React from "react";
 import { CossistantLogo } from "./cossistant-branding";
 
@@ -24,7 +25,12 @@ export const ConversationEvent: React.FC<ConversationEventProps> = ({
 }) => {
 	const isAI = senderType === SenderType.AI;
 	return (
-		<div className="flex items-center justify-center py-4">
+		<motion.div
+			animate={{ opacity: 1, scale: 1 }}
+			className="flex items-center justify-center py-4"
+			initial={{ opacity: 0, scale: 0.95 }}
+			transition={{ duration: 0.3, ease: "easeOut" }}
+		>
 			<div className="flex items-center gap-2 text-muted-foreground text-xs">
 				<div className="flex flex-col justify-end">
 					{isAI ? (
@@ -53,6 +59,6 @@ export const ConversationEvent: React.FC<ConversationEventProps> = ({
 					</span>
 				)}
 			</div>
-		</div>
+		</motion.div>
 	);
 };
