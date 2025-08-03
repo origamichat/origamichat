@@ -30,7 +30,7 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 		<motion.div
 			animate={{ opacity: 1, y: 0 }}
 			className={cn(
-				"flex gap-2",
+				"flex w-full gap-2",
 				isVisitor && "flex-row-reverse",
 				!isVisitor && "flex-row"
 			)}

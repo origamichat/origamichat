@@ -60,13 +60,13 @@ export const MessageList: React.FC<MessageListProps> = ({
 			className={cn(
 				"overflow-y-auto scroll-smooth px-4 py-6",
 				"scrollbar-thin scrollbar-thumb-co-background-300 scrollbar-track-transparent",
-				"h-full", // Take full height of parent flex container
+				"h-full w-full",
 				className
 			)}
 			id="message-list"
 			ref={scrollRef}
 		>
-			<div className="flex min-h-full flex-col gap-4">
+			<div className="flex min-h-full w-full flex-col gap-4">
 				{groupedMessages.map((item, index) => {
 					if (item.type === "event") {
 						return (
