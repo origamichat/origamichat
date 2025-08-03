@@ -1,4 +1,4 @@
-import type { Message as MessageType } from "@cossistant/types";
+import type { Message as MessageType, SenderType } from "@cossistant/types";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useSupport } from "../..";
@@ -21,6 +21,7 @@ export interface HomePageProps {
 	messages?: MessageType[];
 	events?: { id: string; event: string; timestamp?: Date }[];
 	isTyping?: boolean;
+	currentTypingUser?: SenderType | null;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -35,6 +36,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 	messages = [],
 	events = [],
 	isTyping = false,
+	currentTypingUser,
 }) => {
 	const { website } = useSupport();
 	const [isScrolled, setIsScrolled] = useState(false);
@@ -94,7 +96,15 @@ export const HomePage: React.FC<HomePageProps> = ({
 				events={events}
 				isTyping={isTyping}
 				messages={messages}
-				typingSenderName="Support"
+				typingSenderName={
+					currentTypingUser === "visitor"
+						? "You"
+						: currentTypingUser === "ai"
+							? "AI Assistant"
+							: currentTypingUser === "team_member"
+								? "Support Agent"
+								: "Support"
+				}
 			/>
 
 			<div className="flex-shrink-0 px-2 pb-2">

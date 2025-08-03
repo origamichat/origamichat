@@ -1,7 +1,5 @@
-import { useMultimodalInput } from "@cossistant/react/hooks/use-multimodal-input";
-import type { Message as MessageType } from "@cossistant/types";
+import type { Message as MessageType, SenderType } from "@cossistant/types";
 import type React from "react";
-import { useState } from "react";
 import { useSupport } from "../..";
 import { Container } from "../components/container";
 import { Header } from "../components/header";
@@ -22,6 +20,7 @@ interface ConversationPageProps {
 	messages?: MessageType[];
 	events?: { id: string; event: string; timestamp?: Date }[];
 	isTyping?: boolean;
+	currentTypingUser?: SenderType | null;
 }
 
 export const ConversationPage: React.FC<ConversationPageProps> = ({
@@ -37,6 +36,7 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 	messages = [],
 	events = [],
 	isTyping = false,
+	currentTypingUser,
 }) => {
 	const { goBack, canGoBack } = useSupportNavigation();
 	const { website } = useSupport();
@@ -67,7 +67,15 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 					events={events}
 					isTyping={isTyping}
 					messages={messages}
-					typingSenderName="Support"
+					typingSenderName={
+						currentTypingUser === "visitor"
+							? "You"
+							: currentTypingUser === "ai"
+								? "AI Assistant"
+								: currentTypingUser === "team_member"
+									? "Support Agent"
+									: "Support"
+					}
 				/>
 
 				<div className="px-2 pt-2">

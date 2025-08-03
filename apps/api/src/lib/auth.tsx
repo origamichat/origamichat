@@ -17,7 +17,6 @@ import {
 } from "better-auth/plugins";
 
 // Needed for email templates, don't remove
-
 export const auth = betterAuth({
 	baseURL:
 		process.env.BETTER_AUTH_URL ||

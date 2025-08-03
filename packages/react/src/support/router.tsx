@@ -1,4 +1,4 @@
-import type { Message } from "@cossistant/types";
+import type { Message, SenderType } from "@cossistant/types";
 import type React from "react";
 import { useSupportNavigation } from "./context/navigation";
 import { ConversationPage } from "./pages/conversation";
@@ -18,6 +18,7 @@ export const SupportRouter: React.FC<{
 	messages?: Message[];
 	events?: { id: string; event: string; timestamp?: Date }[];
 	isTyping?: boolean;
+	currentTypingUser?: SenderType | null;
 }> = ({
 	message,
 	files,
@@ -30,6 +31,7 @@ export const SupportRouter: React.FC<{
 	messages,
 	events,
 	isTyping,
+	currentTypingUser,
 }) => {
 	const { current } = useSupportNavigation();
 
@@ -38,6 +40,7 @@ export const SupportRouter: React.FC<{
 			return (
 				<HomePage
 					addFiles={addFiles}
+					currentTypingUser={currentTypingUser}
 					error={error}
 					events={events}
 					files={files}
@@ -60,6 +63,7 @@ export const SupportRouter: React.FC<{
 				<ConversationPage
 					addFiles={addFiles}
 					conversationId={current.params.conversationId}
+					currentTypingUser={currentTypingUser}
 					error={error}
 					events={events}
 					files={files}
@@ -80,6 +84,7 @@ export const SupportRouter: React.FC<{
 			return (
 				<HomePage
 					addFiles={addFiles}
+					currentTypingUser={currentTypingUser}
 					error={error}
 					events={events}
 					files={files}

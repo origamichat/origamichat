@@ -1,5 +1,5 @@
 import { createHmac, randomBytes } from "node:crypto";
-import { APIKeyType } from "@api/db/enums";
+import { APIKeyType } from "@cossistant/types";
 
 export function generateApiKey({
 	type,

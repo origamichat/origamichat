@@ -6,12 +6,13 @@ import type { Message } from "@cossistant/types";
 import { SenderType } from "@cossistant/types";
 import { motion } from "motion/react";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SupportConfig } from "../config";
 import { useMultimodalInput } from "../hooks/use-multimodal-input";
 import { Bubble, Window } from "./components";
 import { SupportConfigProvider } from "./context/config";
 import { NavigationProvider } from "./context/navigation";
+import { useDemo } from "./hooks/use-demo";
 import { SupportRouter } from "./router";
 import { cn } from "./utils";
 
@@ -25,6 +26,7 @@ export interface SupportProps {
 	quickOptions?: string[];
 	showTypingIndicator?: boolean;
 	conversationEvents?: { id: string; event: string; timestamp?: Date }[];
+	demo?: boolean;
 }
 
 export const Support: React.FC<SupportProps> = ({
@@ -36,24 +38,29 @@ export const Support: React.FC<SupportProps> = ({
 	quickOptions,
 	showTypingIndicator = false,
 	conversationEvents = [],
+	demo = false,
 }) => {
-	const [messages, setMessages] = useState<Message[]>([]);
-	const [isTyping, setIsTyping] = useState(showTypingIndicator);
+	const [regularMessages, setRegularMessages] = useState<Message[]>([]);
+	const [regularIsTyping, setRegularIsTyping] = useState(showTypingIndicator);
+	const [regularTypingUser, setRegularTypingUser] = useState<SenderType | null>(
+		null
+	);
 
-	// Initialize with default messages
-	// biome-ignore lint/correctness/useExhaustiveDependencies: ok here
-	useEffect(() => {
-		if (defaultMessages.length > 0) {
-			const initialMessages: Message[] = defaultMessages.map((msg, index) => ({
-				id: `default-${index}`,
-				content: msg,
-				timestamp: new Date(),
-				sender: SenderType.TEAM_MEMBER,
-				conversationId: "default",
-			}));
-			setMessages(initialMessages);
-		}
-	}, []);
+	// Use demo hook for demo logic
+	const demoState = useDemo({
+		enabled: demo,
+		defaultMessages,
+		onDemoMessage: (demoMessage) => {
+			console.log("Demo message:", demoMessage);
+		},
+	});
+
+	// Determine which state to use based on demo mode
+	const messages = demo ? demoState.messages : regularMessages;
+	const isTyping = demo ? demoState.isTyping : regularIsTyping;
+	const currentTypingUser = demo
+		? demoState.currentTypingUser
+		: regularTypingUser;
 
 	const {
 		message,
@@ -66,7 +73,10 @@ export const Support: React.FC<SupportProps> = ({
 		submit,
 	} = useMultimodalInput({
 		onSubmit: async (data) => {
-			console.log("Submitting:", data);
+			if (demo) {
+				demoState.handleDemoResponse(data.message);
+				return;
+			}
 
 			// Add user message
 			const userMessage: Message = {
@@ -76,10 +86,11 @@ export const Support: React.FC<SupportProps> = ({
 				sender: SenderType.VISITOR,
 				conversationId: "default",
 			};
-			setMessages((prev) => [...prev, userMessage]);
+			setRegularMessages((prev) => [...prev, userMessage]);
 
 			// Simulate typing
-			setIsTyping(true);
+			setRegularIsTyping(true);
+			setRegularTypingUser(SenderType.AI);
 			setTimeout(() => {
 				// Add AI response
 				const aiMessage: Message = {
@@ -89,8 +100,9 @@ export const Support: React.FC<SupportProps> = ({
 					sender: SenderType.AI,
 					conversationId: "default",
 				};
-				setMessages((prev) => [...prev, aiMessage]);
-				setIsTyping(false);
+				setRegularMessages((prev) => [...prev, aiMessage]);
+				setRegularIsTyping(false);
+				setRegularTypingUser(null);
 			}, 1500);
 		},
 		onError: (_error) => {
@@ -141,6 +153,7 @@ export const Support: React.FC<SupportProps> = ({
 						<Window className={windowClasses}>
 							<SupportRouter
 								addFiles={addFiles}
+								currentTypingUser={currentTypingUser}
 								error={error}
 								events={conversationEvents}
 								files={files}

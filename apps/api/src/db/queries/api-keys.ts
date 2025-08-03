@@ -1,5 +1,4 @@
 import type { Database } from "@api/db";
-import { APIKeyType } from "@api/db/enums";
 import type {
 	ApiKeySelect,
 	OrganizationSelect,
@@ -9,6 +8,7 @@ import { apiKey } from "@api/db/schema";
 import { env } from "@api/env";
 import { generateApiKey, hashApiKey } from "@api/utils/api-keys";
 import { generateULID } from "@api/utils/db/ids";
+import { APIKeyType } from "@cossistant/types";
 import { and, desc, eq } from "drizzle-orm";
 
 export type CreateApiKeyResult = ApiKeySelect;

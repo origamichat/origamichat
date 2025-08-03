@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 
 const defaultCards = [
 	{
-		icon: <Icon className="size-4" name="star" />,
-		title: "How to upgrade my plan?",
+		icon: <Icon className="size-4" name="check" />,
+		title: "SSO Configuration",
 		description:
-			"Step-by-step guide to upgrade your subscription and access premium features",
+			"Configure Single Sign-On with popular identity providers like Google and Microsoft",
 		date: "Updated 2 hours ago",
 		className:
-			"[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
+			"[grid-area:stack] hover:-translate-y-10 opacity-20 hover:opacity-100",
 	},
 	{
 		icon: <Icon className="size-4" name="command" />,
@@ -20,13 +20,13 @@ const defaultCards = [
 			"Complete tutorial for connecting your app with our REST API and webhooks",
 		date: "Updated 1 day ago",
 		className:
-			"[grid-area:stack] translate-x-12 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded before:outline-border before:h-[100%] before:content-[''] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0",
+			"[grid-area:stack] translate-x-12 translate-y-10 hover:-translate-y-1 opacity-50 hover:opacity-100",
 	},
 	{
-		icon: <Icon className="size-4" name="check" />,
-		title: "SSO Configuration",
+		icon: <Icon className="size-4" name="star" />,
+		title: "How to upgrade my plan?",
 		description:
-			"Configure Single Sign-On with popular identity providers like Google and Microsoft",
+			"Step-by-step guide to upgrade your subscription and access premium features",
 		date: "Updated 3 days ago",
 		className:
 			"[grid-area:stack] translate-x-24 translate-y-20 hover:translate-y-10",

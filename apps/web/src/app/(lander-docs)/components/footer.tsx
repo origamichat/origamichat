@@ -10,7 +10,7 @@ export function Footer() {
 	return (
 		<footer className="mt-16 flex-col border-primary/10 border-t border-dashed md:mt-0 md:border-transparent">
 			<div className="container-wrapper z-0 mx-auto px-2 py-12 lg:px-0">
-				<div className="container grid grid-cols-1 gap-8 px-6 md:grid-cols-4 lg:px-4">
+				<div className="container grid grid-cols-1 gap-8 px-2 md:grid-cols-4 md:px-4">
 					{/* Brand */}
 					<div className="col-span-1 md:col-span-2">
 						<div className="mb-4 flex items-center space-x-2">

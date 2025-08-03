@@ -20,7 +20,7 @@ export default async function Landing() {
 					<div className="flex flex-1 flex-col items-start justify-between gap-6 pt-11 ">
 						<EscapeIframeAnimation />
 						<div className="my-auto flex flex-col items-center gap-6 px-4 lg:items-start">
-							<h1 className="text-center font-f37-stout text-4xl leading-tight md:text-5xl lg:text-left xl:text-6xl">
+							<h1 className="text-center font-f37-stout text-[36px] leading-tight md:text-5xl lg:text-left xl:text-6xl">
 								AI and human
 								<span className="text-cossistant-blue">{" <Support /> "}</span>
 								<br />

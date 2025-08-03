@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { APIKeyType } from "@api/db/enums";
+import { APIKeyType } from "@cossistant/types";
 
 import {
 	generateApiKey,

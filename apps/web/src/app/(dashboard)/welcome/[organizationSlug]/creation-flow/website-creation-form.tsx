@@ -1,9 +1,9 @@
 "use client";
 
-import { WebsiteInstallationTarget } from "@api/db/enums";
 import {
 	type CreateWebsiteRequest,
 	createWebsiteRequestSchema,
+	WebsiteInstallationTarget,
 } from "@cossistant/types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
