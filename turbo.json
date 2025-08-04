@@ -5,6 +5,19 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "@cossistant/core#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/types#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/react#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/api#build": {
+      "dependsOn": ["^build"],
       "env": [
         "DATABASE_HOST",
         "DATABASE_PORT",
@@ -26,29 +39,9 @@
         "QSTASH_TOKEN",
         "QSTASH_URL",
         "QSTASH_CURRENT_SIGNING_KEY",
-        "QSTASH_NEXT_SIGNING_KEY",
-        "NEXT_PUBLIC_COSSISSTANT_KEY"
+        "QSTASH_NEXT_SIGNING_KEY"
       ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env.production.local",
-        ".env.local",
-        ".env.production",
-        ".env"
-      ],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
-    "@cossistant/core#build": {
-      "outputs": ["dist/**"]
-    },
-    "@cossistant/types#build": {
-      "outputs": ["dist/**"]
-    },
-    "@cossistant/react#build": {
-      "outputs": ["dist/**"]
-    },
-    "@cossistant/api#build": {
-      "outputs": ["dist/**"]
+      "outputs": ["server"]
     },
     "@cossistant/transactional#build": {
       "outputs": ["dist/**"]
@@ -61,8 +54,15 @@
         "^build",
         "@cossistant/core#build",
         "@cossistant/types#build",
-        "@cossistant/react#build",
-        "@cossistant/api#build"
+        "@cossistant/react#build"
+      ],
+      "env": ["NEXT_PUBLIC_COSSISSTANT_KEY"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.production.local",
+        ".env.local",
+        ".env.production",
+        ".env"
       ],
       "outputs": [".next/**", "!.next/cache/**"]
     },
