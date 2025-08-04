@@ -5,6 +5,30 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": [
+        "DATABASE_HOST",
+        "DATABASE_PORT",
+        "DATABASE_USERNAME",
+        "DATABASE_PASSWORD",
+        "DATABASE_NAME",
+        "BETTER_AUTH_URL",
+        "BETTER_AUTH_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN",
+        "API_KEY_SECRET",
+        "RESEND_API_KEY",
+        "RESEND_AUDIENCE_ID",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "PUBLIC_APP_URL",
+        "QSTASH_TOKEN",
+        "QSTASH_URL",
+        "QSTASH_CURRENT_SIGNING_KEY",
+        "QSTASH_NEXT_SIGNING_KEY",
+        "NEXT_PUBLIC_COSSISSTANT_KEY"
+      ],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "@cossistant/core#build": {
