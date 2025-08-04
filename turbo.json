@@ -38,6 +38,34 @@
       ],
       "outputs": [".next/**", "!.next/cache/**"]
     },
+    "@cossistant/core#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/types#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/react#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/api#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/transactional#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/location#build": {
+      "outputs": ["dist/**"]
+    },
+    "@cossistant/web#build": {
+      "dependsOn": [
+        "^build",
+        "@cossistant/core#build",
+        "@cossistant/types#build",
+        "@cossistant/react#build",
+        "@cossistant/api#build"
+      ],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },
