@@ -6,9 +6,10 @@ import type { Message } from "@cossistant/types";
 import { SenderType } from "@cossistant/types";
 import { motion } from "motion/react";
 import type React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SupportConfig } from "../config";
 import { useMultimodalInput } from "../hooks/use-multimodal-input";
+import { useSupport } from "../provider";
 import { Bubble, Window } from "./components";
 import { SupportConfigProvider } from "./context/config";
 import { NavigationProvider } from "./context/navigation";
@@ -36,7 +37,6 @@ export const Support: React.FC<SupportProps> = ({
 	mode = "floating",
 	defaultMessages = [],
 	quickOptions,
-	showTypingIndicator = false,
 	conversationEvents = [],
 	demo = false,
 }) => {
@@ -48,23 +48,29 @@ export const Support: React.FC<SupportProps> = ({
 		| undefined
 	>(undefined);
 
-	// Use demo hook for demo logic
 	const demoState = useDemo({
 		enabled: demo,
 		defaultMessages,
-		onDemoMessage: (demoMessage) => {
-			console.log("Demo message:", demoMessage);
-		},
 	});
 
-	// Determine which state to use based on demo mode
-	const messages = demo ? demoState.messages : regularMessages;
-	const events = demo ? demoState.events : conversationEvents;
-	const isTyping = demo
-		? demoState.currentTypingUser
-			? { type: demoState.currentTypingUser }
-			: undefined
-		: isTypingState;
+	// UGLY, JUST FOR DEMO, WILL GO AWAY
+	const messages = useMemo(
+		() => (demo ? demoState.messages : regularMessages),
+		[demo, demoState.messages, regularMessages]
+	);
+	const events = useMemo(
+		() => (demo ? demoState.events : conversationEvents),
+		[demo, demoState.events, conversationEvents]
+	);
+	const isTyping = useMemo(
+		() =>
+			demo
+				? demoState.currentTypingUser
+					? { type: demoState.currentTypingUser }
+					: undefined
+				: isTypingState,
+		[demo, demoState.currentTypingUser, isTypingState]
+	);
 
 	const {
 		message,
@@ -183,6 +189,7 @@ export const Support: React.FC<SupportProps> = ({
 export default Support;
 
 export { useSupportConfig } from "./context/config";
+
 // Export navigation types and hooks for advanced usage
 export {
 	type NavigationState,

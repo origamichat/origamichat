@@ -1,6 +1,6 @@
 import type { Message } from "@cossistant/types";
 import { SenderType } from "@cossistant/types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type EventType =
 	| "agent_joined"
@@ -156,6 +156,19 @@ export function useDemo({
 	);
 	const [demoStarted, setDemoStarted] = useState(false);
 
+	// Use refs to prevent re-renders when these change
+	const defaultMessagesRef = useRef(defaultMessages);
+	const onDemoMessageRef = useRef(onDemoMessage);
+
+	// Update refs when props change
+	useEffect(() => {
+		defaultMessagesRef.current = defaultMessages;
+	}, [defaultMessages]);
+
+	useEffect(() => {
+		onDemoMessageRef.current = onDemoMessage;
+	}, [onDemoMessage]);
+
 	// Initialize with default messages or start demo
 	useEffect(() => {
 		if (enabled && !demoStarted) {
@@ -186,7 +199,7 @@ export function useDemo({
 						};
 						setMessages((prev) => {
 							const newMessages = [...prev, message];
-							onDemoMessage?.(message);
+							onDemoMessageRef.current?.(message);
 							return newMessages;
 						});
 						// Only clear typing state if it was set for this message
@@ -237,38 +250,47 @@ export function useDemo({
 					}, cumulativeDelay);
 				}
 			});
-		} else if (defaultMessages.length > 0 && !enabled) {
-			const initialMessages: Message[] = defaultMessages.map((msg, index) => ({
-				id: `default-${index}`,
-				content: msg,
-				timestamp: new Date(),
-				sender: SenderType.TEAM_MEMBER,
-				conversationId: "default",
-			}));
+		} else if (
+			defaultMessagesRef.current.length > 0 &&
+			!enabled &&
+			messages.length === 0
+		) {
+			const initialMessages: Message[] = defaultMessagesRef.current.map(
+				(msg, index) => ({
+					id: `default-${index}`,
+					content: msg,
+					timestamp: new Date(),
+					sender: SenderType.TEAM_MEMBER,
+					conversationId: "default",
+				})
+			);
 			setMessages(initialMessages);
 		}
-	}, [enabled, demoStarted, defaultMessages, onDemoMessage]);
+	}, [enabled, demoStarted, messages.length]);
 
-	const handleDemoResponse = (userMessage: string) => {
-		if (!enabled) {
-			return;
-		}
+	const handleDemoResponse = useCallback(
+		(userMessage: string) => {
+			if (!enabled) {
+				return;
+			}
 
-		// In demo mode, just show a message that this is a demo
-		const demoResponse: Message = {
-			id: `demo-response-${Date.now()}`,
-			content:
-				"This is a demo mode. In a real implementation, your message would be sent to the support team.",
-			timestamp: new Date(),
-			sender: SenderType.AI,
-			conversationId: "demo",
-		};
-		setMessages((prev) => {
-			const newMessages = [...prev, demoResponse];
-			onDemoMessage?.(demoResponse);
-			return newMessages;
-		});
-	};
+			// In demo mode, just show a message that this is a demo
+			const demoResponse: Message = {
+				id: `demo-response-${Date.now()}`,
+				content:
+					"This is a demo mode. In a real implementation, your message would be sent to the support team.",
+				timestamp: new Date(),
+				sender: SenderType.AI,
+				conversationId: "demo",
+			};
+			setMessages((prev) => {
+				const newMessages = [...prev, demoResponse];
+				onDemoMessageRef.current?.(demoResponse);
+				return newMessages;
+			});
+		},
+		[enabled]
+	);
 
 	return {
 		messages,

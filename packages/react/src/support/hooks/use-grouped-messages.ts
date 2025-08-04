@@ -132,10 +132,9 @@ export const useGroupedMessages = ({
 
 			// If agentName is provided, it's a team member event
 			if (event.agentName) {
+				const agent = availableAgents[0];
 				senderType = SenderType.TEAM_MEMBER;
-				senderName = event.agentName;
-				// Try to find the agent's image
-				const agent = availableAgents.find((a) => a.name === event.agentName);
+				senderName = agent?.name || "Support";
 				senderImage = agent?.image || undefined;
 			} else {
 				// Use getSenderInfo for other types
