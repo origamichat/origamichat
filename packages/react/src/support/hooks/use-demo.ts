@@ -110,7 +110,7 @@ const demoSequence: DemoStep[] = [
 		type: "message",
 		delay: 2400,
 		sender: SenderType.TEAM_MEMBER,
-		content: "Hope that helps, Can I help with anything else?",
+		content: "Hope that helps, can I help with anything else?",
 		senderName: "Anthony",
 	},
 	{
