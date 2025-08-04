@@ -10,6 +10,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Animation delays for typing indicator */
+.animation-delay-0 {
+	animation-delay: 0ms;
+}
+.animation-delay-200 {
+	animation-delay: 200ms;
+}
+.animation-delay-400 {
+	animation-delay: 400ms;
+}
+
 :root {
 	--background: oklch(99% 0 0);
 	--background-100: oklch(98% 0 0);

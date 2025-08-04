@@ -63,7 +63,7 @@ export const Benefits = () => (
 			{benefits.map((benefit, index) => (
 				<div
 					className={cn(
-						"relative flex flex-col gap-2 overflow-hidden border-primary/10 border-dashed p-4 pt-20 sm:p-8 sm:pt-20",
+						"relative flex flex-col gap-2 overflow-hidden border-primary/10 border-dashed p-4 pt-20 sm:p-8 sm:pt-10",
 						benefit.className,
 						// Add border-right for first column items (index 0, 2, 4)
 						index % 2 === 0 && "border-r",
