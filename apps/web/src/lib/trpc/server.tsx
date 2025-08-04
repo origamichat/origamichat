@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { OrigamiTRPCRouter } from "@cossistant/api";
+import type { OrigamiTRPCRouter } from "@cossistant/api/types";
 import { getCountryCode, getLocale, getTimezone } from "@cossistant/location";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createTRPCClient, loggerLink } from "@trpc/client";

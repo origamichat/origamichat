@@ -19,7 +19,8 @@
   },
   "exports": {
     ".": "./src/client/index.ts",
-    "./queries": "./src/db/queries/index.ts"
+    "./queries": "./src/db/queries/index.ts",
+    "./types": "./src/trpc/types.ts"
   },
   "dependencies": {
     "@cossistant/transactional": "workspace:*",
