@@ -8,6 +8,9 @@ import { ConversationStatus, SenderType } from "./enums";
 // Export all API schemas and types
 export * from "./api";
 
+// Export realtime event types
+export * from "./realtime-events";
+
 // Configuration types
 export interface CossistantConfig {
 	apiUrl: string;

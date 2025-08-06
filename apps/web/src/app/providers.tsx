@@ -18,8 +18,8 @@ const API_URL =
 
 const WS_URL =
 	process.env.NODE_ENV === "development"
-		? "ws://localhost:8787"
-		: "wss://api.cossistant.com";
+		? "ws://localhost:8787/ws"
+		: "wss://api.cossistant.com/ws";
 
 export function Providers({ children }: ProviderProps) {
 	return (

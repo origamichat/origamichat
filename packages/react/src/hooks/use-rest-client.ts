@@ -1,3 +1,5 @@
+"use client";
+
 import { CossistantClient } from "@cossistant/core";
 import type { CossistantConfig } from "@cossistant/types";
 import { useEffect, useMemo, useState } from "react";
@@ -10,7 +12,7 @@ export interface UseClientResult {
 export function useClient(
 	publicKey: string | undefined,
 	apiUrl = "https://api.cossistant.com/v1",
-	wsUrl = "wss://api.cossistant.com"
+	wsUrl = "wss://api.cossistant.com/ws"
 ): UseClientResult {
 	const [error, setError] = useState<Error | null>(null);
 

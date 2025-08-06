@@ -7,10 +7,12 @@ import { checkHealth } from "@api/utils/health";
 import { swaggerUI } from "@hono/swagger-ui";
 import { trpcServer } from "@hono/trpc-server";
 import { OpenAPIHono } from "@hono/zod-openapi";
+
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { workflowsRouters } from "./workflows";
+import { upgradedWebsocket, websocket } from "./ws/socket";
 
 const app = new OpenAPIHono<{
 	Variables: {
@@ -111,6 +113,9 @@ app.route("/v1", routers);
 // Upstash Workflows routes
 app.route("/workflow", workflowsRouters);
 
+// WebSocket endpoint for real-time communication
+app.get("/ws", upgradedWebsocket);
+
 app.doc("/openapi", {
 	openapi: "3.1.0",
 	info: {
@@ -145,4 +150,5 @@ app.get(
 export default {
 	port: env.PORT,
 	fetch: app.fetch,
+	websocket,
 };

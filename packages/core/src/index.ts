@@ -47,4 +47,8 @@ export {
 	getVisitorId,
 	setVisitorId,
 } from "./visitor-tracker";
-export { CossistantWebSocketClient } from "./websocket-client";
+export {
+	CossistantWebSocketClient,
+	type CossistantWebSocketConfig,
+	type WebSocketEventHandlers,
+} from "./websocket-client";

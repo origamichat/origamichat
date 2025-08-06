@@ -1,9 +1,9 @@
+import type { RealtimeEvent } from "@cossistant/types/realtime-events";
 import { CossistantRestClient } from "./rest-client";
 import {
 	type Conversation,
 	CossistantAPIError,
 	type CossistantConfig,
-	type EventHandlers,
 	type GetConversationsResponse,
 	type GetMessagesResponse,
 	Message,
@@ -11,7 +11,11 @@ import {
 	type SendMessageRequest,
 	type SendMessageResponse,
 } from "./types";
-import { CossistantWebSocketClient } from "./websocket-client";
+import {
+	CossistantWebSocketClient,
+	type CossistantWebSocketConfig,
+	type WebSocketEventHandlers,
+} from "./websocket-client";
 
 export class CossistantClient {
 	private restClient: CossistantRestClient;
@@ -21,7 +25,14 @@ export class CossistantClient {
 	constructor(config: CossistantConfig) {
 		this.config = config;
 		this.restClient = new CossistantRestClient(config);
-		this.wsClient = new CossistantWebSocketClient(config);
+		const wsConfig: CossistantWebSocketConfig = {
+			wsUrl: config.wsUrl,
+			publicKey: config.publicKey,
+			apiKey: config.apiKey,
+			userId: config.userId,
+			organizationId: config.organizationId,
+		};
+		this.wsClient = new CossistantWebSocketClient(wsConfig);
 	}
 
 	// REST API methods
@@ -73,16 +84,19 @@ export class CossistantClient {
 		return this.wsClient.isConnected();
 	}
 
-	sendWebSocketMessage(data: unknown): void {
-		this.wsClient.send(data);
+	sendWebSocketMessage(event: RealtimeEvent): void {
+		this.wsClient.send(event);
 	}
 
 	// Event handling
-	on<T extends keyof EventHandlers>(event: T, handler: EventHandlers[T]): void {
+	on<T extends keyof WebSocketEventHandlers>(
+		event: T,
+		handler: WebSocketEventHandlers[T]
+	): void {
 		this.wsClient.on(event, handler);
 	}
 
-	off<T extends keyof EventHandlers>(event: T): void {
+	off<T extends keyof WebSocketEventHandlers>(event: T): void {
 		this.wsClient.off(event);
 	}
 
@@ -90,7 +104,26 @@ export class CossistantClient {
 	updateConfiguration(config: Partial<CossistantConfig>): void {
 		this.config = { ...this.config, ...config };
 		this.restClient.updateConfiguration(config);
-		this.wsClient.updateConfiguration(config);
+
+		const wsConfig: Partial<CossistantWebSocketConfig> = {};
+
+		if (config.wsUrl !== undefined) {
+			wsConfig.wsUrl = config.wsUrl;
+		}
+		if (config.publicKey !== undefined) {
+			wsConfig.publicKey = config.publicKey;
+		}
+		if (config.apiKey !== undefined) {
+			wsConfig.apiKey = config.apiKey;
+		}
+		if (config.userId !== undefined) {
+			wsConfig.userId = config.userId;
+		}
+		if (config.organizationId !== undefined) {
+			wsConfig.organizationId = config.organizationId;
+		}
+
+		this.wsClient.updateConfiguration(wsConfig);
 	}
 
 	// Utility methods

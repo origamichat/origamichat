@@ -1,24 +1,35 @@
-import {
-	type ConversationUpdatedEvent,
-	CossistantAPIError,
-	type CossistantConfig,
-	type CossistantWebSocketEvent,
-	type EventHandlers,
-	type MessageReceivedEvent,
-	type TypingEvent,
-} from "./types";
+import type {
+	RealtimeEvent,
+	RealtimeEventType,
+} from "@cossistant/types/realtime-events";
+import { CossistantAPIError } from "./types";
+
+export interface CossistantWebSocketConfig {
+	wsUrl: string;
+	publicKey?: string;
+	apiKey?: string;
+	userId?: string;
+	organizationId?: string;
+}
+
+export interface WebSocketEventHandlers {
+	onConnect?: () => void;
+	onDisconnect?: () => void;
+	onError?: (error: CossistantAPIError) => void;
+	onEvent?: (event: RealtimeEvent) => void;
+}
 
 export class CossistantWebSocketClient {
-	private config: CossistantConfig;
+	private config: CossistantWebSocketConfig;
 	private ws: WebSocket | null = null;
-	private eventHandlers: EventHandlers = {};
+	private eventHandlers: WebSocketEventHandlers = {};
 	private reconnectAttempts = 0;
 	private maxReconnectAttempts = 5;
 	private reconnectDelay = 1000;
 	private isConnecting = false;
 	private isManuallyDisconnected = false;
 
-	constructor(config: CossistantConfig) {
+	constructor(config: CossistantWebSocketConfig) {
 		this.config = config;
 	}
 
@@ -49,15 +60,16 @@ export class CossistantWebSocketClient {
 
 				this.ws.onmessage = (event) => {
 					try {
-						const data = JSON.parse(event.data);
-						this.handleWebSocketEvent(data);
+						const data = JSON.parse(event.data) as RealtimeEvent;
+						this.eventHandlers.onEvent?.(data);
 					} catch (error) {
 						console.error("Failed to parse WebSocket message:", error);
-						this.eventHandlers.onError?.({
+						const apiError = new CossistantAPIError({
 							code: "WEBSOCKET_PARSE_ERROR",
 							message: "Failed to parse WebSocket message",
 							details: { error, rawData: event.data },
 						});
+						this.eventHandlers.onError?.(apiError);
 					}
 				};
 
@@ -73,28 +85,22 @@ export class CossistantWebSocketClient {
 
 				this.ws.onerror = (error) => {
 					this.isConnecting = false;
-					this.eventHandlers.onError?.({
+					const apiError = new CossistantAPIError({
 						code: "WEBSOCKET_ERROR",
 						message: "WebSocket connection error",
 						details: { error },
 					});
-					reject(
-						new CossistantAPIError({
-							code: "WEBSOCKET_ERROR",
-							message: "Failed to connect to WebSocket",
-							details: { error },
-						})
-					);
+					this.eventHandlers.onError?.(apiError);
+					reject(apiError);
 				};
 			} catch (error) {
 				this.isConnecting = false;
-				reject(
-					new CossistantAPIError({
-						code: "WEBSOCKET_INIT_ERROR",
-						message: "Failed to initialize WebSocket connection",
-						details: { error },
-					})
-				);
+				const apiError = new CossistantAPIError({
+					code: "WEBSOCKET_INIT_ERROR",
+					message: "Failed to initialize WebSocket connection",
+					details: { error },
+				});
+				reject(apiError);
 			}
 		});
 	}
@@ -107,9 +113,9 @@ export class CossistantWebSocketClient {
 		}
 	}
 
-	send(data: unknown): void {
+	send<T extends RealtimeEventType>(event: RealtimeEvent<T>): void {
 		if (this.ws?.readyState === WebSocket.OPEN) {
-			this.ws.send(JSON.stringify(data));
+			this.ws.send(JSON.stringify(event));
 		} else {
 			throw new CossistantAPIError({
 				code: "WEBSOCKET_NOT_CONNECTED",
@@ -118,11 +124,14 @@ export class CossistantWebSocketClient {
 		}
 	}
 
-	on<T extends keyof EventHandlers>(event: T, handler: EventHandlers[T]): void {
+	on<T extends keyof WebSocketEventHandlers>(
+		event: T,
+		handler: WebSocketEventHandlers[T]
+	): void {
 		this.eventHandlers[event] = handler;
 	}
 
-	off<T extends keyof EventHandlers>(event: T): void {
+	off<T extends keyof WebSocketEventHandlers>(event: T): void {
 		delete this.eventHandlers[event];
 	}
 
@@ -133,12 +142,10 @@ export class CossistantWebSocketClient {
 	private buildWebSocketUrl(): string {
 		const url = new URL(this.config.wsUrl);
 
-		// Add public key if available
 		if (this.config.publicKey) {
 			url.searchParams.set("publicKey", this.config.publicKey);
 		}
 
-		// Add API key if available (for backward compatibility)
 		if (this.config.apiKey) {
 			url.searchParams.set("token", this.config.apiKey);
 		}
@@ -152,26 +159,6 @@ export class CossistantWebSocketClient {
 		}
 
 		return url.toString();
-	}
-
-	private handleWebSocketEvent(data: unknown): void {
-		const event = data as CossistantWebSocketEvent;
-
-		switch (event.type) {
-			case "message_received":
-				this.eventHandlers.onMessage?.(event as MessageReceivedEvent);
-				break;
-			case "conversation_updated":
-				this.eventHandlers.onConversationUpdate?.(
-					event as ConversationUpdatedEvent
-				);
-				break;
-			case "typing":
-				this.eventHandlers.onTyping?.(event as TypingEvent);
-				break;
-			default:
-				console.warn("Unknown WebSocket event type", event);
-		}
 	}
 
 	private shouldReconnect(): boolean {
@@ -193,7 +180,7 @@ export class CossistantWebSocketClient {
 		);
 	}
 
-	updateConfiguration(config: Partial<CossistantConfig>): void {
+	updateConfiguration(config: Partial<CossistantWebSocketConfig>): void {
 		const wasConnected = this.isConnected();
 
 		if (wasConnected) {

@@ -3,6 +3,7 @@
 import type { CossistantClient } from "@cossistant/core";
 import type { PublicWebsiteResponse } from "@cossistant/types";
 import * as React from "react";
+import { useRealtimeSupport } from "./hooks/use-realtime-support";
 import { useClient } from "./hooks/use-rest-client";
 import { useWebsiteData } from "./hooks/use-website-data";
 
@@ -58,6 +59,20 @@ export function SupportProvider({
 	const toggle = React.useCallback(() => setIsOpen((o) => !o), []);
 
 	const { client, error: clientError } = useClient(publicKey, apiUrl, wsUrl);
+	const { isConnected } = useRealtimeSupport({
+		publicKey,
+		wsUrl,
+		autoConnect: true,
+		onConnect: () => {
+			console.log("Connected to realtime");
+		},
+		onDisconnect: () => {
+			console.log("Disconnected from realtime");
+		},
+	});
+
+	console.log("isConnected", isConnected);
+
 	const { website, isLoading, error: websiteError } = useWebsiteData(client);
 
 	const error = clientError || websiteError;
