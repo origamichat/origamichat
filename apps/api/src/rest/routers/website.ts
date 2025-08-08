@@ -1,5 +1,6 @@
 import { getOrCreateVisitor } from "@api/db/queries";
 import { member } from "@api/db/schema/auth";
+import { validateResponse } from "@api/utils/validate-response";
 import { publicWebsiteResponseSchema } from "@cossistant/types";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { and, eq, or } from "drizzle-orm";
@@ -127,8 +128,6 @@ websiteRouter.openapi(
 			return c.json({ error: "Website not found for this API key" }, 404);
 		}
 
-		console.log("website", website);
-
 		// Handle visitor tracking
 		const visitorIdHeader = c.req.header("X-Visitor-Id");
 		const visitorData = await getOrCreateVisitor(db, {
@@ -161,22 +160,24 @@ websiteRouter.openapi(
 		const lastOnlineAt = new Date().toISOString();
 
 		return c.json(
-			{
-				id: website.id,
-				name: website.name,
-				slug: website.slug,
-				domain: website.domain,
-				description: website.description,
-				logoUrl: website.logoUrl,
-				organizationId: website.organizationId,
-				status: website.status,
-				lastOnlineAt,
-				availableAgents,
-				visitor: {
-					id: visitorData.id,
-					createdAt: visitorData.createdAt.toISOString(),
+			validateResponse(
+				{
+					id: website.id,
+					name: website.name,
+					domain: website.domain,
+					description: website.description,
+					logoUrl: website.logoUrl,
+					organizationId: website.organizationId,
+					status: website.status,
+					lastOnlineAt,
+					availableAgents,
+					visitor: {
+						id: visitorData.id,
+						createdAt: visitorData.createdAt.toISOString(),
+					},
 				},
-			},
+				publicWebsiteResponseSchema
+			),
 			200
 		);
 	}
