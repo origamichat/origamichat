@@ -6,7 +6,7 @@ import { ConversationStatus } from "@cossistant/types";
 import type React from "react";
 import { useEffect } from "react";
 import { SupportConfig } from "../config";
-import { useConversation, useConversationActions } from "../store";
+import { useConversationActions, useConversationState } from "../store";
 import { SupportContent } from "./components/support-content";
 import { SupportConfigProvider } from "./context/config";
 import { NavigationProvider } from "./context/navigation";
@@ -44,7 +44,7 @@ export function Support({
 	demo = false,
 }: SupportProps) {
 	// Initialize default conversation if needed
-	const { state } = useConversation();
+	const state = useConversationState();
 	const { addConversation, setActiveConversation } = useConversationActions();
 
 	useEffect(() => {
@@ -104,10 +104,11 @@ export {
 	useActiveMessages,
 	useActiveTypingIndicator,
 	useAllConversations,
-	useConversation,
 	useConversationActions,
 	useConversationById,
+	useConversationDispatch,
 	useConversationMessages,
+	useConversationState,
 } from "../store";
 export { useSupportConfig } from "./context/config";
 // Export navigation types and hooks for advanced usage

@@ -56,10 +56,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
 		if (!keyToUse) {
 			const envKey =
-				(typeof window !== "undefined" &&
-					window.process?.env?.NEXT_PUBLIC_COSSISSTANT_KEY) ||
-				(typeof window !== "undefined" &&
-					window.process?.env?.COSSISSTANT_PUBLIC_KEY) ||
 				process.env.NEXT_PUBLIC_COSSISSTANT_KEY ||
 				process.env.COSSISSTANT_PUBLIC_KEY;
 
@@ -123,8 +119,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 				for (const handler of eventHandlersRef.current) {
 					handler(event);
 				}
-			} catch (err) {
-				console.error("Failed to parse WebSocket message:", err);
+			} catch {
+				// Intentionally swallow to avoid console noise in production builds
 			}
 		}
 	}, [lastMessage, handleRealtimeEvent]);
@@ -146,14 +142,17 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 		};
 	}, []);
 
-	const value: WebSocketContextValue = {
-		isConnected: readyState === ReadyState.OPEN,
-		isConnecting: readyState === ReadyState.CONNECTING,
-		error: null,
-		send,
-		subscribe,
-		lastMessage: lastMessageRef.current,
-	};
+	const value: WebSocketContextValue = useMemo(
+		() => ({
+			isConnected: readyState === ReadyState.OPEN,
+			isConnecting: readyState === ReadyState.CONNECTING,
+			error: null,
+			send,
+			subscribe,
+			lastMessage: lastMessageRef.current,
+		}),
+		[readyState, send, subscribe]
+	);
 
 	return (
 		<WebSocketContext.Provider value={value}>

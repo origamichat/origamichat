@@ -10,7 +10,9 @@ import type { RealtimeEvent } from "@cossistant/types/realtime-events";
 import React, {
 	createContext,
 	type ReactNode,
+	useCallback,
 	useContext,
+	useMemo,
 	useReducer,
 } from "react";
 
@@ -95,14 +97,6 @@ export type ConversationAction =
 	  }
 	| { type: "HANDLE_REALTIME_EVENT"; payload: { event: RealtimeEvent } }
 	| { type: "CLEAR_ALL" };
-
-export interface ConversationContextValue {
-	state: ConversationState;
-	dispatch: React.Dispatch<ConversationAction>;
-	// Utility functions
-	getActiveMessages: () => Message[];
-	getActiveConversation: () => Conversation | undefined;
-}
 
 const initialState: ConversationState = {
 	conversations: new Map(),
@@ -320,49 +314,40 @@ function conversationReducer(
 	}
 }
 
-// Context
-const ConversationContext = createContext<ConversationContextValue | null>(
-	null
-);
+// Contexts (split state and dispatch to minimize rerenders)
+const ConversationStateContext = createContext<ConversationState | null>(null);
+const ConversationDispatchContext =
+	createContext<React.Dispatch<ConversationAction> | null>(null);
 
 // Provider component
 export function ConversationProvider({ children }: { children: ReactNode }) {
 	const [state, dispatch] = useReducer(conversationReducer, initialState);
 
-	const getActiveMessages = (): Message[] => {
-		if (!state.activeConversationId) {
-			return [];
-		}
-		return state.messages.get(state.activeConversationId) || [];
-	};
-
-	const getActiveConversation = (): Conversation | undefined => {
-		if (!state.activeConversationId) {
-			return;
-		}
-		return state.conversations.get(state.activeConversationId);
-	};
-
-	const value: ConversationContextValue = {
-		state,
-		dispatch,
-		getActiveMessages,
-		getActiveConversation,
-	};
-
 	return (
-		<ConversationContext.Provider value={value}>
-			{children}
-		</ConversationContext.Provider>
+		<ConversationStateContext.Provider value={state}>
+			<ConversationDispatchContext.Provider value={dispatch}>
+				{children}
+			</ConversationDispatchContext.Provider>
+		</ConversationStateContext.Provider>
 	);
 }
 
 // Hook to use the conversation context
-export function useConversation(): ConversationContextValue {
-	const context = useContext(ConversationContext);
+export function useConversationState(): ConversationState {
+	const context = useContext(ConversationStateContext);
 	if (!context) {
 		throw new Error(
-			"useConversation must be used within a ConversationProvider"
+			"useConversationState must be used within a ConversationProvider"
+		);
+	}
+	return context;
+}
+
+export function useConversationDispatch(): React.Dispatch<ConversationAction> {
+	const context = useContext(ConversationDispatchContext);
+	if (!context) {
+		throw new Error(
+			"useConversationDispatch must be used within a ConversationProvider"
 		);
 	}
 	return context;
@@ -370,87 +355,167 @@ export function useConversation(): ConversationContextValue {
 
 // Convenience hooks for common operations
 export function useConversationActions() {
-	const { dispatch } = useConversation();
+	const dispatch = useConversationDispatch();
 
-	return {
-		addMessage: (conversationId: string, message: Message) =>
+	const addMessage = useCallback(
+		(conversationId: string, message: Message) =>
 			dispatch({ type: "ADD_MESSAGE", payload: { conversationId, message } }),
+		[dispatch]
+	);
 
-		updateMessage: (
-			conversationId: string,
-			messageId: string,
-			updates: Partial<Message>
-		) =>
+	const updateMessage = useCallback(
+		(conversationId: string, messageId: string, updates: Partial<Message>) =>
 			dispatch({
 				type: "UPDATE_MESSAGE",
 				payload: { conversationId, messageId, updates },
 			}),
+		[dispatch]
+	);
 
-		deleteMessage: (conversationId: string, messageId: string) =>
+	const deleteMessage = useCallback(
+		(conversationId: string, messageId: string) =>
 			dispatch({
 				type: "DELETE_MESSAGE",
 				payload: { conversationId, messageId },
 			}),
+		[dispatch]
+	);
 
-		addConversation: (conversation: Conversation) =>
+	const addConversation = useCallback(
+		(conversation: Conversation) =>
 			dispatch({ type: "ADD_CONVERSATION", payload: { conversation } }),
+		[dispatch]
+	);
 
-		updateConversation: (
-			conversationId: string,
-			updates: Partial<Conversation>
-		) =>
+	const updateConversation = useCallback(
+		(conversationId: string, updates: Partial<Conversation>) =>
 			dispatch({
 				type: "UPDATE_CONVERSATION",
 				payload: { conversationId, updates },
 			}),
+		[dispatch]
+	);
 
-		deleteConversation: (conversationId: string) =>
+	const deleteConversation = useCallback(
+		(conversationId: string) =>
 			dispatch({ type: "DELETE_CONVERSATION", payload: { conversationId } }),
+		[dispatch]
+	);
 
-		setActiveConversation: (conversationId: string | null) =>
+	const setActiveConversation = useCallback(
+		(conversationId: string | null) =>
 			dispatch({
 				type: "SET_ACTIVE_CONVERSATION",
 				payload: { conversationId },
 			}),
+		[dispatch]
+	);
 
-		addEvent: (conversationId: string, event: ConversationEvent) =>
+	const addEvent = useCallback(
+		(conversationId: string, event: ConversationEvent) =>
 			dispatch({ type: "ADD_EVENT", payload: { conversationId, event } }),
+		[dispatch]
+	);
 
-		clearEvents: (conversationId: string) =>
+	const clearEvents = useCallback(
+		(conversationId: string) =>
 			dispatch({ type: "CLEAR_EVENTS", payload: { conversationId } }),
+		[dispatch]
+	);
 
-		setTypingIndicator: (
-			conversationId: string,
-			indicator: TypingIndicator | null
-		) =>
+	const setTypingIndicator = useCallback(
+		(conversationId: string, indicator: TypingIndicator | null) =>
 			dispatch({
 				type: "SET_TYPING_INDICATOR",
 				payload: { conversationId, indicator },
 			}),
+		[dispatch]
+	);
 
-		setAvailableAgents: (agents: Agent[]) =>
+	const setAvailableAgents = useCallback(
+		(agents: Agent[]) =>
 			dispatch({ type: "SET_AVAILABLE_AGENTS", payload: { agents } }),
+		[dispatch]
+	);
 
-		setLoading: (loading: boolean) =>
+	const setLoading = useCallback(
+		(loading: boolean) =>
 			dispatch({ type: "SET_LOADING", payload: { loading } }),
+		[dispatch]
+	);
 
-		setError: (error: Error | null) =>
+	const setError = useCallback(
+		(error: Error | null) =>
 			dispatch({ type: "SET_ERROR", payload: { error } }),
+		[dispatch]
+	);
 
-		setMessages: (conversationId: string, messages: Message[]) =>
+	const setMessages = useCallback(
+		(conversationId: string, messages: Message[]) =>
 			dispatch({ type: "SET_MESSAGES", payload: { conversationId, messages } }),
+		[dispatch]
+	);
 
-		appendMessages: (conversationId: string, messages: Message[]) =>
+	const appendMessages = useCallback(
+		(conversationId: string, messages: Message[]) =>
 			dispatch({
 				type: "APPEND_MESSAGES",
 				payload: { conversationId, messages },
 			}),
+		[dispatch]
+	);
 
-		handleRealtimeEvent: (event: RealtimeEvent) =>
+	const handleRealtimeEvent = useCallback(
+		(event: RealtimeEvent) =>
 			dispatch({ type: "HANDLE_REALTIME_EVENT", payload: { event } }),
+		[dispatch]
+	);
 
-		clearAll: () => dispatch({ type: "CLEAR_ALL" }),
-	};
+	const clearAll = useCallback(
+		() => dispatch({ type: "CLEAR_ALL" }),
+		[dispatch]
+	);
+
+	return useMemo(
+		() => ({
+			addMessage,
+			updateMessage,
+			deleteMessage,
+			addConversation,
+			updateConversation,
+			deleteConversation,
+			setActiveConversation,
+			addEvent,
+			clearEvents,
+			setTypingIndicator,
+			setAvailableAgents,
+			setLoading,
+			setError,
+			setMessages,
+			appendMessages,
+			handleRealtimeEvent,
+			clearAll,
+		}),
+		[
+			addMessage,
+			updateMessage,
+			deleteMessage,
+			addConversation,
+			updateConversation,
+			deleteConversation,
+			setActiveConversation,
+			addEvent,
+			clearEvents,
+			setTypingIndicator,
+			setAvailableAgents,
+			setLoading,
+			setError,
+			setMessages,
+			appendMessages,
+			handleRealtimeEvent,
+			clearAll,
+		]
+	);
 }
 
 // Cached empty arrays to prevent infinite re-renders
@@ -459,7 +524,7 @@ const EMPTY_CONVERSATIONS: Conversation[] = [];
 
 // Selector hooks for optimized re-renders
 export function useActiveMessages(): Message[] {
-	const { state } = useConversation();
+	const state = useConversationState();
 
 	if (!state.activeConversationId) {
 		return EMPTY_MESSAGES;
@@ -469,7 +534,7 @@ export function useActiveMessages(): Message[] {
 }
 
 export function useActiveConversation(): Conversation | undefined {
-	const { state } = useConversation();
+	const state = useConversationState();
 	if (!state.activeConversationId) {
 		return;
 	}
@@ -477,7 +542,7 @@ export function useActiveConversation(): Conversation | undefined {
 }
 
 export function useActiveTypingIndicator(): TypingIndicator | null {
-	const { state } = useConversation();
+	const state = useConversationState();
 	if (!state.activeConversationId) {
 		return null;
 	}
@@ -485,19 +550,19 @@ export function useActiveTypingIndicator(): TypingIndicator | null {
 }
 
 export function useConversationMessages(conversationId: string): Message[] {
-	const { state } = useConversation();
+	const state = useConversationState();
 	return state.messages.get(conversationId) || EMPTY_MESSAGES;
 }
 
 export function useConversationById(
 	conversationId: string
 ): Conversation | undefined {
-	const { state } = useConversation();
+	const state = useConversationState();
 	return state.conversations.get(conversationId);
 }
 
 export function useAllConversations(): Conversation[] {
-	const { state } = useConversation();
+	const state = useConversationState();
 	if (state.conversations.size === 0) {
 		return EMPTY_CONVERSATIONS;
 	}

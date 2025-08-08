@@ -29,7 +29,10 @@ export const SupportConfigProvider: React.FC<{
 	children: React.ReactNode;
 	mode?: "floating" | "responsive";
 }> = ({ children, mode = "floating" }) => {
-	const config: SupportConfig = { mode, content: {} };
+	const config: SupportConfig = React.useMemo(
+		() => ({ mode, content: {} }),
+		[mode]
+	);
 
 	return (
 		<SupportConfigContext.Provider value={{ config }}>

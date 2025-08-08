@@ -10,7 +10,7 @@ import {
 	useActiveMessages,
 	useActiveTypingIndicator,
 	useConversationActions,
-	useConversation as useConversationContext,
+	useConversationState,
 } from "../../store";
 import { useWebSocket } from "../context/websocket";
 import { useDemo } from "../hooks/use-demo";
@@ -39,11 +39,10 @@ export const SupportContent: React.FC<SupportContentProps> = ({
 	// Store hooks
 	const messages = useActiveMessages();
 	const typingIndicator = useActiveTypingIndicator();
-	const { state } = useConversationContext();
-	const activeConversationId = state.activeConversationId;
+	const { activeConversationId, events: eventsMap } = useConversationState();
 	const { addMessage, setTypingIndicator } = useConversationActions();
 	const events = activeConversationId
-		? state.events.get(activeConversationId) || []
+		? eventsMap.get(activeConversationId) || []
 		: [];
 
 	// WebSocket hook
@@ -135,9 +134,7 @@ export const SupportContent: React.FC<SupportContentProps> = ({
 				}, 3000);
 			}
 		},
-		onError: (_error) => {
-			console.error("Multimodal input error:", _error);
-		},
+		onError: () => {},
 	});
 
 	const containerClasses = cn(

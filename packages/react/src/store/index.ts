@@ -1,6 +1,5 @@
 export {
 	type ConversationAction,
-	type ConversationContextValue,
 	type ConversationEvent,
 	ConversationProvider,
 	type ConversationState,
@@ -9,8 +8,9 @@ export {
 	useActiveMessages,
 	useActiveTypingIndicator,
 	useAllConversations,
-	useConversation,
 	useConversationActions,
 	useConversationById,
+	useConversationDispatch,
 	useConversationMessages,
+	useConversationState,
 } from "./conversation";

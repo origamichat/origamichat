@@ -114,7 +114,6 @@ export const Icon: React.FC<IconProps> = ({
 	const iconType = getIconType(variant);
 
 	if (!currentPath) {
-		console.warn(`Icon "${name}" with variant "${variant}" not found`);
 		return null;
 	}
 

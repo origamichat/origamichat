@@ -8,7 +8,7 @@ import {
 	useActiveTypingIndicator,
 	useAllConversations,
 	useConversationActions,
-	useConversation as useConversationContext,
+	useConversationState,
 } from "../store";
 import { useWebSocket } from "../support/context/websocket";
 
@@ -22,8 +22,7 @@ export function useConversation() {
 
 	const messages = useActiveMessages();
 	const typingIndicator = useActiveTypingIndicator();
-	const { state } = useConversationContext();
-	const activeConversationId = state.activeConversationId;
+	const { activeConversationId } = useConversationState();
 	const conversations = useAllConversations();
 
 	// Actions from the new context

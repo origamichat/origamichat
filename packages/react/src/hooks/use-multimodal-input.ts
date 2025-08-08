@@ -136,7 +136,6 @@ export const useMultimodalInput = ({
 
 	const submit = useCallback(async () => {
 		if (!onSubmit) {
-			console.warn("useMultimodalInput: No onSubmit handler provided");
 			return;
 		}
 

@@ -36,8 +36,8 @@ const getInitialNavigation = (): SupportNavigation => {
 				}
 			);
 		}
-	} catch (error) {
-		console.error("Failed to load navigation from localStorage:", error);
+	} catch {
+		// Intentionally swallow to avoid console noise in production builds
 	}
 
 	return {
@@ -65,8 +65,8 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		try {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify({ navigation }));
-		} catch (error) {
-			console.error("Failed to save navigation to localStorage:", error);
+		} catch {
+			// Intentionally swallow to avoid console noise in production builds
 		}
 	}, [navigation]);
 
