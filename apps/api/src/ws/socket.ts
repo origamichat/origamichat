@@ -1,5 +1,7 @@
 import { db } from "@api/db";
 import type { ApiKeyWithWebsiteAndOrganization } from "@api/db/queries/api-keys";
+import { website as websiteTable } from "@api/db/schema";
+import { auth } from "@api/lib/auth";
 import {
 	AuthValidationError,
 	type AuthValidationOptions,
@@ -12,6 +14,7 @@ import {
 	validateRealtimeEvent,
 } from "@cossistant/types/realtime-events";
 import type { ServerWebSocket } from "bun";
+import { eq } from "drizzle-orm";
 import type { Context } from "hono";
 import { createBunWebSocket } from "hono/bun";
 import { type EventContext, routeEvent } from "./router";
@@ -277,12 +280,23 @@ function logAuthSuccess(result: {
 }
 
 /**
- * Authenticate WebSocket connection
+ * Result of a successful WebSocket authentication
  */
-async function authenticateWebSocketConnection(c: Context): Promise<{
-	apiKey: ApiKeyWithWebsiteAndOrganization;
-	isTestKey: boolean;
-} | null> {
+type WebSocketAuthSuccess = {
+	organizationId?: string;
+	websiteId?: string;
+	userId?: string;
+	apiKey?: ApiKeyWithWebsiteAndOrganization;
+	isTestKey?: boolean;
+};
+
+/**
+ * Authenticate WebSocket connection
+ * Accept either API keys (public/private) or a Better Auth session via cookies
+ */
+async function authenticateWebSocketConnection(
+	c: Context
+): Promise<WebSocketAuthSuccess | null> {
 	try {
 		// Extract credentials
 		const { privateKey, publicKey, actualOrigin } = extractAuthCredentials(c);
@@ -305,15 +319,13 @@ async function authenticateWebSocketConnection(c: Context): Promise<{
 			hostname,
 		};
 
-		const result = await performAuthentication(
-			privateKey,
-			publicKey,
-			db,
-			options
-		);
+		// If an API key was provided, authenticate with key-based flow
+		if (privateKey || publicKey) {
+			return await authenticateWithApiKey(privateKey, publicKey, options);
+		}
 
-		logAuthSuccess(result);
-		return result;
+		// Otherwise, attempt Better Auth session-based authentication via cookies
+		return await authenticateWithSession(c);
 	} catch (error) {
 		if (AUTH_LOGS_ENABLED) {
 			console.error("[WebSocket Auth] Authentication failed:", error);
@@ -326,6 +338,63 @@ async function authenticateWebSocketConnection(c: Context): Promise<{
 
 		throw error;
 	}
+}
+
+async function authenticateWithApiKey(
+	privateKey: string | undefined,
+	publicKey: string | undefined,
+	options: AuthValidationOptions
+): Promise<WebSocketAuthSuccess> {
+	const result = await performAuthentication(
+		privateKey,
+		publicKey,
+		db,
+		options
+	);
+	logAuthSuccess(result);
+	return {
+		apiKey: result.apiKey,
+		isTestKey: result.isTestKey,
+		organizationId: result.apiKey.organization.id,
+		websiteId: result.apiKey.website?.id,
+	};
+}
+
+async function authenticateWithSession(
+	c: Context
+): Promise<WebSocketAuthSuccess | null> {
+	const session = await auth.api.getSession({ headers: c.req.raw.headers });
+	if (!session) {
+		if (AUTH_LOGS_ENABLED) {
+			console.log("[WebSocket Auth] No API key or session provided");
+		}
+		return null;
+	}
+
+	const organizationId = session.session.activeOrganizationId ?? null;
+	const activeTeamId = session.session.activeTeamId ?? null;
+	let websiteId: string | undefined;
+
+	if (activeTeamId) {
+		const [site] = await db
+			.select({ id: websiteTable.id })
+			.from(websiteTable)
+			.where(eq(websiteTable.teamId, activeTeamId))
+			.limit(1);
+		websiteId = site?.id;
+	}
+
+	if (!organizationId && AUTH_LOGS_ENABLED) {
+		console.log(
+			"[WebSocket Auth] Session found but no active organization; proceeding without website context"
+		);
+	}
+
+	return {
+		organizationId: organizationId ?? undefined,
+		websiteId,
+		userId: session.user.id,
+	};
 }
 
 export const upgradedWebsocket = upgradeWebSocket(async (c) => {
@@ -345,7 +414,7 @@ export const upgradedWebsocket = upgradeWebSocket(async (c) => {
 					JSON.stringify({
 						error: "Authentication failed",
 						message:
-							"Invalid API key or domain not whitelisted. Please check your API key and ensure your domain is whitelisted.",
+							"Authentication failed: Provide a valid API key or be signed in.",
 					})
 				);
 				ws.close(1008, "Authentication failed");
@@ -356,8 +425,8 @@ export const upgradedWebsocket = upgradeWebSocket(async (c) => {
 				connectionId,
 				connectedAt: Date.now(),
 				apiKey: authResult.apiKey,
-				organizationId: authResult.apiKey.organization.id,
-				websiteId: authResult.apiKey.website?.id,
+				organizationId: authResult.organizationId,
+				websiteId: authResult.websiteId,
 			};
 
 			connections.set(connectionId, connectionData);
@@ -374,8 +443,10 @@ export const upgradedWebsocket = upgradeWebSocket(async (c) => {
 				`[WebSocket] Connection opened: ${connectionId} for organization: ${connectionData.organizationId}`
 			);
 
-			// Generate a user ID (in production, this might come from the auth system)
-			const userId = `user_${Math.random().toString(36).substring(2, 9)}`;
+			// Prefer authenticated user id if available; otherwise generate ephemeral id
+			const userId =
+				authResult.userId ??
+				`user_${Math.random().toString(36).substring(2, 9)}`;
 			connectionData.userId = userId;
 
 			// Send successful connection message

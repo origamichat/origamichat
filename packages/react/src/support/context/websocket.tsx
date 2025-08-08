@@ -51,23 +51,17 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 	const lastMessageRef = useRef<RealtimeEvent | null>(null);
 	const { handleRealtimeEvent } = useConversationActions();
 
-	const getPublicKey = useCallback(() => {
-		let keyToUse = publicKey;
-
-		if (!keyToUse) {
-			const envKey =
-				process.env.NEXT_PUBLIC_COSSISSTANT_KEY ||
-				process.env.COSSISSTANT_PUBLIC_KEY;
-
-			if (!envKey) {
-				throw new Error(
-					"Public key is required. Please provide it as a prop or set NEXT_PUBLIC_COSSISSTANT_KEY environment variable."
-				);
-			}
-			keyToUse = envKey;
+	const getOptionalPublicKey = useCallback(() => {
+		const keyFromProps = publicKey?.trim();
+		if (keyFromProps) {
+			return keyFromProps;
 		}
 
-		return keyToUse;
+		const envKey =
+			process.env.NEXT_PUBLIC_COSSISSTANT_KEY ||
+			process.env.COSSISSTANT_PUBLIC_KEY;
+		const trimmed = envKey?.trim();
+		return trimmed && trimmed.length > 0 ? trimmed : null;
 	}, [publicKey]);
 
 	// Build the WebSocket URL with query parameters
@@ -77,9 +71,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 		}
 
 		try {
-			const key = getPublicKey();
 			const url = new URL(wsUrl);
-			url.searchParams.set("publicKey", key);
+			const key = getOptionalPublicKey();
+			if (key) {
+				url.searchParams.set("publicKey", key);
+			}
 
 			return url.toString();
 		} catch (err) {
@@ -88,7 +84,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 			);
 			return null;
 		}
-	}, [wsUrl, autoConnect, getPublicKey, onError]);
+	}, [wsUrl, autoConnect, getOptionalPublicKey, onError]);
 
 	const { sendMessage, lastMessage, readyState } = useWebSocketLib(socketUrl, {
 		shouldReconnect: () => true,
