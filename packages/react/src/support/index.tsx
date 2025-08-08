@@ -2,20 +2,14 @@
 
 import "./support.css";
 
-import type { Message } from "@cossistant/types";
-import { SenderType } from "@cossistant/types";
-import { motion } from "motion/react";
+import { ConversationStatus } from "@cossistant/types";
 import type React from "react";
-import { useMemo, useState } from "react";
+import { useEffect } from "react";
 import { SupportConfig } from "../config";
-import { useMultimodalInput } from "../hooks/use-multimodal-input";
-import { useSupport } from "../provider";
-import { Bubble, Window } from "./components";
+import { useConversation, useConversationActions } from "../store";
+import { SupportContent } from "./components/support-content";
 import { SupportConfigProvider } from "./context/config";
 import { NavigationProvider } from "./context/navigation";
-import { useDemo } from "./hooks/use-demo";
-import { SupportRouter } from "./router";
-import { cn } from "./utils";
 
 export interface SupportProps {
 	className?: string;
@@ -28,154 +22,64 @@ export interface SupportProps {
 	showTypingIndicator?: boolean;
 	conversationEvents?: { id: string; event: string; timestamp?: Date }[];
 	demo?: boolean;
+	// WebSocket configuration
+	publicKey?: string;
+	wsUrl?: string;
+	userId?: string;
+	organizationId?: string;
+	autoConnect?: boolean;
+	onWsConnect?: () => void;
+	onWsDisconnect?: () => void;
+	onWsError?: (error: Error) => void;
 }
 
-export const Support: React.FC<SupportProps> = ({
+// Internal component that needs the conversation context
+export function Support({
 	className,
 	position = "bottom",
 	align = "right",
 	mode = "floating",
 	defaultMessages = [],
 	quickOptions,
-	conversationEvents = [],
 	demo = false,
-}) => {
-	const [regularMessages, setRegularMessages] = useState<Message[]>([]);
-	const [isTypingState, setIsTypingState] = useState<
-		| {
-				type: SenderType;
-		  }
-		| undefined
-	>(undefined);
+}: SupportProps) {
+	// Initialize default conversation if needed
+	const { state } = useConversation();
+	const { addConversation, setActiveConversation } = useConversationActions();
 
-	const demoState = useDemo({
-		enabled: demo,
-		defaultMessages,
-	});
-
-	// UGLY, JUST FOR DEMO, WILL GO AWAY
-	const messages = useMemo(
-		() => (demo ? demoState.messages : regularMessages),
-		[demo, demoState.messages, regularMessages]
-	);
-	const events = useMemo(
-		() => (demo ? demoState.events : conversationEvents),
-		[demo, demoState.events, conversationEvents]
-	);
-	const isTyping = useMemo(
-		() =>
-			demo
-				? demoState.currentTypingUser
-					? { type: demoState.currentTypingUser }
-					: undefined
-				: isTypingState,
-		[demo, demoState.currentTypingUser, isTypingState]
-	);
-
-	const {
-		message,
-		files,
-		isSubmitting,
-		error,
-		setMessage,
-		addFiles,
-		removeFile,
-		submit,
-	} = useMultimodalInput({
-		onSubmit: async (data) => {
-			if (demo) {
-				demoState.handleDemoResponse(data.message);
-				return;
-			}
-
-			// Add user message
-			const userMessage: Message = {
-				id: `msg-${Date.now()}`,
-				content: data.message,
-				timestamp: new Date(),
-				sender: SenderType.VISITOR,
-				conversationId: "default",
+	useEffect(() => {
+		// Create default conversation if none exists
+		if (!(state.activeConversationId || demo)) {
+			const defaultConversation = {
+				id: `conv-${Date.now()}`,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				userId: "user-1",
+				status: ConversationStatus.OPEN,
+				unreadCount: 0,
 			};
-			setRegularMessages((prev) => [...prev, userMessage]);
-
-			// Simulate typing
-			setIsTypingState({ type: SenderType.AI });
-
-			setTimeout(() => {
-				// Add AI response
-				const aiMessage: Message = {
-					id: `msg-${Date.now() + 1}`,
-					content:
-						"Thanks for your message! This is a demo response, don't forget to join the waitlist to not miss the real stuff soon.",
-					timestamp: new Date(),
-					sender: SenderType.AI,
-					conversationId: "default",
-				};
-				setRegularMessages((prev) => [...prev, aiMessage]);
-				setIsTypingState(undefined);
-			}, 3000);
-		},
-		onError: (_error) => {
-			console.error("Multimodal input error:", _error);
-		},
-	});
-
-	const containerClasses = cn(
-		"cossistant",
-		{
-			// Floating mode positioning
-			"fixed z-[9999]": mode === "floating",
-			"bottom-4": mode === "floating" && position === "bottom",
-			"top-4": mode === "floating" && position === "top",
-			"right-4": mode === "floating" && align === "right",
-			"left-4": mode === "floating" && align === "left",
-			// Responsive mode
-			"relative h-full w-full": mode === "responsive",
-		},
-		className
-	);
-
-	const windowClasses = cn({
-		// Floating mode window positioning
-		"absolute z-[9999]": mode === "floating",
-		"bottom-16": mode === "floating" && position === "bottom",
-		"top-16": mode === "floating" && position === "top",
-		"right-0": mode === "floating" && align === "right",
-		"left-0": mode === "floating" && align === "left",
-		// Responsive mode window
-		"relative h-full w-full rounded-none border-0 shadow-none":
-			mode === "responsive",
-	});
+			addConversation(defaultConversation);
+			setActiveConversation(defaultConversation.id);
+		}
+	}, [
+		state.activeConversationId,
+		demo,
+		addConversation,
+		setActiveConversation,
+	]);
 
 	return (
 		<>
 			<SupportConfigProvider mode={mode}>
 				<NavigationProvider>
-					<motion.div
-						className={containerClasses}
-						layout="position"
-						transition={{
-							default: { ease: "anticipate" },
-							layout: { duration: 0.3 },
-						}}
-					>
-						{mode === "floating" && <Bubble />}
-						<Window className={windowClasses}>
-							<SupportRouter
-								addFiles={addFiles}
-								error={error}
-								events={events}
-								files={files}
-								isSubmitting={isSubmitting}
-								isTyping={isTyping}
-								message={message}
-								messages={messages}
-								removeFile={removeFile}
-								setMessage={setMessage}
-								submit={submit}
-							/>
-						</Window>
-					</motion.div>
+					<SupportContent
+						align={align}
+						className={className}
+						defaultMessages={defaultMessages}
+						demo={demo}
+						mode={mode}
+						position={position}
+					/>
 				</NavigationProvider>
 			</SupportConfigProvider>
 			<SupportConfig
@@ -184,15 +88,34 @@ export const Support: React.FC<SupportProps> = ({
 			/>
 		</>
 	);
-};
+}
 
 export default Support;
 
+export type {
+	ConversationEvent,
+	ConversationState,
+	TypingIndicator,
+} from "../store";
+// Export store hooks and context
+export {
+	ConversationProvider,
+	useActiveConversation,
+	useActiveMessages,
+	useActiveTypingIndicator,
+	useAllConversations,
+	useConversation,
+	useConversationActions,
+	useConversationById,
+	useConversationMessages,
+} from "../store";
 export { useSupportConfig } from "./context/config";
-
 // Export navigation types and hooks for advanced usage
 export {
 	type NavigationState,
 	type SUPPORT_PAGES,
 	useSupportNavigation,
 } from "./context/navigation";
+export type { WebSocketContextValue } from "./context/websocket";
+// Export WebSocket context and hook for realtime features
+export { useWebSocket, WebSocketProvider } from "./context/websocket";

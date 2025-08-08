@@ -55,6 +55,13 @@ export const ConversationSchema = z.object({
 
 export type Conversation = z.infer<typeof ConversationSchema>;
 
+export type Agent = {
+	id: string;
+	name: string;
+	image: string | null;
+	lastOnlineAt: string | null;
+};
+
 // API Request/Response types
 export interface SendMessageRequest {
 	content: string;

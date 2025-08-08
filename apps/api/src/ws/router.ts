@@ -1,3 +1,4 @@
+import { emitToDashboard } from "@api/lib/pubsub";
 import type {
 	RealtimeEvent,
 	RealtimeEventData,
@@ -7,6 +8,8 @@ import type {
 type EventContext = {
 	connectionId: string;
 	userId?: string;
+	websiteId?: string;
+	organizationId?: string;
 	ws?: WebSocket;
 };
 
@@ -22,6 +25,7 @@ type EventHandlers = {
 /**
  * Event handlers for each realtime event type
  * Each handler receives context and validated data
+ * Handlers now also emit events via pub/sub to reach other connections
  */
 const eventHandlers: EventHandlers = {
 	USER_CONNECTED: async (ctx, data) => {
@@ -29,7 +33,13 @@ const eventHandlers: EventHandlers = {
 			connectionId: data.connectionId,
 			timestamp: new Date(data.timestamp).toISOString(),
 			contextConnectionId: ctx.connectionId,
+			websiteId: ctx.websiteId,
 		});
+
+		// Emit to dashboard so agents can see user connections
+		if (ctx.websiteId) {
+			await emitToDashboard(ctx.websiteId, "USER_CONNECTED", data);
+		}
 	},
 
 	USER_DISCONNECTED: async (ctx, data) => {
@@ -37,7 +47,13 @@ const eventHandlers: EventHandlers = {
 			connectionId: data.connectionId,
 			timestamp: new Date(data.timestamp).toISOString(),
 			contextConnectionId: ctx.connectionId,
+			websiteId: ctx.websiteId,
 		});
+
+		// Emit to dashboard so agents can see user disconnections
+		if (ctx.websiteId) {
+			await emitToDashboard(ctx.websiteId, "USER_DISCONNECTED", data);
+		}
 	},
 
 	USER_PRESENCE_UPDATE: async (ctx, data) => {
@@ -46,8 +62,14 @@ const eventHandlers: EventHandlers = {
 			{
 				lastSeen: new Date(data.lastSeen).toISOString(),
 				contextConnectionId: ctx.connectionId,
+				websiteId: ctx.websiteId,
 			}
 		);
+
+		// Emit to dashboard so agents can see presence updates
+		if (ctx.websiteId) {
+			await emitToDashboard(ctx.websiteId, "USER_PRESENCE_UPDATE", data);
+		}
 	},
 };
 

@@ -10,7 +10,7 @@ const FORBIDDEN_SLUGS = [
 	"admin",
 	"api",
 	"cossistant-chat",
-	"origamichat",
+	"cossistant",
 	"org",
 	"select",
 	"website",
@@ -38,6 +38,7 @@ const FORBIDDEN_SLUGS = [
 	"features",
 	"page",
 	"pages",
+	"playground",
 ];
 
 // Most popular email domains that B2B customers might use

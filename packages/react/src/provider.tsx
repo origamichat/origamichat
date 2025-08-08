@@ -2,10 +2,13 @@
 
 import type { CossistantClient } from "@cossistant/core";
 import type { PublicWebsiteResponse } from "@cossistant/types";
+import { enableMapSet } from "immer";
 import * as React from "react";
-import { useRealtimeSupport } from "./hooks/use-realtime-support";
 import { useClient } from "./hooks/use-rest-client";
 import { useWebsiteData } from "./hooks/use-website-data";
+import { ConversationProvider, WebSocketProvider } from "./support";
+
+enableMapSet();
 
 export interface CossistantProviderProps {
 	children: React.ReactNode;
@@ -15,6 +18,10 @@ export interface CossistantProviderProps {
 	publicKey?: string;
 	defaultMessages?: string[];
 	quickOptions?: string[];
+	autoConnect?: boolean;
+	onWsConnect?: () => void;
+	onWsDisconnect?: () => void;
+	onWsError?: (error: Error) => void;
 }
 
 export interface CossistantContextValue {
@@ -46,6 +53,10 @@ export function SupportProvider({
 	publicKey,
 	defaultMessages,
 	quickOptions,
+	autoConnect = true,
+	onWsConnect,
+	onWsDisconnect,
+	onWsError,
 }: CossistantProviderProps) {
 	const [isOpen, setIsOpen] = React.useState(defaultOpen);
 	const [unreadCount, setUnreadCount] = React.useState(0);
@@ -59,20 +70,6 @@ export function SupportProvider({
 	const toggle = React.useCallback(() => setIsOpen((o) => !o), []);
 
 	const { client, error: clientError } = useClient(publicKey, apiUrl, wsUrl);
-	const { isConnected } = useRealtimeSupport({
-		publicKey,
-		wsUrl,
-		autoConnect: true,
-		onConnect: () => {
-			console.log("Connected to realtime");
-		},
-		onDisconnect: () => {
-			console.log("Disconnected from realtime");
-		},
-	});
-
-	console.log("isConnected", isConnected);
-
 	const { website, isLoading, error: websiteError } = useWebsiteData(client);
 
 	const error = clientError || websiteError;
@@ -110,7 +107,20 @@ export function SupportProvider({
 	);
 
 	return (
-		<SupportContext.Provider value={value}>{children}</SupportContext.Provider>
+		<SupportContext.Provider value={value}>
+			<ConversationProvider>
+				<WebSocketProvider
+					autoConnect={autoConnect}
+					onConnect={onWsConnect}
+					onDisconnect={onWsDisconnect}
+					onError={onWsError}
+					publicKey={publicKey}
+					wsUrl={wsUrl}
+				>
+					{children}
+				</WebSocketProvider>
+			</ConversationProvider>
+		</SupportContext.Provider>
 	);
 }
 
