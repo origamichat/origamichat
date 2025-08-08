@@ -11,7 +11,12 @@ const getEnvVariable = (name: string, defaultValue?: string): string => {
 				);
 				return "build-time-placeholder";
 			}
-			throw new Error(`environment variable ${name} not found`);
+
+			console.warn(
+				`WARNING: Environment variable ${name} not found during build`
+			);
+
+			return "";
 		}
 		return defaultValue;
 	}
