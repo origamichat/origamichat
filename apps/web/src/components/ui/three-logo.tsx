@@ -92,7 +92,17 @@ function LogoPlane() {
 export function ThreeLogo({ className }: ThreeLogoProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [dimensions, setDimensions] = useState({ width: 1355, height: 210 });
+	const [dpr, setDpr] = useState(1);
 	const { resolvedTheme } = useTheme();
+
+	useEffect(() => {
+		// Ensure DPR is an integer to prevent fractional canvas sizes in downstream consumers
+		if (typeof window !== "undefined") {
+			const device = window.devicePixelRatio || 1;
+			const clamped = Math.min(2, Math.max(1, device));
+			setDpr(Math.round(clamped));
+		}
+	}, []);
 
 	useEffect(() => {
 		const updateDimensions = () => {
@@ -114,7 +124,7 @@ export function ThreeLogo({ className }: ThreeLogoProps) {
 		<div className={className} ref={containerRef} style={{ width: "100%" }}>
 			<Canvas
 				camera={{ position: [0, 0, 10], fov: 75 }}
-				dpr={[1, 2]}
+				dpr={dpr}
 				style={{ width: dimensions.width, height: dimensions.height }}
 			>
 				<LogoPlane />
@@ -122,7 +132,7 @@ export function ThreeLogo({ className }: ThreeLogoProps) {
 					bgColor="transparent"
 					characters=" .%=*:+-# "
 					fgColor={resolvedTheme === "dark" ? "white" : "black"}
-					resolution={0.19}
+					resolution={0.2}
 				/>
 			</Canvas>
 		</div>
