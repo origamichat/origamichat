@@ -31,7 +31,7 @@ export const CommandShortcut = ({
 	return (
 		<span
 			className={cn(
-				"ml-auto inline-flex h-[20px] min-w-[20px] items-center justify-center rounded border border-primary/10 bg-primary-foreground/20 px-1 text-center font-mono font-semibold text-[10px] text-primary-foreground capitalize tracking-widest",
+				"ml-auto inline-flex h-[20px] min-w-[20px] items-center justify-center rounded border border-primary/10 bg-primary-foreground/20 px-1 text-center font-mono font-semibold text-[10px] text-primary-foreground capitalize tracking-tight",
 				className
 			)}
 			{...props}

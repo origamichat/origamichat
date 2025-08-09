@@ -18,6 +18,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
 			<Page>
 				<p>Welcome to {website?.name} dashboard!</p>
 				<p>You have access as: {user.name}</p>
+				{/* Conversations list now lives in the navigation sidebar */}
 			</Page>
 		</>
 	);

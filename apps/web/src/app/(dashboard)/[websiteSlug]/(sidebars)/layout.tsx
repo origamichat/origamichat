@@ -1,6 +1,6 @@
 import { CentralBlock } from "@/components/ui/layout";
-import { ConversationSidebar } from "@/components/ui/layout/sidebars/conversation-sidebar";
-import { NavigationSidebar } from "@/components/ui/layout/sidebars/navigation-sidebar";
+import { NavigationSidebar } from "@/components/ui/layout/sidebars/navigation/navigation-sidebar";
+import { ConversationSidebar } from "@/components/ui/layout/sidebars/visitor/visitor-sidebar";
 import { ensureWebsiteAccess } from "@/lib/auth/website-access";
 
 interface LayoutProps {
@@ -12,11 +12,13 @@ interface LayoutProps {
 
 export default async function Layout({ children, params }: LayoutProps) {
 	const { websiteSlug } = await params;
-	await ensureWebsiteAccess(websiteSlug);
+	const { website } = await ensureWebsiteAccess(websiteSlug);
 
 	return (
 		<div className="flex h-screen w-screen overflow-hidden">
-			<NavigationSidebar websiteSlug={websiteSlug} />
+			{website ? (
+				<NavigationSidebar websiteId={website.id} websiteSlug={websiteSlug} />
+			) : null}
 			<CentralBlock>{children}</CentralBlock>
 			{/* <ConversationSidebar /> */}
 		</div>

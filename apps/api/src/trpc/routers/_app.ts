@@ -1,7 +1,7 @@
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import { createTRPCRouter } from "../init";
-
+import { conversationRouter } from "./conversation";
 import { resendRouter } from "./resend";
 import { userRouter } from "./user";
 import { waitlistRouter } from "./waitlist";
@@ -12,6 +12,7 @@ export const origamiTRPCRouter = createTRPCRouter({
 	user: userRouter,
 	website: websiteRouter,
 	waitlist: waitlistRouter,
+	conversation: conversationRouter,
 });
 
 // export type definition of API

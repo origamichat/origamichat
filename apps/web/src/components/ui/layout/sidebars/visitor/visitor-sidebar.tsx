@@ -1,5 +1,5 @@
-import { SidebarContainer } from "./container";
-import { ResizableSidebar } from "./resizable-sidebar";
+import { SidebarContainer } from "../container";
+import { ResizableSidebar } from "../resizable-sidebar";
 
 export function ConversationSidebar() {
 	return (

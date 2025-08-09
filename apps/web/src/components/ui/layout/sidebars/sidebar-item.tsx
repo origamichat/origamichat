@@ -3,10 +3,11 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import Icon, { type IconName } from "../../icons";
 
 interface SidebarItemProps {
 	children: ReactNode;
-	icon?: ReactNode;
+	iconName?: IconName;
 	actions?: ReactNode;
 	href?: string;
 	onClick?: () => void;
@@ -16,7 +17,7 @@ interface SidebarItemProps {
 
 export function SidebarItem({
 	children,
-	icon,
+	iconName,
 	actions,
 	href,
 	onClick,
@@ -24,23 +25,35 @@ export function SidebarItem({
 	active = false,
 }: SidebarItemProps) {
 	const baseClasses = cn(
-		"group relative flex items-center gap-3 rounded-[2px] px-3 py-2 font-medium text-sm transition-colors",
-		"hover:bg-os-background-400 hover:text-primary",
+		"group/btn relative flex items-center gap-3 rounded px-1 py-1 text-primary/80 text-sm transition-colors",
+		"hover:bg-background-100 hover:text-primary",
 		"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-		active && "bg-os-background-400 text-primary",
+		active && "bg-background-100 text-primary",
 		className
 	);
 
 	const content = (
 		<>
-			{icon && (
-				<span className="flex size-6 shrink-0 items-center justify-center">
-					{icon}
+			{iconName && (
+				<span
+					className={cn(
+						"flex size-6 shrink-0 items-center justify-center opacity-60 group-hover/btn:opacity-80",
+						{
+							"opacity-100 group-hover/btn:opacity-100": active,
+						}
+					)}
+				>
+					<Icon
+						className="size-5"
+						filledOnHover={!active}
+						name={iconName}
+						variant={active ? "filled" : "default"}
+					/>
 				</span>
 			)}
 			<span className="flex-1 truncate">{children}</span>
 			{actions && (
-				<span className="opacity-0 transition-opacity group-hover:opacity-100">
+				<span className="opacity-0 transition-opacity group-hover/btn:opacity-100">
 					{actions}
 				</span>
 			)}
