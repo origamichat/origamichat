@@ -5,6 +5,7 @@ import {
 } from "drizzle-orm";
 import {
 	boolean,
+	doublePrecision,
 	index,
 	integer,
 	jsonb,
@@ -25,7 +26,7 @@ export const aiAgent = pgTable(
 		description: text("description"),
 		basePrompt: text("base_prompt").notNull(),
 		model: text("model").notNull(),
-		temperature: integer("temperature"),
+		temperature: doublePrecision("temperature"),
 		maxTokens: integer("max_tokens"),
 		organizationId: ulidReference("organization_id").references(
 			() => organization.id,

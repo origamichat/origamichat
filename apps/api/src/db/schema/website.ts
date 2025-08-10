@@ -13,6 +13,7 @@ import {
 	text,
 	timestamp,
 	uniqueIndex,
+	varchar,
 } from "drizzle-orm/pg-core";
 import { enumToPgEnum } from "../../utils/db";
 import {
@@ -29,6 +30,11 @@ export const websiteInstallationTargetEnum = pgEnum(
 	"website_installation_target",
 	enumToPgEnum(WebsiteInstallationTarget)
 );
+
+export const websiteStatusEnum = pgEnum("website_status", [
+	"active",
+	"inactive",
+]);
 
 export const website = pgTable(
 	"website",
@@ -53,7 +59,7 @@ export const website = pgTable(
 		teamId: ulidReference("team_id").references(() => team.id, {
 			onDelete: "cascade",
 		}),
-		status: text("status").default("active").notNull(),
+		status: websiteStatusEnum("status").default("active").notNull(),
 		createdAt: timestamp("created_at")
 			.$defaultFn(() => new Date())
 			.notNull(),
@@ -82,7 +88,7 @@ export const visitor = pgTable(
 	"visitor",
 	{
 		id: ulidPrimaryKey("id"),
-		identifier: text("identifier").notNull(),
+		identifier: varchar("identifier", { length: 255 }).notNull(),
 		name: text("name"),
 		email: text("email"),
 		phone: text("phone"),
@@ -130,6 +136,36 @@ export const visitor = pgTable(
 	]
 );
 
+export const tag = pgTable(
+	"tag",
+	{
+		id: ulidPrimaryKey("id"),
+		name: text("name").notNull(),
+		description: text("description"),
+		prompt: text("prompt"),
+		organizationId: ulidReference("organization_id").references(
+			() => organization.id,
+			{ onDelete: "cascade" }
+		),
+		websiteId: ulidReference("website_id").references(() => website.id, {
+			onDelete: "cascade",
+		}),
+		createdAt: timestamp("created_at")
+			.$defaultFn(() => new Date())
+			.notNull(),
+		updatedAt: timestamp("updated_at")
+			.$defaultFn(() => new Date())
+			.notNull(),
+		deletedAt: timestamp("deleted_at"),
+	},
+	(table) => [
+		index("tag_org_idx").on(table.organizationId),
+		index("tag_website_idx").on(table.websiteId),
+		uniqueIndex("tag_website_name_idx").on(table.websiteId, table.name),
+		index("tag_deleted_at_idx").on(table.deletedAt),
+	]
+);
+
 // Relations
 export const websiteRelations = relations(website, ({ many, one }) => ({
 	organization: one(organization, {
@@ -144,6 +180,7 @@ export const websiteRelations = relations(website, ({ many, one }) => ({
 	aiAgents: many(aiAgent),
 	conversations: many(conversation),
 	apiKeys: many(apiKey),
+	tags: many(tag),
 }));
 
 export const visitorRelations = relations(visitor, ({ one, many }) => ({
@@ -162,8 +199,21 @@ export const visitorRelations = relations(visitor, ({ one, many }) => ({
 	conversations: many(conversation),
 }));
 
+export const tagRelations = relations(tag, ({ one }) => ({
+	organization: one(organization, {
+		fields: [tag.organizationId],
+		references: [organization.id],
+	}),
+	website: one(website, {
+		fields: [tag.websiteId],
+		references: [website.id],
+	}),
+}));
+
 export type WebsiteSelect = InferSelectModel<typeof website>;
 export type WebsiteInsert = InferInsertModel<typeof website>;
 
 export type VisitorSelect = InferSelectModel<typeof visitor>;
 export type VisitorInsert = InferInsertModel<typeof visitor>;
+export type TagSelect = InferSelectModel<typeof tag>;
+export type TagInsert = InferInsertModel<typeof tag>;
