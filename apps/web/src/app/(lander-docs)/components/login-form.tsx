@@ -99,7 +99,7 @@ export function LoginForm() {
 			const result = await signIn.email({
 				email: email.trim(),
 				password,
-				callbackURL: `${baseURL}/auth`,
+				callbackURL: `${baseURL}/select`,
 			});
 
 			if (result.error) {
@@ -117,7 +117,7 @@ export function LoginForm() {
 		await signIn.social(
 			{
 				provider,
-				callbackURL: `${baseURL}/auth`,
+				callbackURL: `${baseURL}/select`,
 			},
 			{
 				credentials: "include",

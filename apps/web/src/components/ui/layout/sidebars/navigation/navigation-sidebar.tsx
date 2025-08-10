@@ -1,15 +1,14 @@
 "use client";
 
 import { Header } from "@cossistant/react/support/components/header";
-import { LayoutDashboard, MoreHorizontal, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRef } from "react";
-import { ConversationsList } from "@/app/(dashboard)/[websiteSlug]/(sidebars)/conversations.client";
-import Icon from "@/components/ui/icons";
+import { ConversationsList } from "@/components/ui/layout/sidebars/navigation/conversations";
 import { Logo } from "../../../logo";
 import { SidebarContainer } from "../container";
 import { ResizableSidebar } from "../resizable-sidebar";
 import { SidebarItem } from "../sidebar-item";
+import { UserDropdown } from "./user-dropdown";
 
 // Removed mock conversations; now using live data
 
@@ -68,7 +67,9 @@ export function NavigationSidebar({
 					</div>
 				</div>
 
-				<div className="h-14 p-2" />
+				<div className="p-2">
+					<UserDropdown />
+				</div>
 			</SidebarContainer>
 		</ResizableSidebar>
 	);
