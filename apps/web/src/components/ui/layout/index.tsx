@@ -1,6 +1,19 @@
-export const Page = ({ children }: { children: React.ReactNode }) => {
+import { cn } from "@/lib/utils";
+
+export const Page = ({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) => {
 	return (
-		<div className="scrollbar-thin scrollbar-thumb-background-500 scrollbar-track-background-500 flex flex-1 flex-col overflow-y-auto rounded border-x border-t p-4 dark:bg-background-100">
+		<div
+			className={cn(
+				"scrollbar-thin scrollbar-thumb-background-500 scrollbar-track-background-500 flex flex-1 flex-col overflow-y-auto rounded border-x border-t p-6 dark:bg-background-100",
+				className
+			)}
+		>
 			{children}
 		</div>
 	);

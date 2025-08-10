@@ -1,5 +1,7 @@
+import Icon from "@/components/ui/icons";
 import { Page } from "@/components/ui/layout";
 import { Header } from "@/components/ui/layout/header";
+import { TextEffect } from "@/components/ui/text-effect";
 import { ensureWebsiteAccess } from "@/lib/auth/website-access";
 
 interface DashboardPageProps {
@@ -14,11 +16,17 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
 
 	return (
 		<>
-			<Header />
+			<Header>Dashboard</Header>
 			<Page>
-				<p>Welcome to {website?.name} dashboard!</p>
-				<p>You have access as: {user.name}</p>
-				{/* Conversations list now lives in the navigation sidebar */}
+				<div className="flex flex-col gap-2 font-medium">
+					<TextEffect className="font-normal text-3xl">
+						Welcome {user.name?.split(" ")[0] || "there"},
+					</TextEffect>
+					<p className="text-base text-primary/70">
+						Here&apos;s what&apos;s happening with{" "}
+						{website?.name || "your website"}.
+					</p>
+				</div>
 			</Page>
 		</>
 	);
