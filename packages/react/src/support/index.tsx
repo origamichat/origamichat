@@ -19,18 +19,7 @@ export interface SupportProps {
 	mode?: "floating" | "responsive";
 	defaultMessages?: string[];
 	quickOptions?: string[];
-	showTypingIndicator?: boolean;
-	conversationEvents?: { id: string; event: string; timestamp?: Date }[];
 	demo?: boolean;
-	// WebSocket configuration
-	publicKey?: string;
-	wsUrl?: string;
-	userId?: string;
-	organizationId?: string;
-	autoConnect?: boolean;
-	onWsConnect?: () => void;
-	onWsDisconnect?: () => void;
-	onWsError?: (error: Error) => void;
 }
 
 // Internal component that needs the conversation context

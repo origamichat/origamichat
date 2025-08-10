@@ -9,6 +9,7 @@ import {
 	useEffect,
 	useMemo,
 	useRef,
+	useState,
 } from "react";
 import useWebSocketLib, { ReadyState } from "react-use-websocket";
 import { useConversationActions } from "../../store";
@@ -86,18 +87,23 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 		}
 	}, [wsUrl, autoConnect, getOptionalPublicKey, onError]);
 
+	const [connectionError, setConnectionError] = useState<Error | null>(null);
+
 	const { sendMessage, lastMessage, readyState } = useWebSocketLib(socketUrl, {
 		shouldReconnect: () => true,
 		reconnectAttempts: 10,
 		reconnectInterval: 3000,
 		onOpen: () => {
+			setConnectionError(null);
 			onConnect?.();
 		},
 		onClose: () => {
 			onDisconnect?.();
 		},
 		onError: (event) => {
-			onError?.(new Error(`WebSocket error: ${event.type}`));
+			const err = new Error(`WebSocket error: ${event.type}`);
+			setConnectionError(err);
+			onError?.(err);
 		},
 	});
 
@@ -142,12 +148,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 		() => ({
 			isConnected: readyState === ReadyState.OPEN,
 			isConnecting: readyState === ReadyState.CONNECTING,
-			error: null,
+			error: connectionError,
 			send,
 			subscribe,
 			lastMessage: lastMessageRef.current,
 		}),
-		[readyState, send, subscribe]
+		[readyState, send, subscribe, connectionError]
 	);
 
 	return (

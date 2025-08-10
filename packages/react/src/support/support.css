@@ -116,10 +116,6 @@
 }
 
 @layer base {
-	.cossistant * {
-		@apply !border-co-border outline-co-ring/50;
-	}
-
 	.cossistant {
 		@apply scroll-smooth;
 

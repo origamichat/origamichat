@@ -49,7 +49,7 @@ export function SupportProvider({
 	children,
 	defaultOpen = false,
 	apiUrl = "https://api.cossistant.com/v1",
-	wsUrl = "wss://api.cossistant.com",
+	wsUrl = "wss://api.cossistant.com/ws",
 	publicKey,
 	defaultMessages,
 	quickOptions,
