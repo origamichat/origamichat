@@ -10,15 +10,13 @@
     "check-types": "turbo run check-types",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish",
-    "prepare": "husky"
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.5",
     "@changesets/cli": "^2.29.5",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "tsup": "^8.5.0",
     "tsx": "4.19.4",
