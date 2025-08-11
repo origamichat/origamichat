@@ -2,13 +2,11 @@
 
 import type { CossistantClient } from "@cossistant/core";
 import type { PublicWebsiteResponse } from "@cossistant/types";
-import { enableMapSet } from "immer";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
 import { useClient } from "./hooks/use-rest-client";
 import { useWebsiteData } from "./hooks/use-website-data";
-import { ConversationProvider, WebSocketProvider } from "./support";
-
-enableMapSet();
+import { WebSocketProvider } from "./support";
 
 export interface CossistantProviderProps {
 	children: React.ReactNode;
@@ -22,6 +20,7 @@ export interface CossistantProviderProps {
 	onWsConnect?: () => void;
 	onWsDisconnect?: () => void;
 	onWsError?: (error: Error) => void;
+	queryClient?: QueryClient;
 }
 
 export interface CossistantContextValue {
@@ -30,24 +29,128 @@ export interface CossistantContextValue {
 	quickOptions: string[];
 	setDefaultMessages: (messages: string[]) => void;
 	setQuickOptions: (options: string[]) => void;
-	isOpen: boolean;
-	open: () => void;
-	close: () => void;
-	toggle: () => void;
 	unreadCount: number;
 	setUnreadCount: (count: number) => void;
 	isLoading: boolean;
 	error: Error | null;
 	client: CossistantClient | null;
+	queryClient: QueryClient;
 }
 
 const SupportContext = React.createContext<CossistantContextValue | undefined>(
 	undefined
 );
 
+// Inner component that uses React Query hooks
+function SupportProviderInner({
+	children,
+	apiUrl,
+	wsUrl,
+	publicKey,
+	defaultMessages,
+	quickOptions,
+	autoConnect,
+	onWsConnect,
+	onWsDisconnect,
+	onWsError,
+	queryClient,
+}: CossistantProviderProps & { queryClient: QueryClient }) {
+	const [unreadCount, setUnreadCount] = React.useState(0);
+	const [_defaultMessages, _setDefaultMessages] = React.useState<string[]>(
+		defaultMessages || []
+	);
+	const [_quickOptions, _setQuickOptions] = React.useState<string[]>(
+		quickOptions || []
+	);
+
+	// Update state when props change (for initial values from provider)
+	React.useEffect(() => {
+		if (defaultMessages && defaultMessages.length > 0) {
+			_setDefaultMessages(defaultMessages);
+		}
+	}, [defaultMessages]);
+
+	React.useEffect(() => {
+		if (quickOptions && quickOptions.length > 0) {
+			_setQuickOptions(quickOptions);
+		}
+	}, [quickOptions]);
+
+	const { client, error: clientError } = useClient(publicKey, apiUrl, wsUrl);
+	const { website, isLoading, error: websiteError } = useWebsiteData(client);
+
+	const error = clientError || websiteError;
+
+	// Prime REST client with website/visitor context so headers are sent reliably
+	React.useEffect(() => {
+		if (client && website) {
+			// @ts-expect-error internal priming: safe in our library context
+			client.restClient?.setWebsiteContext?.(website.id, website.visitor?.id);
+		}
+	}, [client, website]);
+
+	const setDefaultMessages = React.useCallback(
+		(messages: string[]) => _setDefaultMessages(messages),
+		[]
+	);
+
+	const setQuickOptions = React.useCallback(
+		(options: string[]) => _setQuickOptions(options),
+		[]
+	);
+
+	const setUnreadCountStable = React.useCallback(
+		(count: number) => setUnreadCount(count),
+		[]
+	);
+
+	const value = React.useMemo<CossistantContextValue>(
+		() => ({
+			website,
+			unreadCount,
+			setUnreadCount: setUnreadCountStable,
+			isLoading,
+			error,
+			client,
+			defaultMessages: _defaultMessages,
+			setDefaultMessages,
+			quickOptions: _quickOptions,
+			setQuickOptions,
+			queryClient,
+		}),
+		[
+			website,
+			unreadCount,
+			isLoading,
+			error,
+			client,
+			_defaultMessages,
+			_quickOptions,
+			queryClient,
+			setDefaultMessages,
+			setQuickOptions,
+			setUnreadCountStable,
+		]
+	);
+
+	return (
+		<SupportContext.Provider value={value}>
+			<WebSocketProvider
+				autoConnect={autoConnect}
+				onConnect={onWsConnect}
+				onDisconnect={onWsDisconnect}
+				onError={onWsError}
+				publicKey={publicKey}
+				wsUrl={wsUrl}
+			>
+				{children}
+			</WebSocketProvider>
+		</SupportContext.Provider>
+	);
+}
+
 export function SupportProvider({
 	children,
-	defaultOpen = false,
 	apiUrl = "https://api.cossistant.com/v1",
 	wsUrl = "wss://api.cossistant.com/ws",
 	publicKey,
@@ -57,70 +160,40 @@ export function SupportProvider({
 	onWsConnect,
 	onWsDisconnect,
 	onWsError,
+	queryClient,
 }: CossistantProviderProps) {
-	const [isOpen, setIsOpen] = React.useState(defaultOpen);
-	const [unreadCount, setUnreadCount] = React.useState(0);
-	const [_defaultMessages, _setDefaultMessages] = React.useState(
-		defaultMessages || []
+	// Create a default QueryClient if none provided
+	const [defaultQueryClient] = React.useState(
+		() =>
+			new QueryClient({
+				defaultOptions: {
+					queries: {
+						staleTime: 5 * 60 * 1000, // 5 minutes
+						gcTime: 10 * 60 * 1000, // 10 minutes
+					},
+				},
+			})
 	);
-	const [_quickOptions, _setQuickOptions] = React.useState(quickOptions || []);
 
-	const open = React.useCallback(() => setIsOpen(true), []);
-	const close = React.useCallback(() => setIsOpen(false), []);
-	const toggle = React.useCallback(() => setIsOpen((o) => !o), []);
-
-	const { client, error: clientError } = useClient(publicKey, apiUrl, wsUrl);
-	const { website, isLoading, error: websiteError } = useWebsiteData(client);
-
-	const error = clientError || websiteError;
-
-	const value = React.useMemo<CossistantContextValue>(
-		() => ({
-			website,
-			isOpen,
-			open,
-			close,
-			toggle,
-			unreadCount,
-			setUnreadCount,
-			isLoading,
-			error,
-			client,
-			defaultMessages: _defaultMessages,
-			setDefaultMessages: _setDefaultMessages,
-			quickOptions: _quickOptions,
-			setQuickOptions: _setQuickOptions,
-		}),
-		[
-			website,
-			isOpen,
-			unreadCount,
-			isLoading,
-			error,
-			client,
-			open,
-			close,
-			_defaultMessages,
-			_quickOptions,
-			toggle,
-		]
-	);
+	const activeQueryClient = queryClient || defaultQueryClient;
 
 	return (
-		<SupportContext.Provider value={value}>
-			<ConversationProvider>
-				<WebSocketProvider
-					autoConnect={autoConnect}
-					onConnect={onWsConnect}
-					onDisconnect={onWsDisconnect}
-					onError={onWsError}
-					publicKey={publicKey}
-					wsUrl={wsUrl}
-				>
-					{children}
-				</WebSocketProvider>
-			</ConversationProvider>
-		</SupportContext.Provider>
+		<QueryClientProvider client={activeQueryClient}>
+			<SupportProviderInner
+				apiUrl={apiUrl}
+				autoConnect={autoConnect}
+				defaultMessages={defaultMessages}
+				onWsConnect={onWsConnect}
+				onWsDisconnect={onWsDisconnect}
+				onWsError={onWsError}
+				publicKey={publicKey}
+				queryClient={activeQueryClient}
+				quickOptions={quickOptions}
+				wsUrl={wsUrl}
+			>
+				{children}
+			</SupportProviderInner>
+		</QueryClientProvider>
 	);
 }
 

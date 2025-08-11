@@ -3,27 +3,31 @@ import {
 	AvatarFallback,
 	AvatarImage,
 } from "@cossistant/react/primitive/avatar";
-import { SenderType } from "@cossistant/types";
+import type {
+	AvailableAIAgent,
+	AvailableHumanAgent,
+	ConversationEvent as ConversationEventType,
+} from "@cossistant/types";
 import { motion } from "motion/react";
 import type React from "react";
 import { CossistantLogo } from "./cossistant-branding";
 
 export interface ConversationEventProps {
-	event: string;
-	timestamp?: Date;
-	senderName?: string;
-	senderImage?: string;
-	senderType?: SenderType;
+	event: ConversationEventType;
+	availableAIAgents: AvailableAIAgent[];
+	availableHumanAgents: AvailableHumanAgent[];
 }
 
 export const ConversationEvent: React.FC<ConversationEventProps> = ({
 	event,
-	timestamp,
-	senderName,
-	senderImage,
-	senderType,
+	availableAIAgents,
+	availableHumanAgents,
 }) => {
-	const isAI = senderType === SenderType.AI;
+	const isAI = event.actorAiAgentId !== null;
+	const humanAgent = availableHumanAgents.find(
+		(agent) => agent.id === event.actorUserId
+	);
+
 	return (
 		<motion.div
 			animate={{ opacity: 1, scale: 1 }}
@@ -39,20 +43,20 @@ export const ConversationEvent: React.FC<ConversationEventProps> = ({
 						</div>
 					) : (
 						<Avatar className="size-5 flex-shrink-0 overflow-clip rounded">
-							{senderImage && (
-								<AvatarImage alt={senderName} src={senderImage} />
+							{humanAgent?.image && (
+								<AvatarImage alt={humanAgent.name} src={humanAgent.image} />
 							)}
 							<AvatarFallback
 								className="size-5 overflow-clip rounded text-xs"
-								name={senderName || "Support"}
+								name={humanAgent?.name || "Support"}
 							/>
 						</Avatar>
 					)}
 				</div>
-				<span className="px-2">{event}</span>
-				{timestamp && (
+				<span className="px-2">{event.type}</span>
+				{event.createdAt && (
 					<span className="text-[10px]">
-						{new Date(timestamp).toLocaleTimeString([], {
+						{new Date(event.createdAt).toLocaleTimeString([], {
 							hour: "2-digit",
 							minute: "2-digit",
 						})}

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useSupport } from "../provider";
 import { useSupportConfig } from "../support/context/config";
 import { useRenderElement } from "../utils/use-render-element";
 
@@ -32,27 +31,23 @@ export const SupportWindow = React.forwardRef<HTMLDivElement, WindowProps>(
 		},
 		ref
 	) => {
-		const context = useSupport();
-		const supportConfig = useSupportConfig();
+		const { isOpen, close, mode } = useSupportConfig();
 
 		// In responsive mode, window is always open
 		// Otherwise use normal open/close logic
-		const isOpen =
-			supportConfig?.mode === "responsive"
-				? true
-				: (isOpenProp ?? context?.isOpen ?? false);
+		const open = mode === "responsive" ? true : (isOpenProp ?? isOpen ?? false);
 
-		const close = React.useCallback(() => {
+		const closeFn = React.useCallback(() => {
 			if (onOpenChange) {
 				onOpenChange(false);
-			} else if (context?.close) {
-				context.close();
+			} else if (close) {
+				close();
 			}
-		}, [onOpenChange, context?.close]);
+		}, [onOpenChange, close]);
 
 		// Close on Escape
 		React.useEffect(() => {
-			if (!(isOpen && closeOnEscape)) {
+			if (!(open && closeOnEscape)) {
 				return;
 			}
 			const onKey = (e: KeyboardEvent) => {
@@ -62,9 +57,9 @@ export const SupportWindow = React.forwardRef<HTMLDivElement, WindowProps>(
 			};
 			window.addEventListener("keydown", onKey);
 			return () => window.removeEventListener("keydown", onKey);
-		}, [isOpen, close, closeOnEscape]);
+		}, [open, close, closeOnEscape]);
 
-		const renderProps: WindowRenderProps = { isOpen, close };
+		const renderProps: WindowRenderProps = { isOpen: open, close: closeFn };
 
 		const content =
 			typeof children === "function" ? children(renderProps) : children;
@@ -85,7 +80,7 @@ export const SupportWindow = React.forwardRef<HTMLDivElement, WindowProps>(
 					...props,
 					children: content,
 				},
-				enabled: isOpen,
+				enabled: open,
 			}
 		);
 	}

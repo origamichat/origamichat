@@ -10,6 +10,7 @@ export { MessageGroup } from "./message-group";
 export type { MessageListProps } from "./message-list";
 export { MessageList } from "./message-list";
 export { SendButton } from "./multimodal-input";
+export { SupportContent } from "./support-content";
 export type { TypingIndicatorProps } from "./typing-indicator";
 export { TypingIndicator } from "./typing-indicator";
 export { Window } from "./window";

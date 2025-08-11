@@ -1,7 +1,10 @@
 import {
+	ConversationEventType,
+	ConversationParticipationStatus,
 	ConversationPriority,
 	ConversationStatus,
 	MessageType,
+	MessageVisibility,
 } from "@cossistant/types";
 import {
 	type InferInsertModel,
@@ -48,28 +51,19 @@ export const conversationPriorityEnum = pgEnum(
 	enumToPgEnum(ConversationPriority)
 );
 
-export const messageVisibilityEnum = pgEnum("message_visibility", [
-	"PUBLIC",
-	"PRIVATE_NOTE",
-]);
+export const messageVisibilityEnum = pgEnum(
+	"message_visibility",
+	enumToPgEnum(MessageVisibility)
+);
 
-export const conversationEventTypeEnum = pgEnum("conversation_event_type", [
-	"ASSIGNED",
-	"UNASSIGNED",
-	"PARTICIPANT_REQUESTED",
-	"PARTICIPANT_JOINED",
-	"PARTICIPANT_LEFT",
-	"STATUS_CHANGED",
-	"PRIORITY_CHANGED",
-	"TAG_ADDED",
-	"TAG_REMOVED",
-	"RESOLVED",
-	"REOPENED",
-]);
+export const conversationEventTypeEnum = pgEnum(
+	"conversation_event_type",
+	enumToPgEnum(ConversationEventType)
+);
 
 export const conversationParticipationStatusEnum = pgEnum(
 	"conversation_participation_status",
-	["REQUESTED", "ACTIVE", "LEFT", "DECLINED"]
+	enumToPgEnum(ConversationParticipationStatus)
 );
 
 export const conversation = pgTable(
@@ -82,9 +76,6 @@ export const conversation = pgTable(
 		priority: conversationPriorityEnum("priority")
 			.default(ConversationPriority.NORMAL)
 			.notNull(),
-		assignedTeamMemberId: ulidNullableReference(
-			"assigned_team_member_id"
-		).references(() => user.id),
 		organizationId: ulidReference("organization_id").references(
 			() => organization.id,
 			{ onDelete: "cascade" }
@@ -96,9 +87,6 @@ export const conversation = pgTable(
 			onDelete: "cascade",
 		}),
 		title: text("title"),
-		readBy: text("read_by").array(),
-		lastReadAt: jsonb("last_read_at"), // Stores { userId: timestamp }
-		lastMessageAt: timestamp("last_message_at"),
 		resolutionTime: integer("resolution_time"), // in seconds
 		startedAt: timestamp("started_at").$defaultFn(() => new Date()),
 		firstResponseAt: timestamp("first_response_at"),
@@ -131,16 +119,6 @@ export const conversation = pgTable(
 		index("conversation_website_status_idx").on(table.websiteId, table.status),
 		// Index for filtering conversations by visitor
 		index("conversation_visitor_idx").on(table.visitorId),
-		// Index for filtering conversations by assigned team member within org
-		index("conversation_org_team_member_idx").on(
-			table.organizationId,
-			table.assignedTeamMemberId
-		),
-		// Index for sorting by last message within organization
-		index("conversation_org_last_message_idx").on(
-			table.organizationId,
-			table.lastMessageAt
-		),
 		// Index for resolution data
 		index("conversation_org_resolved_idx").on(
 			table.organizationId,
@@ -165,6 +143,12 @@ export const message = pgTable(
 		userId: ulidNullableReference("user_id").references(() => user.id, {
 			onDelete: "set null",
 		}),
+		visitorId: ulidNullableReference("visitor_id").references(
+			() => visitor.id,
+			{
+				onDelete: "set null",
+			}
+		),
 		organizationId: ulidReference("organization_id").references(
 			() => organization.id,
 			{ onDelete: "cascade" }
@@ -178,8 +162,9 @@ export const message = pgTable(
 			() => aiAgent.id
 		),
 		modelUsed: text("model_used"),
-		visibility: messageVisibilityEnum("visibility").default("PUBLIC").notNull(),
-		metadata: jsonb("metadata"),
+		visibility: messageVisibilityEnum("visibility")
+			.default(MessageVisibility.PUBLIC)
+			.notNull(),
 		createdAt: timestamp("created_at")
 			.$defaultFn(() => new Date())
 			.notNull(),
@@ -273,7 +258,7 @@ export const conversationParticipant = pgTable(
 			onDelete: "cascade",
 		}),
 		status: conversationParticipationStatusEnum("status")
-			.default("ACTIVE")
+			.default(ConversationParticipationStatus.ACTIVE)
 			.notNull(),
 		reason: text("reason"),
 		requestedByUserId: ulidNullableReference("requested_by_user_id").references(
@@ -399,16 +384,11 @@ export const conversationRelations = relations(
 			fields: [conversation.visitorId],
 			references: [visitor.id],
 		}),
-		assignedTeamMember: one(user, {
-			fields: [conversation.assignedTeamMemberId],
-			references: [user.id],
-		}),
 		messages: many(message),
 		assignees: many(conversationAssignee),
 		participants: many(conversationParticipant),
 		events: many(conversationEvent),
 		tags: many(conversationTag),
-		readReceipts: many(conversationReadReceipt),
 	})
 );
 
@@ -429,78 +409,15 @@ export const messageRelations = relations(message, ({ one }) => ({
 		fields: [message.aiAgentId],
 		references: [aiAgent.id],
 	}),
+	visitor: one(visitor, {
+		fields: [message.visitorId],
+		references: [visitor.id],
+	}),
 	parentMessage: one(message, {
 		fields: [message.parentMessageId],
 		references: [message.id],
 	}),
 }));
-
-export const conversationReadReceipt = pgTable(
-	"conversation_read_receipt",
-	{
-		id: ulidPrimaryKey("id"),
-		organizationId: ulidReference("organization_id").references(
-			() => organization.id,
-			{ onDelete: "cascade" }
-		),
-		conversationId: nanoidReference("conversation_id").references(
-			() => conversation.id,
-			{ onDelete: "cascade" }
-		),
-		userId: ulidNullableReference("user_id").references(() => user.id, {
-			onDelete: "set null",
-		}),
-		aiAgentId: ulidNullableReference("ai_agent_id").references(
-			() => aiAgent.id,
-			{ onDelete: "set null" }
-		),
-		lastReadAt: timestamp("last_read_at")
-			.$defaultFn(() => new Date())
-			.notNull(),
-		createdAt: timestamp("created_at")
-			.$defaultFn(() => new Date())
-			.notNull(),
-		updatedAt: timestamp("updated_at")
-			.$defaultFn(() => new Date())
-			.notNull(),
-	},
-	(table) => [
-		index("conv_read_receipt_org_idx").on(table.organizationId),
-		index("conv_read_receipt_conv_idx").on(table.conversationId),
-		index("conv_read_receipt_user_idx").on(table.userId),
-		index("conv_read_receipt_ai_agent_idx").on(table.aiAgentId),
-		uniqueIndex("conv_read_receipt_conv_user_unique").on(
-			table.conversationId,
-			table.userId
-		),
-		uniqueIndex("conv_read_receipt_conv_ai_agent_unique").on(
-			table.conversationId,
-			table.aiAgentId
-		),
-	]
-);
-
-export const conversationReadReceiptRelations = relations(
-	conversationReadReceipt,
-	({ one }) => ({
-		organization: one(organization, {
-			fields: [conversationReadReceipt.organizationId],
-			references: [organization.id],
-		}),
-		conversation: one(conversation, {
-			fields: [conversationReadReceipt.conversationId],
-			references: [conversation.id],
-		}),
-		user: one(user, {
-			fields: [conversationReadReceipt.userId],
-			references: [user.id],
-		}),
-		aiAgent: one(aiAgent, {
-			fields: [conversationReadReceipt.aiAgentId],
-			references: [aiAgent.id],
-		}),
-	})
-);
 
 export const conversationTagRelations = relations(
 	conversationTag,
@@ -557,10 +474,3 @@ export type ConversationEventInsert = InferInsertModel<
 
 export type ConversationTagSelect = InferSelectModel<typeof conversationTag>;
 export type ConversationTagInsert = InferInsertModel<typeof conversationTag>;
-
-export type ConversationReadReceiptSelect = InferSelectModel<
-	typeof conversationReadReceipt
->;
-export type ConversationReadReceiptInsert = InferInsertModel<
-	typeof conversationReadReceipt
->;

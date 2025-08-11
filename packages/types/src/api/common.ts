@@ -40,11 +40,11 @@ export const referralCodeSchema = z.string().min(1).openapi({
  * Common pagination schema
  */
 export const paginationSchema = z.object({
-	page: z.number().int().positive().default(1).openapi({
+	page: z.coerce.number().int().positive().default(1).openapi({
 		description: "The page number to retrieve.",
 		example: 1,
 	}),
-	limit: z.number().int().positive().max(100).default(20).openapi({
+	limit: z.coerce.number().int().positive().max(100).default(20).openapi({
 		description: "The number of items per page (max 100).",
 		example: 20,
 	}),

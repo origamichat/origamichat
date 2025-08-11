@@ -1,4 +1,8 @@
-import type { Message as MessageType } from "@cossistant/types";
+import type {
+	AvailableAIAgent,
+	AvailableHumanAgent,
+	Message as MessageType,
+} from "@cossistant/types";
 import { SenderType } from "@cossistant/types";
 import { motion } from "motion/react";
 import type React from "react";
@@ -9,22 +13,26 @@ import { Message } from "./message";
 
 export interface MessageGroupProps {
 	messages: MessageType[];
-	senderName?: string;
-	senderImage?: string;
+	availableAIAgents: AvailableAIAgent[];
+	availableHumanAgents: AvailableHumanAgent[];
 }
 
 export const MessageGroup: React.FC<MessageGroupProps> = ({
 	messages,
-	senderName,
-	senderImage,
+	availableAIAgents,
+	availableHumanAgents,
 }) => {
 	if (messages.length === 0) {
 		return null;
 	}
 
-	const isVisitor = messages[0]?.sender === SenderType.VISITOR;
-	const isAI = messages[0]?.sender === SenderType.AI;
+	const isVisitor = messages[0]?.visitorId !== null;
+	const isAI = messages[0]?.aiAgentId !== null;
 	const showAvatar = !isVisitor;
+
+	const humanAgent = availableHumanAgents.find(
+		(agent) => agent.id === messages[0]?.userId
+	);
 
 	return (
 		<motion.div
@@ -46,12 +54,12 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 						</div>
 					) : (
 						<Avatar className="size-8 flex-shrink-0 overflow-clip rounded">
-							{senderImage && (
-								<AvatarImage alt={senderName} src={senderImage} />
+							{humanAgent?.image && (
+								<AvatarImage alt={humanAgent.name} src={humanAgent.image} />
 							)}
 							<AvatarFallback
 								className="text-xs"
-								name={senderName || "Support"}
+								name={humanAgent?.name || "Support"}
 							/>
 						</Avatar>
 					)}
@@ -61,9 +69,9 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 			{/* Messages column */}
 			<div className={cn("flex flex-col gap-1", isVisitor && "items-end")}>
 				{/* Sender name shown at top of group */}
-				{showAvatar && (senderName || isAI) && (
+				{showAvatar && (humanAgent?.name || isAI) && (
 					<span className="px-1 text-muted-foreground text-xs">
-						{isAI ? "Cossistant AI" : senderName}
+						{isAI ? "Cossistant AI" : humanAgent?.name}
 					</span>
 				)}
 

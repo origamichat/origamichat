@@ -27,6 +27,7 @@ export function useRealtimeSupport(
 	useEffect(() => {
 		if (onEvent) {
 			const unsubscribe = subscribe(onEvent);
+
 			return unsubscribe;
 		}
 	}, [onEvent, subscribe]);

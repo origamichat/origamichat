@@ -22,16 +22,20 @@ export const SupportConfig = ({
 }: SupportConfigProps) => {
 	const { setDefaultMessages, setQuickOptions } = useSupport();
 
+	// Only update when the arrays actually change content
 	React.useEffect(() => {
 		if (defaultMessages) {
 			setDefaultMessages(defaultMessages);
 		}
+	}, [defaultMessages, setDefaultMessages]);
+
+	React.useEffect(() => {
 		if (quickOptions) {
 			setQuickOptions(quickOptions);
 		}
-	}, [defaultMessages, quickOptions, setDefaultMessages, setQuickOptions]);
+	}, [quickOptions, setQuickOptions]);
 
-	return <></>;
+	return null;
 };
 
 SupportConfig.displayName = "SupportConfig";

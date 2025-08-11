@@ -1,10 +1,9 @@
-import type { Message, SenderType } from "@cossistant/types";
 import type React from "react";
-import { useSupportNavigation } from "./context/navigation";
 import { ConversationPage } from "./pages/conversation";
 import { ConversationHistoryPage } from "./pages/conversation-history";
 import { FAQPage } from "./pages/faq";
 import { HomePage } from "./pages/home";
+import { useSupportNavigation } from "./store/support-store";
 
 export const SupportRouter: React.FC<{
 	message: string;
@@ -15,19 +14,6 @@ export const SupportRouter: React.FC<{
 	addFiles: (files: File[]) => void;
 	removeFile: (index: number) => void;
 	submit: () => void;
-	messages?: Message[];
-	events?: {
-		id: string;
-		event: string;
-		timestamp?: Date;
-		agentAvatar?: string;
-		agentName?: string;
-	}[];
-	isTyping?: {
-		type: SenderType;
-	};
-	currentTypingUser?: SenderType | null;
-	currentTypingAvatar?: string;
 }> = ({
 	message,
 	files,
@@ -37,32 +23,12 @@ export const SupportRouter: React.FC<{
 	addFiles,
 	removeFile,
 	submit,
-	messages,
-	events,
-	isTyping,
-	currentTypingUser,
-	currentTypingAvatar,
 }) => {
 	const { current } = useSupportNavigation();
 
 	switch (current.page) {
 		case "HOME":
-			return (
-				<HomePage
-					addFiles={addFiles}
-					currentTypingUser={currentTypingUser}
-					error={error}
-					events={events}
-					files={files}
-					isSubmitting={isSubmitting}
-					isTyping={isTyping}
-					message={message}
-					messages={messages}
-					removeFile={removeFile}
-					setMessage={setMessage}
-					submit={submit}
-				/>
-			);
+			return <HomePage onStartConversation={() => {}} />;
 
 		case "FAQ":
 			return <FAQPage />;
@@ -74,12 +40,11 @@ export const SupportRouter: React.FC<{
 					addFiles={addFiles}
 					conversationId={current.params.conversationId}
 					error={error}
-					events={events}
+					events={[]}
 					files={files}
 					isSubmitting={isSubmitting}
-					isTyping={isTyping}
 					message={message}
-					messages={messages}
+					messages={[]}
 					removeFile={removeFile}
 					setMessage={setMessage}
 					submit={submit}
@@ -90,22 +55,7 @@ export const SupportRouter: React.FC<{
 			return <ConversationHistoryPage />;
 
 		default: {
-			return (
-				<HomePage
-					addFiles={addFiles}
-					currentTypingUser={currentTypingUser}
-					error={error}
-					events={events}
-					files={files}
-					isSubmitting={isSubmitting}
-					isTyping={isTyping}
-					message={message}
-					messages={messages}
-					removeFile={removeFile}
-					setMessage={setMessage}
-					submit={submit}
-				/>
-			);
+			return <HomePage onStartConversation={() => {}} />;
 		}
 	}
 };

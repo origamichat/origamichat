@@ -1,19 +1,9 @@
 "use client";
 
-import type { Message } from "@cossistant/types";
-import { SenderType } from "@cossistant/types";
 import { motion } from "motion/react";
 import type React from "react";
-import { useMemo } from "react";
 import { useMultimodalInput } from "../../hooks/use-multimodal-input";
-import {
-	useActiveMessages,
-	useActiveTypingIndicator,
-	useConversationActions,
-	useConversationState,
-} from "../../store";
-import { useWebSocket } from "../context/websocket";
-import { useDemo } from "../hooks/use-demo";
+
 import { SupportRouter } from "../router";
 import { cn } from "../utils";
 import { Bubble } from "./bubble";
@@ -24,8 +14,6 @@ interface SupportContentProps {
 	position?: "top" | "bottom";
 	align?: "right" | "left";
 	mode?: "floating" | "responsive";
-	defaultMessages?: string[];
-	demo?: boolean;
 }
 
 export const SupportContent: React.FC<SupportContentProps> = ({
@@ -33,48 +21,7 @@ export const SupportContent: React.FC<SupportContentProps> = ({
 	position = "bottom",
 	align = "right",
 	mode = "floating",
-	defaultMessages = [],
-	demo = false,
 }) => {
-	// Store hooks
-	const messages = useActiveMessages();
-	const typingIndicator = useActiveTypingIndicator();
-	const { activeConversationId, events: eventsMap } = useConversationState();
-	const { addMessage, setTypingIndicator } = useConversationActions();
-	const events = activeConversationId
-		? eventsMap.get(activeConversationId) || []
-		: [];
-
-	// WebSocket hook
-	const { isConnected } = useWebSocket();
-
-	// Demo state
-	const demoState = useDemo({
-		enabled: demo,
-		defaultMessages,
-	});
-
-	// Determine which messages and events to show
-	const displayMessages = useMemo(
-		() => (demo ? demoState.messages : messages),
-		[demo, demoState.messages, messages]
-	);
-
-	const displayEvents = useMemo(
-		() => (demo ? demoState.events : events),
-		[demo, demoState.events, events]
-	);
-
-	const _displayTyping = useMemo(
-		() =>
-			demo
-				? demoState.currentTypingUser
-					? { type: demoState.currentTypingUser }
-					: undefined
-				: typingIndicator,
-		[demo, demoState.currentTypingUser, typingIndicator]
-	);
-
 	const {
 		message,
 		files,
@@ -85,55 +32,7 @@ export const SupportContent: React.FC<SupportContentProps> = ({
 		removeFile,
 		submit,
 	} = useMultimodalInput({
-		onSubmit: async (data) => {
-			if (demo) {
-				demoState.handleDemoResponse(data.message);
-				return;
-			}
-
-			// Get or create conversation ID
-			const conversationId = activeConversationId || `conv-${Date.now()}`;
-
-			// Add user message to store
-			const userMessage: Message = {
-				id: `msg-${Date.now()}`,
-				content: data.message,
-				timestamp: new Date(),
-				sender: SenderType.VISITOR,
-				conversationId,
-			};
-			addMessage(conversationId, userMessage);
-
-			// Send via WebSocket if connected
-			if (isConnected) {
-				// Set typing indicator for AI
-				setTypingIndicator(conversationId, {
-					conversationId,
-					type: SenderType.AI,
-					timestamp: new Date(),
-				});
-			} else {
-				// Fallback simulation when not connected
-				setTypingIndicator(conversationId, {
-					conversationId,
-					type: SenderType.AI,
-					timestamp: new Date(),
-				});
-
-				setTimeout(() => {
-					const aiMessage: Message = {
-						id: `msg-${Date.now() + 1}`,
-						content:
-							"Thanks for your message! This is a demo response. WebSocket is not connected.",
-						timestamp: new Date(),
-						sender: SenderType.AI,
-						conversationId,
-					};
-					addMessage(conversationId, aiMessage);
-					setTypingIndicator(conversationId, null);
-				}, 3000);
-			}
-		},
+		onSubmit: async (data) => {},
 		onError: () => {},
 	});
 
@@ -178,11 +77,9 @@ export const SupportContent: React.FC<SupportContentProps> = ({
 				<SupportRouter
 					addFiles={addFiles}
 					error={error}
-					events={displayEvents}
 					files={files}
 					isSubmitting={isSubmitting}
 					message={message}
-					messages={displayMessages}
 					removeFile={removeFile}
 					setMessage={setMessage}
 					submit={submit}

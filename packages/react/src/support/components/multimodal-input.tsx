@@ -1,11 +1,9 @@
 "use client";
 
 import type React from "react";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import * as Primitive from "../../primitive";
-import { useSupport } from "../../provider";
 import { cn } from "../utils";
-import { CossistantLogo } from "./cossistant-branding";
 import Icon from "./icons";
 import { Watermark } from "./watermark";
 

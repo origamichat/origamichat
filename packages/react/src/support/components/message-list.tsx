@@ -1,31 +1,26 @@
-import { type Message as MessageType, SenderType } from "@cossistant/types";
+import type {
+	AvailableAIAgent,
+	AvailableHumanAgent,
+	ConversationEvent,
+	Message as MessageType,
+	SenderType,
+} from "@cossistant/types";
 import type React from "react";
 import { useEffect, useRef } from "react";
 import { useGroupedMessages } from "../hooks";
 import { cn } from "../utils";
-import { ConversationEvent } from "./conversation-event";
+import { ConversationEvent as ConversationEventComponent } from "./conversation-event";
 import { MessageGroup } from "./message-group";
-import { TypingIndicator } from "./typing-indicator";
 
 export interface MessageListProps {
 	messages: MessageType[];
-	events?: {
-		id: string;
-		event: string;
-		timestamp?: Date;
-		agentAvatar?: string;
-		agentName?: string;
-	}[];
+	events: ConversationEvent[];
 	isTyping?: {
 		type: SenderType;
 	};
 	className?: string;
-	availableAgents: {
-		id: string;
-		name: string;
-		image: string | null;
-		lastOnlineAt: string | null;
-	}[];
+	availableAIAgents: AvailableAIAgent[];
+	availableHumanAgents: AvailableHumanAgent[];
 }
 
 export const MessageList: React.FC<MessageListProps> = ({
@@ -33,7 +28,8 @@ export const MessageList: React.FC<MessageListProps> = ({
 	events = [],
 	isTyping,
 	className,
-	availableAgents = [],
+	availableAIAgents = [],
+	availableHumanAgents = [],
 }) => {
 	const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +37,8 @@ export const MessageList: React.FC<MessageListProps> = ({
 	const groupedMessages = useGroupedMessages({
 		messages,
 		events,
-		availableAgents,
+		availableAIAgents,
+		availableHumanAgents,
 	});
 
 	// Auto-scroll to bottom when new messages or events are added
@@ -70,32 +67,30 @@ export const MessageList: React.FC<MessageListProps> = ({
 				{groupedMessages.map((item, index) => {
 					if (item.type === "event") {
 						return (
-							<ConversationEvent
+							<ConversationEventComponent
+								availableAIAgents={availableAIAgents}
+								availableHumanAgents={availableHumanAgents}
 								event={item.event}
-								key={item.id}
-								senderImage={item.senderImage}
-								senderName={item.senderName}
-								senderType={item.senderType}
-								timestamp={item.timestamp}
+								key={item.event.id}
 							/>
 						);
 					}
 					return (
 						<MessageGroup
+							availableAIAgents={availableAIAgents}
+							availableHumanAgents={availableHumanAgents}
 							key={`group-${index}`}
 							messages={item.messages}
-							senderImage={item.senderImage}
-							senderName={item.senderName}
 						/>
 					);
 				})}
-				{isTyping && (
-					<TypingIndicator
-						isAI={isTyping.type === SenderType.AI}
-						senderImage={availableAgents[0]?.image || undefined}
-						senderName={availableAgents[0]?.name || "Support"}
-					/>
-				)}
+				{/* {isTyping && (
+          <TypingIndicator
+            isAI={isTyping.type === SenderType.AI}
+            senderImage={availableAgents[0]?.image || undefined}
+            senderName={availableAgents[0]?.name || "Support"}
+          />
+        )} */}
 			</div>
 		</div>
 	);

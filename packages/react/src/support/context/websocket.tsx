@@ -12,7 +12,6 @@ import {
 	useState,
 } from "react";
 import useWebSocketLib, { ReadyState } from "react-use-websocket";
-import { useConversationActions } from "../../store";
 
 export interface WebSocketContextValue {
 	isConnected: boolean;
@@ -50,7 +49,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 		new Set()
 	);
 	const lastMessageRef = useRef<RealtimeEvent | null>(null);
-	const { handleRealtimeEvent } = useConversationActions();
 
 	const getOptionalPublicKey = useCallback(() => {
 		const keyFromProps = publicKey?.trim();
@@ -114,9 +112,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 				const event = JSON.parse(lastMessage.data) as RealtimeEvent;
 				lastMessageRef.current = event;
 
-				// Update the store with the event
-				handleRealtimeEvent(event);
-
 				// Notify all subscribed handlers
 				for (const handler of eventHandlersRef.current) {
 					handler(event);
@@ -125,7 +120,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 				// Intentionally swallow to avoid console noise in production builds
 			}
 		}
-	}, [lastMessage, handleRealtimeEvent]);
+	}, [lastMessage]);
 
 	const send = useCallback(
 		(event: RealtimeEvent) => {

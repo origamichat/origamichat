@@ -119,9 +119,9 @@ export type CheckWebsiteDomainRequest = z.infer<
 	typeof checkWebsiteDomainRequestSchema
 >;
 
-export const availableAgentSchema = z.object({
+export const availableHumanAgentSchema = z.object({
 	id: z.string().ulid().openapi({
-		description: "The agent's unique identifier.",
+		description: "The human agent's unique identifier.",
 		example: "01JG000000000000000000000",
 	}),
 	name: z.string().openapi({
@@ -136,6 +136,21 @@ export const availableAgentSchema = z.object({
 		description:
 			"The agent's last online timestamp, used to determine if the agent is online. If the agent is offline, this will be null or more than 5 minutes ago.",
 		example: "2021-01-01T00:00:00.000Z",
+	}),
+});
+
+export const AvailableAIAgentSchema = z.object({
+	id: z.string().ulid().openapi({
+		description: "The AI agent's unique identifier.",
+		example: "01JG000000000000000000000",
+	}),
+	name: z.string().openapi({
+		description: "The AI agent's name.",
+		example: "John Doe",
+	}),
+	image: z.string().nullable().openapi({
+		description: "The AI agent's avatar URL.",
+		example: "https://cossistant.com/avatar.png",
 	}),
 });
 
@@ -175,7 +190,8 @@ export const publicWebsiteResponseSchema = z.object({
 		description: "The website's support last online date.",
 		example: "2021-01-01T00:00:00.000Z",
 	}),
-	availableAgents: z.array(availableAgentSchema),
+	availableHumanAgents: z.array(availableHumanAgentSchema),
+	availableAIAgents: z.array(AvailableAIAgentSchema),
 	visitor: z
 		.object({
 			id: z.string().ulid().openapi({
@@ -194,3 +210,5 @@ export const publicWebsiteResponseSchema = z.object({
 });
 
 export type PublicWebsiteResponse = z.infer<typeof publicWebsiteResponseSchema>;
+export type AvailableHumanAgent = z.infer<typeof availableHumanAgentSchema>;
+export type AvailableAIAgent = z.infer<typeof AvailableAIAgentSchema>;

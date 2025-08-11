@@ -1,7 +1,7 @@
 "use client";
 
 import { useRealtimeSupport } from "@cossistant/react/hooks/use-realtime-support";
-import Support from "@cossistant/react/support";
+import Support, { useSupportConfig } from "@cossistant/react/support";
 import { Logo } from "@/components/ui/logo";
 
 export const dynamic = "force-dynamic";
@@ -22,8 +22,16 @@ function PlaygroundPropDisplay({
 	);
 }
 
+const DEFAULT_MESSAGES = [
+	"Hi 👋 I'm Anthony, founder of Cossistant",
+	"How can I help you?",
+];
+
+const QUICK_OPTIONS = ["How to install Cossistant?", "Pricing"];
+
 export default function Playground() {
 	const { isConnected } = useRealtimeSupport();
+	const { mode, size, isOpen } = useSupportConfig();
 
 	return (
 		<>
@@ -38,9 +46,16 @@ export default function Playground() {
 							name="Websocket healthy"
 							value={isConnected.toString()}
 						/>
+						<PlaygroundPropDisplay name="Opened" value={isOpen.toString()} />
+						<PlaygroundPropDisplay name="Mode" value={mode} />
+						<PlaygroundPropDisplay name="Size" value={size} />
 					</div>
 				</div>
-				<Support />
+				<Support
+					defaultMessages={DEFAULT_MESSAGES}
+					defaultOpen
+					quickOptions={QUICK_OPTIONS}
+				/>
 			</div>
 		</>
 	);

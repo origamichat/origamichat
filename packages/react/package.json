@@ -2,18 +2,34 @@
   "name": "@cossistant/react",
   "version": "0.0.0",
   "private": false,
-  "author": "Cossistant Team",
-  "description": "Cossistant React is a library of headless ('unstyled') React components and low-level hooks to create your own support AI agent.",
+  "author": "Cossistant team",
+  "description": "Headless React SDK for building AI-powered support/chat widgets. Hooks + primitives, WS-driven, TypeScript-first. Next.js-ready, Tailwind optional.",
   "keywords": [
     "react",
-    "ai-agent",
-    "support-ai",
-    "react-component",
-    "support-agent",
-    "saas",
+    "react-hooks",
+    "react-components",
+    "headless",
+    "headless-ui",
     "support",
-    "unstyled",
-    "a11y"
+    "customer-support",
+    "helpdesk",
+    "support-widget",
+    "chat-widget",
+    "live-chat",
+    "ai",
+    "ai-support",
+    "ai-agent",
+    "support-agent",
+    "sdk",
+    "typescript",
+    "nextjs",
+    "websocket",
+    "tanstack-query",
+    "open-source",
+    "tailwind",
+    "shadcn",
+    "a11y",
+    "accessibility"
   ],
   "bugs": {
     "url": "https://github.com/cossistantcom/cossistant/issues"
@@ -65,25 +81,25 @@
   "dependencies": {
     "@cossistant/core": "workspace:*",
     "@cossistant/types": "workspace:*",
-    "@tailwindcss/postcss": "^4.1.11",
-    "postcss": "^8.5.6",
+    "react-markdown": "^9.0.0",
     "react-use-websocket": "^4.13.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
+    "postcss": "^8.5.6",
     "@cossistant/typescript-config": "workspace:*",
-    "autoprefixer": "^10.4.21"
+    "autoprefixer": "^10.4.21",
+    "@tanstack/react-query": "^5.0.0"
   },
   "peerDependencies": {
-    "@types/react": "^17 || ^18 || ^19",
-    "react": "^17 || ^18 || ^19",
-    "react-dom": "^17 || ^18 || ^19",
+    "react": ">=18 <20",
+    "react-dom": ">=18 <20",
+    "@types/react": "^18 || ^19",
+    "@tanstack/react-query": "^5.0.0",
     "motion": "^12.18.1",
-    "clsx": "^2.1.1",
-    "zod": "^3.25.56",
-    "react-markdown": "^9.0.0",
-    "marked": "^15.0.0",
-    "tailwindcss": ""
+    "tailwindcss": "*"
   },
   "peerDependenciesMeta": {
     "@types/react": {

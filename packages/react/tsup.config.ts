@@ -11,9 +11,32 @@ export default defineConfig({
 	clean: true,
 	outDir: "dist",
 	target: "es2020",
-	platform: "browser",
+	// Use neutral so the lib works in both browser + SSR bundles
+	platform: "neutral",
 	splitting: false,
 	sourcemap: true,
-	minify: false,
-	external: ["react", "react-dom", "motion/react", "clsx", "zod"],
+	minify: true,
+	external: [
+		// React ecosystem
+		"react",
+		"react-dom",
+		"react/jsx-runtime",
+
+		// TanStack Query (peer)
+		"@tanstack/react-query",
+
+		// Motion (root and subpath)
+		"motion",
+		"motion/*",
+
+		// workspace packages (so we don’t inline them)
+		"@cossistant/*",
+
+		"react-use-websocket",
+		"clsx",
+		"zod",
+		"react-markdown",
+		"zustand",
+		"zustand/middleware",
+	],
 });

@@ -1,11 +1,19 @@
-import type { Message as MessageType, SenderType } from "@cossistant/types";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+} from "@cossistant/react/primitive/avatar";
+import type {
+	ConversationEvent,
+	Message as MessageType,
+	SenderType,
+} from "@cossistant/types";
 import type React from "react";
+import { useEffect, useState } from "react";
 import { useSupport } from "../..";
-import { Container } from "../components/container";
-import { Header } from "../components/header";
 import { MessageList } from "../components/message-list";
 import { MultimodalInput } from "../components/multimodal-input";
-import { useSupportNavigation } from "../context/navigation";
+import { cn } from "../utils";
 
 interface ConversationPageProps {
 	conversationId: string;
@@ -18,10 +26,8 @@ interface ConversationPageProps {
 	removeFile: (index: number) => void;
 	submit: () => void;
 	messages?: MessageType[];
-	events?: { id: string; event: string; timestamp?: Date }[];
-	isTyping?: {
-		type: SenderType;
-	};
+	events: ConversationEvent[];
+
 	currentTypingUser?: SenderType | null;
 }
 
@@ -37,55 +43,82 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
 	submit,
 	messages = [],
 	events = [],
-	isTyping,
-	currentTypingUser,
 }) => {
-	const { goBack, canGoBack } = useSupportNavigation();
 	const { website } = useSupport();
-	const availableAgents = website?.availableAgents || [];
+	const [isScrolled, setIsScrolled] = useState(false);
+
+	const availableAgents = website?.availableHumanAgents || [];
+	const availableAIAgents = website?.availableAIAgents || [];
+
+	// Set up scroll listener for the message-list element
+	useEffect(() => {
+		const messageListElement = document.getElementById("message-list");
+
+		if (!messageListElement) {
+			return;
+		}
+
+		const handleScroll = () => {
+			setIsScrolled(messageListElement.scrollTop > 0);
+		};
+
+		messageListElement.addEventListener("scroll", handleScroll);
+
+		// Cleanup listener on unmount
+		return () => {
+			messageListElement.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
 
 	return (
-		<>
-			<Header>
-				<div className="flex w-full items-center gap-2.5">
-					{canGoBack && (
-						<button
-							className="cursor-pointer rounded border-none bg-transparent p-1 px-2 text-base hover:bg-gray-100"
-							onClick={goBack}
-							type="button"
+		<div className="flex h-full flex-col gap-0 overflow-hidden">
+			<div
+				className={cn(
+					"flex-shrink-0 border-co-border border-b bg-co-background px-2 pt-0 shadow-xs transition-all duration-200",
+					isScrolled && ""
+				)}
+			>
+				<div className="flex items-center gap-2 px-2 py-3">
+					{availableAgents.map((agent) => (
+						<Avatar
+							className="flex size-8 items-center justify-center overflow-clip rounded bg-co-background-200"
+							key={agent.id}
 						>
-							←
-						</button>
-					)}
-					<span className="font-medium text-sm">
-						Conversation {conversationId}
-					</span>
+							{agent.image && (
+								<AvatarImage alt={agent.name} src={agent.image} />
+							)}
+							<AvatarFallback className="text-xs" name={agent.name} />
+						</Avatar>
+					))}
+					<div className="flex flex-col">
+						<p className="font-medium text-sm">{website?.name}</p>
+						<p className="text-muted-foreground text-sm">Online</p>
+					</div>
 				</div>
-			</Header>
-			<Container className="flex h-full flex-col px-2 pt-0 pb-2">
-				<MessageList
-					availableAgents={availableAgents}
-					className="flex-1"
-					events={events}
-					isTyping={isTyping}
-					messages={messages}
-				/>
+			</div>
 
-				<div className="px-2 pt-2">
-					<MultimodalInput
-						disabled={isSubmitting}
-						error={error}
-						files={files}
-						isSubmitting={isSubmitting}
-						onChange={setMessage}
-						onFileSelect={addFiles}
-						onRemoveFile={removeFile}
-						onSubmit={submit}
-						placeholder="Type your message or paste an image..."
-						value={message}
-					/>
-				</div>
-			</Container>
-		</>
+			<MessageList
+				availableAIAgents={availableAIAgents}
+				availableHumanAgents={availableAgents}
+				className="min-h-0 flex-1"
+				events={events}
+				messages={messages}
+			/>
+
+			<div className="flex-shrink-0 px-2 pb-2">
+				<MultimodalInput
+					disabled={isSubmitting}
+					error={error}
+					files={files}
+					isSubmitting={isSubmitting}
+					onChange={setMessage}
+					onFileSelect={addFiles}
+					onRemoveFile={removeFile}
+					onSubmit={submit}
+					placeholder="Type your message..."
+					value={message}
+				/>
+			</div>
+		</div>
 	);
 };

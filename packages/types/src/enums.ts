@@ -31,6 +31,41 @@ export const ConversationPriority = {
 	URGENT: "urgent",
 } as const;
 
+export const MessageVisibility = {
+	PUBLIC: "public",
+	PRIVATE: "private",
+} as const;
+
+export const ConversationEventType = {
+	ASSIGNED: "assigned",
+	UNASSIGNED: "unassigned",
+	PARTICIPANT_REQUESTED: "participant_requested",
+	PARTICIPANT_JOINED: "participant_joined",
+	PARTICIPANT_LEFT: "participant_left",
+	STATUS_CHANGED: "status_changed",
+	PRIORITY_CHANGED: "priority_changed",
+	TAG_ADDED: "tag_added",
+	TAG_REMOVED: "tag_removed",
+	RESOLVED: "resolved",
+	REOPENED: "reopened",
+} as const;
+
+export const ConversationParticipationStatus = {
+	REQUESTED: "requested",
+	ACTIVE: "active",
+	LEFT: "left",
+	DECLINED: "declined",
+} as const;
+
+export type ConversationParticipationStatus =
+	(typeof ConversationParticipationStatus)[keyof typeof ConversationParticipationStatus];
+
+export type ConversationEventType =
+	(typeof ConversationEventType)[keyof typeof ConversationEventType];
+
+export type MessageVisibility =
+	(typeof MessageVisibility)[keyof typeof MessageVisibility];
+
 export type ConversationPriority =
 	(typeof ConversationPriority)[keyof typeof ConversationPriority];
 

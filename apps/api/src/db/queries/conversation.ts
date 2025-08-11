@@ -1,11 +1,14 @@
 import type { Database } from "@api/db";
+import type { MessageInsert } from "@api/db/schema";
 import {
 	type ConversationSelect,
 	conversation,
 	type MessageSelect,
 	message,
 } from "@api/db/schema";
-import { and, desc, eq, inArray, isNull, lt, or } from "drizzle-orm";
+import { generateShortPrimaryId, generateULID } from "@api/utils/db/ids";
+import { ConversationStatus, MessageType } from "@cossistant/types";
+import { and, count, desc, eq, inArray, isNull, lt, or } from "drizzle-orm";
 
 type CursorPayload = {
 	updatedAtISO: string;
@@ -166,4 +169,153 @@ export async function getConversationsByWebsite(
 	});
 
 	return { items: itemsWithPreview, nextCursor };
+}
+export async function getConversationsByVisitor(
+	db: Database,
+	params: {
+		websiteId: string;
+		visitorId: string;
+		page?: number;
+		limit?: number;
+	}
+) {
+	const page = Math.max(1, params.page ?? 1);
+	const limit = Math.max(1, Math.min(100, params.limit ?? 20));
+	const offset = (page - 1) * limit;
+
+	const [totalRow] = await db
+		.select({ count: count() })
+		.from(conversation)
+		.where(
+			and(
+				eq(conversation.websiteId, params.websiteId),
+				eq(conversation.visitorId, params.visitorId),
+				isNull(conversation.deletedAt)
+			)
+		);
+
+	const total = Number(totalRow?.count ?? 0);
+
+	const items = await db
+		.select()
+		.from(conversation)
+		.where(
+			and(
+				eq(conversation.websiteId, params.websiteId),
+				eq(conversation.visitorId, params.visitorId),
+				isNull(conversation.deletedAt)
+			)
+		)
+		.orderBy(desc(conversation.updatedAt), desc(conversation.id))
+		.limit(limit)
+		.offset(offset);
+
+	return {
+		items,
+		total,
+		page,
+		limit,
+		hasMore: offset + items.length < total,
+	};
+}
+
+export async function createConversationAndMessage(
+	db: Database,
+	params: {
+		organizationId: string;
+		websiteId: string;
+		visitorId: string;
+		content: unknown;
+		metadata?: Record<string, unknown> | null;
+	}
+) {
+	const newConversationId = generateShortPrimaryId();
+	const now = new Date();
+
+	// Create conversation
+	const [createdConversation] = await db
+		.insert(conversation)
+		.values({
+			id: newConversationId,
+			organizationId: params.organizationId,
+			websiteId: params.websiteId,
+			visitorId: params.visitorId,
+			status: ConversationStatus.OPEN,
+			lastMessageAt: now,
+			createdAt: now,
+			updatedAt: now,
+		})
+		.returning();
+
+	// Create first message from visitor
+	const newMessage: MessageInsert = {
+		id: generateULID(),
+		content:
+			typeof params.content === "string"
+				? { text: params.content }
+				: params.content,
+		type: MessageType.TEXT,
+		organizationId: params.organizationId,
+		conversationId: newConversationId,
+		parentMessageId: null,
+		aiAgentId: null,
+		modelUsed: null,
+		visibility: "PUBLIC",
+		metadata: params.metadata ?? null,
+		createdAt: now,
+		updatedAt: now,
+		userId: null,
+	} as unknown as MessageInsert;
+
+	const [createdMessage] = await db
+		.insert(message)
+		.values(newMessage)
+		.returning();
+
+	return { conversation: createdConversation, message: createdMessage };
+}
+
+export async function appendVisitorMessage(
+	db: Database,
+	params: {
+		conversationId: string;
+		organizationId: string;
+		content: unknown;
+		metadata?: Record<string, unknown> | null;
+	}
+) {
+	const now = new Date();
+	const newMessage: MessageInsert = {
+		id: generateULID(),
+		content:
+			typeof params.content === "string"
+				? { text: params.content }
+				: params.content,
+		type: MessageType.TEXT,
+		organizationId: params.organizationId,
+		conversationId: params.conversationId,
+		parentMessageId: null,
+		aiAgentId: null,
+		modelUsed: null,
+		visibility: "PUBLIC",
+		metadata: params.metadata ?? null,
+		createdAt: now,
+		updatedAt: now,
+		userId: null,
+	} as unknown as MessageInsert;
+
+	const [createdMessage] = await db
+		.insert(message)
+		.values(newMessage)
+		.returning();
+
+	await db
+		.update(conversation)
+		.set({
+			lastMessageAt: now,
+			updatedAt: now,
+		})
+		.where(eq(conversation.id, params.conversationId));
+
+	return createdMessage;
 }

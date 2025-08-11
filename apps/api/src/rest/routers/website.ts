@@ -148,11 +148,11 @@ websiteRouter.openapi(
 			},
 		});
 
-		const availableAgents = organizationMembers.map((agent) => ({
-			id: agent.id,
-			name: agent.user.name,
-			email: agent.user.email,
-			image: agent.user.image,
+		const availableHumanAgents = organizationMembers.map((humanAgent) => ({
+			id: humanAgent.id,
+			name: humanAgent.user.name,
+			email: humanAgent.user.email,
+			image: humanAgent.user.image,
 			lastOnlineAt: new Date().toISOString(),
 		}));
 
@@ -170,7 +170,8 @@ websiteRouter.openapi(
 					organizationId: website.organizationId,
 					status: website.status,
 					lastOnlineAt,
-					availableAgents,
+					availableHumanAgents,
+					availableAIAgents: [],
 					visitor: {
 						id: visitorData.id,
 						createdAt: visitorData.createdAt.toISOString(),

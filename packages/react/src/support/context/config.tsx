@@ -1,52 +1,36 @@
 "use client";
 
-import React from "react";
+import type React from "react";
+import { useEffect } from "react";
+import {
+	initializeSupportStore,
+	useSupportConfig as useSupportConfigStore,
+} from "../store/support-store";
 
-export type SupportConfig = {
-	mode: "floating" | "responsive";
-	content: {
-		home?: {
-			header?: string;
-			subheader?: string;
-			ctaLabel?: string;
-		};
-	};
+export type { SupportConfig } from "../store/support-store";
+
+export type SupportConfigSetters = {
+	open: () => void;
+	close: () => void;
+	toggle: () => void;
 };
 
-type SupportConfigContextValue = {
-	config: SupportConfig;
-};
-
-export const SupportConfigContext =
-	React.createContext<SupportConfigContextValue>({
-		config: {
-			mode: "floating",
-			content: {},
-		},
-	});
+export const useSupportConfig = useSupportConfigStore;
 
 export const SupportConfigProvider: React.FC<{
 	children: React.ReactNode;
 	mode?: "floating" | "responsive";
-}> = ({ children, mode = "floating" }) => {
-	const config: SupportConfig = React.useMemo(
-		() => ({ mode, content: {} }),
-		[mode]
-	);
+	size?: "normal" | "larger";
+	defaultOpen?: boolean;
+}> = ({
+	children,
+	mode = "floating",
+	size = "normal",
+	defaultOpen = false,
+}) => {
+	useEffect(() => {
+		initializeSupportStore({ mode, size, defaultOpen });
+	}, [mode, size, defaultOpen]);
 
-	return (
-		<SupportConfigContext.Provider value={{ config }}>
-			{children}
-		</SupportConfigContext.Provider>
-	);
-};
-
-export const useSupportConfig = () => {
-	const context = React.useContext(SupportConfigContext);
-	if (!context) {
-		throw new Error(
-			"useSupportConfig must be used within SupportConfigProvider"
-		);
-	}
-	return context.config;
+	return <>{children}</>;
 };

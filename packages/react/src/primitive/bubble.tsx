@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useSupport } from "../provider";
+import { useSupportConfig } from "../support";
 import { useRenderElement } from "../utils/use-render-element";
 
 export interface SupportBubbleProps
@@ -19,9 +20,11 @@ export const SupportBubble = React.forwardRef<
 	HTMLButtonElement,
 	SupportBubbleProps
 >(({ children, className, asChild = false, ...props }, ref) => {
-	const { isOpen, toggle, unreadCount } = useSupport();
+	const { isOpen, toggle } = useSupportConfig();
+	const { unreadCount } = useSupport();
 
 	const renderProps = { isOpen, unreadCount, toggle };
+
 	const content =
 		typeof children === "function" ? children(renderProps) : children;
 

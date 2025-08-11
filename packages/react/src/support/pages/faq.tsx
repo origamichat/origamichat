@@ -1,7 +1,7 @@
 import type React from "react";
 import { Container } from "../components/container";
 import { Header } from "../components/header";
-import { useSupportNavigation } from "../context/navigation";
+import { useSupportNavigation } from "../store/support-store";
 
 export const FAQPage: React.FC = () => {
 	const { navigate, goBack, canGoBack } = useSupportNavigation();

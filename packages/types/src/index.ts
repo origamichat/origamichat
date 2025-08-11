@@ -1,15 +1,18 @@
-import { z } from "zod";
-
-// Export all enums
-export * from "./enums";
-
-import { ConversationStatus, SenderType } from "./enums";
+import type { Conversation, ConversationEvent, Message } from "./schemas";
 
 // Export all API schemas and types
 export * from "./api";
-
+// Export all enums
+export * from "./enums";
 // Export realtime event types
 export * from "./realtime-events";
+export type { Conversation, ConversationEvent, Message } from "./schemas";
+// Export shared schemas to avoid circular init order issues
+export {
+	ConversationEventSchema,
+	ConversationSchema,
+	MessageSchema,
+} from "./schemas";
 
 // Configuration types
 export interface CossistantConfig {
@@ -20,40 +23,6 @@ export interface CossistantConfig {
 	userId?: string;
 	organizationId?: string;
 }
-
-// Message types
-export const MessageSchema = z.object({
-	id: z.string(),
-	content: z.string(),
-	timestamp: z.date(),
-	sender: z.enum([SenderType.VISITOR, SenderType.TEAM_MEMBER, SenderType.AI]),
-	conversationId: z.string(),
-	metadata: z.record(z.unknown()).optional(),
-});
-
-export type Message = z.infer<typeof MessageSchema>;
-
-// Conversation types
-export const ConversationSchema = z.object({
-	id: z.string(),
-	title: z.string().optional(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
-	userId: z.string(),
-	organizationId: z.string().optional(),
-	status: z
-		.enum([
-			ConversationStatus.OPEN,
-			ConversationStatus.RESOLVED,
-			ConversationStatus.BLOCKED,
-			ConversationStatus.PENDING,
-		])
-		.default(ConversationStatus.OPEN),
-	unreadCount: z.number().default(0),
-	lastMessage: MessageSchema.optional(),
-});
-
-export type Conversation = z.infer<typeof ConversationSchema>;
 
 export type Agent = {
 	id: string;

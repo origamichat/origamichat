@@ -16,6 +16,7 @@ export class CossistantRestClient {
 	private baseHeaders: Record<string, string>;
 	private publicKey: string;
 	private websiteId: string | null = null;
+	private visitorId: string | null = null;
 
 	constructor(config: CossistantConfig) {
 		this.config = config;
@@ -78,9 +79,18 @@ export class CossistantRestClient {
 	}
 
 	async sendMessage(request: SendMessageRequest): Promise<SendMessageResponse> {
+		const headers: Record<string, string> = {};
+		if (this.websiteId) {
+			const id = this.visitorId || getVisitorId(this.websiteId);
+			if (id) {
+				headers["X-Visitor-Id"] = id;
+			}
+		}
+
 		return this.request<SendMessageResponse>("/messages", {
 			method: "POST",
 			body: JSON.stringify(request),
+			headers,
 		});
 	}
 
@@ -88,12 +98,20 @@ export class CossistantRestClient {
 		page = 1,
 		limit = 20
 	): Promise<GetConversationsResponse> {
+		const headers: Record<string, string> = {};
+		if (this.websiteId) {
+			const id = this.visitorId || getVisitorId(this.websiteId);
+			if (id) {
+				headers["X-Visitor-Id"] = id;
+			}
+		}
 		const params = new URLSearchParams({
-			page: page.toString(),
-			limit: limit.toString(),
+			page: String(page),
+			limit: String(limit),
 		});
-
-		return this.request<GetConversationsResponse>(`/conversations?${params}`);
+		return this.request<GetConversationsResponse>(`/conversations?${params}`, {
+			headers,
+		});
 	}
 
 	async getConversation(conversationId: string): Promise<Conversation> {
@@ -105,13 +123,24 @@ export class CossistantRestClient {
 		page = 1,
 		limit = 50
 	): Promise<GetMessagesResponse> {
+		const headers: Record<string, string> = {};
+
+		if (this.websiteId) {
+			const id = this.visitorId || getVisitorId(this.websiteId);
+
+			if (id) {
+				headers["X-Visitor-Id"] = id;
+			}
+		}
+
 		const params = new URLSearchParams({
-			page: page.toString(),
-			limit: limit.toString(),
+			page: String(page),
+			limit: String(limit),
 		});
 
 		return this.request<GetMessagesResponse>(
-			`/conversations/${conversationId}/messages?${params}`
+			`/conversations/${conversationId}/messages?${params}`,
+			{ headers }
 		);
 	}
 
@@ -154,10 +183,20 @@ export class CossistantRestClient {
 
 		// Store the visitor ID if we got one
 		if (response.visitor?.id) {
+			this.visitorId = response.visitor.id;
 			setVisitorId(response.id, response.visitor.id);
 		}
 
 		return response;
+	}
+
+	// Manually prime website and visitor context when the caller already has it
+	setWebsiteContext(websiteId: string, visitorId?: string): void {
+		this.websiteId = websiteId;
+		if (visitorId) {
+			this.visitorId = visitorId;
+			setVisitorId(websiteId, visitorId);
+		}
 	}
 
 	async updateConfiguration(config: Partial<CossistantConfig>): Promise<void> {

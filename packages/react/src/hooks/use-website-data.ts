@@ -1,6 +1,6 @@
 import type { CossistantClient } from "@cossistant/core";
 import type { PublicWebsiteResponse } from "@cossistant/types";
-import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export interface UseWebsiteDataResult {
 	website: PublicWebsiteResponse | null;
@@ -11,35 +11,23 @@ export interface UseWebsiteDataResult {
 export function useWebsiteData(
 	client: CossistantClient | null
 ): UseWebsiteDataResult {
-	const [website, setWebsite] = useState<PublicWebsiteResponse | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
-	const hasFetched = useRef(false);
+	const { data, isLoading, error } = useQuery({
+		queryKey: ["website", client?.getConfiguration().publicKey],
+		queryFn: async () => {
+			if (!client) {
+				throw new Error("No client available");
+			}
+			return client.getWebsite();
+		},
+		enabled: !!client,
+		staleTime: Number.POSITIVE_INFINITY, // Data doesn't go stale
+		gcTime: Number.POSITIVE_INFINITY, // Keep in cache forever (previously cacheTime)
+		retry: false, // Don't retry on error to match previous behavior
+	});
 
-	useEffect(() => {
-		if (!client || hasFetched.current) {
-			return;
-		}
-
-		hasFetched.current = true;
-		setIsLoading(true);
-		setError(null);
-
-		client
-			.getWebsite()
-			.then((websiteData: PublicWebsiteResponse) => {
-				setWebsite(websiteData);
-				setIsLoading(false);
-			})
-			.catch((err: unknown) => {
-				setError(
-					err instanceof Error
-						? err
-						: new Error("Failed to fetch website details")
-				);
-				setIsLoading(false);
-			});
-	}, [client]);
-
-	return { website, isLoading, error };
+	return {
+		website: data ?? null,
+		isLoading,
+		error: error as Error | null,
+	};
 }

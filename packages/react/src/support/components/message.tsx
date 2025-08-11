@@ -1,16 +1,9 @@
 import type { Message as MessageType } from "@cossistant/types";
-import { SenderType } from "@cossistant/types";
-import { marked } from "marked";
 import type React from "react";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import ReactMarkdown from "react-markdown";
-import { Avatar, AvatarFallback, AvatarImage } from "../../primitive";
-import { cn } from "../utils";
 
-function parseMarkdownIntoBlocks(markdown: string): string[] {
-	const tokens = marked.lexer(markdown);
-	return tokens.map((token) => token.raw);
-}
+import { cn } from "../utils";
 
 const MemoizedMarkdownBlock = memo(
 	({ content }: { content: string }) => {
@@ -26,18 +19,6 @@ const MemoizedMarkdownBlock = memo(
 
 MemoizedMarkdownBlock.displayName = "MemoizedMarkdownBlock";
 
-const MemoizedMarkdown = memo(
-	({ content, id }: { content: string; id: string }) => {
-		const blocks = useMemo(() => parseMarkdownIntoBlocks(content), [content]);
-
-		return blocks.map((block, index) => (
-			<MemoizedMarkdownBlock content={block} key={`${id}-block_${index}`} />
-		));
-	}
-);
-
-MemoizedMarkdown.displayName = "MemoizedMarkdown";
-
 export interface MessageProps {
 	message: MessageType;
 	senderName?: string;
@@ -45,8 +26,8 @@ export interface MessageProps {
 }
 
 export function Message({ message, senderName, isLast = false }: MessageProps) {
-	const isVisitor = message.sender === SenderType.VISITOR;
-	const isAI = message.sender === SenderType.AI;
+	const isVisitor = message.visitorId !== null;
+	const isAI = message.aiAgentId !== null;
 
 	return (
 		<div
@@ -70,14 +51,11 @@ export function Message({ message, senderName, isLast = false }: MessageProps) {
 							"rounded-bl-sm bg-co-background-200 text-foreground dark:bg-co-background-500"
 					)}
 				>
-					<MemoizedMarkdown
-						content={message.content}
-						id={message.id || `message-${Date.now()}`}
-					/>
+					<MemoizedMarkdownBlock content={message.content} />
 				</div>
 				{isLast && (
 					<span className="px-1 text-muted-foreground text-xs">
-						{new Date(message.timestamp).toLocaleTimeString([], {
+						{new Date(message.createdAt).toLocaleTimeString([], {
 							hour: "2-digit",
 							minute: "2-digit",
 						})}
