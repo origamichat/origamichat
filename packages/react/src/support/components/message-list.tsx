@@ -6,7 +6,10 @@ import type {
 	SenderType,
 } from "@cossistant/types";
 import type React from "react";
-import { useEffect, useRef } from "react";
+import {
+	MessageListContainer,
+	MessageList as PrimitiveMessageList,
+} from "../../primitive/message-list";
 import { useGroupedMessages } from "../hooks";
 import { cn } from "../utils";
 import { ConversationEvent as ConversationEventComponent } from "./conversation-event";
@@ -31,8 +34,6 @@ export const MessageList: React.FC<MessageListProps> = ({
 	availableAIAgents = [],
 	availableHumanAgents = [],
 }) => {
-	const scrollRef = useRef<HTMLDivElement>(null);
-
 	// Use the hook to get grouped messages and events
 	const groupedMessages = useGroupedMessages({
 		messages,
@@ -41,29 +42,20 @@ export const MessageList: React.FC<MessageListProps> = ({
 		availableHumanAgents,
 	});
 
-	// Auto-scroll to bottom when new messages or events are added
-	// biome-ignore lint/correctness/useExhaustiveDependencies: ok here
-	useEffect(() => {
-		if (scrollRef.current) {
-			scrollRef.current.scrollTo({
-				top: scrollRef.current.scrollHeight,
-				behavior: "smooth",
-			});
-		}
-	}, [messages.length, events.length, isTyping]);
-
 	return (
-		<div
+		<PrimitiveMessageList
+			autoScroll={true}
 			className={cn(
 				"overflow-y-auto scroll-smooth px-4 py-6",
 				"scrollbar-thin scrollbar-thumb-co-background-300 scrollbar-track-transparent",
 				"h-full w-full",
 				className
 			)}
+			events={events}
 			id="message-list"
-			ref={scrollRef}
+			messages={messages}
 		>
-			<div className="flex min-h-full w-full flex-col gap-4">
+			<MessageListContainer className="flex min-h-full w-full flex-col gap-4">
 				{groupedMessages.map((item, index) => {
 					if (item.type === "event") {
 						return (
@@ -91,7 +83,7 @@ export const MessageList: React.FC<MessageListProps> = ({
             senderName={availableAgents[0]?.name || "Support"}
           />
         )} */}
-			</div>
-		</div>
+			</MessageListContainer>
+		</PrimitiveMessageList>
 	);
 };
