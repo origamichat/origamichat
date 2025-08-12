@@ -81,6 +81,7 @@
   "dependencies": {
     "@cossistant/core": "workspace:*",
     "@cossistant/types": "workspace:*",
+    "nanoid": "^5.1.5",
     "react-markdown": "^9.0.0",
     "react-use-websocket": "^4.13.0",
     "tailwind-merge": "^3.3.1",
