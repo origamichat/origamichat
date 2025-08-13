@@ -23,6 +23,44 @@ export const ConversationEvent: React.FC<ConversationEventProps> = ({
   const humanAgent = availableHumanAgents.find(
     (agent) => agent.id === event.actorUserId
   );
+  const aiAgent = availableAIAgents.find(
+    (agent) => agent.id === event.actorAiAgentId
+  );
+
+  // Get the actor name
+  const actorName = isAI 
+    ? (aiAgent?.name || "Cossistant")
+    : (humanAgent?.name || "Someone");
+
+  // Convert event type to plain English
+  const getEventText = () => {
+    switch (event.type) {
+      case "assigned":
+        return `${actorName} assigned the conversation`;
+      case "unassigned":
+        return `${actorName} unassigned the conversation`;
+      case "participant_requested":
+        return `${actorName} requested to join`;
+      case "participant_joined":
+        return `${actorName} joined the conversation`;
+      case "participant_left":
+        return `${actorName} left the conversation`;
+      case "status_changed":
+        return `${actorName} changed the status`;
+      case "priority_changed":
+        return `${actorName} changed the priority`;
+      case "tag_added":
+        return `${actorName} added a tag`;
+      case "tag_removed":
+        return `${actorName} removed a tag`;
+      case "resolved":
+        return `${actorName} resolved the conversation`;
+      case "reopened":
+        return `${actorName} reopened the conversation`;
+      default:
+        return `${actorName} performed an action`;
+    }
+  };
 
   return (
     <motion.div
@@ -41,11 +79,11 @@ export const ConversationEvent: React.FC<ConversationEventProps> = ({
             <Avatar
               className="size-5 flex-shrink-0 overflow-clip rounded-full"
               image={humanAgent?.image}
-              name={humanAgent?.name ?? "Support"}
+              name={humanAgent?.name ?? "Someone"}
             />
           )}
         </div>
-        <span className="px-2">{event.type}</span>
+        <span className="px-2">{getEventText()}</span>
         {event.createdAt && (
           <span className="text-[10px]">
             {new Date(event.createdAt).toLocaleTimeString([], {
