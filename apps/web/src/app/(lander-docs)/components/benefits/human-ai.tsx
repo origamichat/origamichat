@@ -150,6 +150,32 @@ const chatSequence: ChatSequenceItem[] = [
     },
     delay: 16.0,
   },
+  {
+    type: "typing",
+    senderType: SenderType.TEAM_MEMBER,
+    aiAgentId: null,
+    userId: "anthony",
+    visitorId: null,
+    delay: 19.0,
+    duration: 3.0,
+  },
+  {
+    type: "message",
+    message: {
+      id: "5",
+      content: "Anything else I can help with?",
+      type: MessageType.TEXT,
+      aiAgentId: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      conversationId: "1",
+      userId: "anthony",
+      visitorId: null,
+      visibility: "public",
+    },
+    delay: 22.0,
+  },
 ];
 
 const availableAIAgents: AvailableAIAgent[] = [];
@@ -204,13 +230,13 @@ export const HumanAiGraphic = () => {
         // Show conversation for 3 seconds after completion, then fade out and restart
         const fadeOutTimeout = setTimeout(() => {
           setVisibleItems([]);
-        }, 23_000);
+        }, 28_000);
         timeouts.push(fadeOutTimeout);
 
         // Restart animation
         const restartTimeout = setTimeout(() => {
           runAnimation();
-        }, 24_000);
+        }, 30_000);
         timeouts.push(restartTimeout);
       };
 
@@ -225,6 +251,186 @@ export const HumanAiGraphic = () => {
     setVisibleItems([]);
   }, [isInView]);
 
+  // Helper to get sender ID from a message
+  const getSenderId = (message: Message): string => {
+    return message.visitorId || message.aiAgentId || message.userId || "";
+  };
+
+  // Helper to find the last visible message before the given index
+  const findLastVisibleMessage = (
+    beforeIndex: number
+  ): { index: number; senderId: string } | null => {
+    for (let i = beforeIndex - 1; i >= 0; i--) {
+      const item = chatSequence[i];
+      if (item && item.type === "message" && visibleItems.includes(i)) {
+        const message = (item as ChatSequenceItem & { type: "message" })
+          .message;
+        return { index: i, senderId: getSenderId(message) };
+      }
+    }
+    return null;
+  };
+
+  // Helper to count visible messages from a sender in a range
+  const countVisibleMessagesFromSender = (
+    startIndex: number,
+    endIndex: number,
+    senderId: string
+  ): number => {
+    let count = 0;
+    for (let i = startIndex; i < endIndex; i++) {
+      const item = chatSequence[i];
+      if (item && item.type === "message" && visibleItems.includes(i)) {
+        const message = (item as ChatSequenceItem & { type: "message" })
+          .message;
+        if (getSenderId(message) === senderId) {
+          count++;
+        }
+      }
+    }
+    return count;
+  };
+
+  // Helper to check if message was already rendered in a group
+  const isMessageAlreadyGrouped = (index: number): boolean => {
+    if (index === 0) {
+      return false;
+    }
+
+    const currentItem = chatSequence[index];
+    if (!currentItem || currentItem.type !== "message") {
+      return false;
+    }
+
+    const currentMessage = (
+      currentItem as ChatSequenceItem & { type: "message" }
+    ).message;
+    const currentSenderId = getSenderId(currentMessage);
+
+    // Find the last visible message before this one
+    const lastMessage = findLastVisibleMessage(index);
+    if (!lastMessage) {
+      return false;
+    }
+
+    // If the last message is from a different sender, this starts a new group
+    if (lastMessage.senderId !== currentSenderId) {
+      return false;
+    }
+
+    // Count how many messages from this sender are between the last message and current
+    const messageCount = countVisibleMessagesFromSender(
+      lastMessage.index,
+      index,
+      currentSenderId
+    );
+
+    // If there's already 1 message from this sender, this would be the 2nd
+    return messageCount >= 1;
+  };
+
+  // Helper to collect consecutive messages from the same sender
+  const collectGroupedMessages = (
+    startIndex: number,
+    senderId: string
+  ): Message[] => {
+    const messages: Message[] = [];
+    let currentIndex = startIndex;
+
+    while (currentIndex < chatSequence.length && messages.length < 2) {
+      const currentItem = chatSequence[currentIndex];
+
+      // Skip if item is not visible
+      if (!visibleItems.includes(currentIndex)) {
+        currentIndex++;
+        continue;
+      }
+
+      // If it's a message
+      if (currentItem && currentItem.type === "message") {
+        const messageItem = currentItem as ChatSequenceItem & {
+          type: "message";
+        };
+
+        // If it's from a different sender, stop collecting
+        if (getSenderId(messageItem.message) !== senderId) {
+          break;
+        }
+
+        // Add the message to our collection
+        messages.push({
+          ...messageItem.message,
+          id: messageItem.message.id || `message-${currentIndex}`,
+        });
+      }
+      // If it's not a message (typing indicator, event, etc.), skip it
+
+      currentIndex++;
+    }
+
+    return messages;
+  };
+
+  // Helper to render a message group
+  const renderMessageGroup = (messages: Message[], index: number) => (
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 10 }}
+      key={`message-${index}`}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
+      <MessageGroup
+        availableAIAgents={availableAIAgents}
+        availableHumanAgents={availableHumanAgents}
+        messages={messages}
+      />
+    </motion.div>
+  );
+
+  // Helper to render typing indicator
+  const renderTypingIndicator = (
+    item: ChatSequenceItem & { type: "typing" },
+    index: number
+  ) => (
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 10 }}
+      key={`typing-${index}`}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
+      <div className="flex items-center gap-2">
+        {item.senderType === SenderType.AI ? (
+          <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
+            <Logo className="h-5 w-5 text-primary" />
+          </div>
+        ) : (
+          <div className="flex flex-col justify-end">
+            <div className="size-8 overflow-hidden rounded-full">
+              {/** biome-ignore lint/performance/noImgElement: ok */}
+              <img
+                alt={item.aiAgentId ?? ""}
+                className="h-full w-full object-cover"
+                src={
+                  availableHumanAgents.find((agent) => agent.id === item.userId)
+                    ?.image ?? ""
+                }
+              />
+            </div>
+          </div>
+        )}
+        <div className="flex flex-col gap-1">
+          <div className="rounded-lg rounded-bl-sm bg-co-background-200 px-3 py-2">
+            <div className="flex gap-1">
+              <span className="dot-bounce-1 size-1 rounded-full bg-primary" />
+              <span className="dot-bounce-2 size-1 rounded-full bg-primary" />
+              <span className="dot-bounce-3 size-1 rounded-full bg-primary" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   // biome-ignore lint/suspicious/noExplicitAny: demo we don't care here
   const renderItem = (item: any, index: number) => {
     if (!visibleItems.includes(index)) {
@@ -232,27 +438,15 @@ export const HumanAiGraphic = () => {
     }
 
     if (item.type === "message") {
-      const messages = [
-        {
-          ...item.message,
-          id: item.message.id || `message-${index}`,
-        },
-      ];
+      // Skip if this message was already rendered as part of a previous group
+      if (isMessageAlreadyGrouped(index)) {
+        return null;
+      }
 
-      return (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: 10 }}
-          key={`message-${index}`}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          <MessageGroup
-            availableAIAgents={availableAIAgents}
-            availableHumanAgents={availableHumanAgents}
-            messages={messages}
-          />
-        </motion.div>
-      );
+      const senderId = getSenderId(item.message);
+      const messages = collectGroupedMessages(index, senderId);
+
+      return renderMessageGroup(messages, index);
     }
 
     if (item.type === "event") {
@@ -267,46 +461,7 @@ export const HumanAiGraphic = () => {
     }
 
     if (item.type === "typing") {
-      return (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: 10 }}
-          key={`typing-${index}`}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        >
-          <div className="flex items-center gap-2">
-            {item.senderType === SenderType.AI ? (
-              <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
-                <Logo className="h-5 w-5 text-primary" />
-              </div>
-            ) : (
-              <div className="flex flex-col justify-end">
-                <div className="size-8 overflow-hidden rounded-full">
-                  {/** biome-ignore lint/performance/noImgElement: ok */}
-                  <img
-                    alt={item.aiAgentId ?? ""}
-                    className="h-full w-full object-cover"
-                    src={
-                      availableHumanAgents.find(
-                        (agent) => agent.id === item.userId
-                      )?.image ?? ""
-                    }
-                  />
-                </div>
-              </div>
-            )}
-            <div className="flex flex-col gap-1">
-              <div className="rounded-lg rounded-bl-sm bg-co-background-200 px-3 py-2">
-                <div className="flex gap-1">
-                  <span className="dot-bounce-1 size-1 rounded-full bg-primary" />
-                  <span className="dot-bounce-2 size-1 rounded-full bg-primary" />
-                  <span className="dot-bounce-3 size-1 rounded-full bg-primary" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      );
+      return renderTypingIndicator(item, index);
     }
 
     return null;
