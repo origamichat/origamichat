@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { useSupport } from "./provider";
+import { type DefaultMessage, useSupport } from "./provider";
 
 export type SupportConfigProps = {
-	defaultMessages?: string[];
-	quickOptions?: string[];
+  defaultMessages?: DefaultMessage[];
+  quickOptions?: string[];
 };
 
 /**
@@ -17,25 +17,25 @@ export type SupportConfigProps = {
  */
 
 export const SupportConfig = ({
-	defaultMessages,
-	quickOptions,
+  defaultMessages,
+  quickOptions,
 }: SupportConfigProps) => {
-	const { setDefaultMessages, setQuickOptions } = useSupport();
+  const { setDefaultMessages, setQuickOptions } = useSupport();
 
-	// Only update when the arrays actually change content
-	React.useEffect(() => {
-		if (defaultMessages) {
-			setDefaultMessages(defaultMessages);
-		}
-	}, [defaultMessages, setDefaultMessages]);
+  // Only update when the arrays actually change content
+  React.useEffect(() => {
+    if (defaultMessages) {
+      setDefaultMessages(defaultMessages);
+    }
+  }, [defaultMessages, setDefaultMessages]);
 
-	React.useEffect(() => {
-		if (quickOptions) {
-			setQuickOptions(quickOptions);
-		}
-	}, [quickOptions, setQuickOptions]);
+  React.useEffect(() => {
+    if (quickOptions) {
+      setQuickOptions(quickOptions);
+    }
+  }, [quickOptions, setQuickOptions]);
 
-	return null;
+  return null;
 };
 
 SupportConfig.displayName = "SupportConfig";
