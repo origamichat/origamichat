@@ -38,7 +38,6 @@ export const ConversationSchema = z.object({
       ConversationStatus.PENDING,
     ])
     .default(ConversationStatus.OPEN),
-  lastMessage: MessageSchema.optional(),
 });
 
 export type Conversation = z.infer<typeof ConversationSchema>;

@@ -1,6 +1,6 @@
 import { upsertVisitor } from "@api/db/queries";
 import { member } from "@api/db/schema/auth";
-import { validateResponse } from "@api/utils/validate-response";
+import { validateResponse } from "@api/utils/validate";
 import { publicWebsiteResponseSchema } from "@cossistant/types";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { and, eq, or } from "drizzle-orm";

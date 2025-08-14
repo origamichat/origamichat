@@ -3,7 +3,7 @@ import {
   createConversationAndMessage,
   upsertConversation,
 } from "@api/db/queries";
-import { validateResponse } from "@api/utils/validate-response";
+import { validateResponse } from "@api/utils/validate";
 import {
   type SendMessageRequestBody,
   sendMessageRequestSchema,

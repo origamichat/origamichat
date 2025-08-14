@@ -6,8 +6,7 @@ export const createMessageSchema = z.object({
   content: z.string(),
   type: z
     .enum([MessageType.TEXT, MessageType.IMAGE, MessageType.FILE])
-    .optional()
-    .default("text"),
+    .default(MessageType.TEXT),
   userId: z.string().nullable(),
   aiAgentId: z.string().nullable(),
   visitorId: z.string().nullable(),

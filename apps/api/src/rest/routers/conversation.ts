@@ -1,7 +1,10 @@
 import { getVisitor } from "@api/db/queries";
 import { upsertConversation } from "@api/db/queries/conversation";
 import { sendMessages } from "@api/db/queries/message";
-import { validateResponse } from "@api/utils/validate-response";
+import {
+  safelyExtractRequestData,
+  validateResponse,
+} from "@api/utils/validate";
 import {
   createConversationRequestSchema,
   createConversationResponseSchema,
@@ -32,7 +35,7 @@ conversationRouter.openapi(
     },
     responses: {
       200: {
-        description: "Message created",
+        description: "Conversation created",
         content: {
           "application/json": {
             schema: createConversationResponseSchema,
@@ -97,19 +100,8 @@ conversationRouter.openapi(
     ],
   },
   async (c) => {
-    const db = c.get("db");
-    const website = c.get("website");
-    const organization = c.get("organization");
-
-    const unsafeBody = await c.req.json();
-    const visitorIdHeader = c.req.header("X-Visitor-Id");
-
-    const { success, data: body } =
-      createConversationRequestSchema.safeParse(unsafeBody);
-
-    if (!success) {
-      return c.json({ error: "Invalid request" }, 400);
-    }
+    const { db, website, organization, body, visitorIdHeader } =
+      await safelyExtractRequestData(c, createConversationRequestSchema);
 
     const visitor = await getVisitor(db, {
       visitorId: body.visitorId || visitorIdHeader,
