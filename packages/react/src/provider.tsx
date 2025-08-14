@@ -47,7 +47,6 @@ const SupportContext = React.createContext<CossistantContextValue | undefined>(
   undefined
 );
 
-// Inner component that uses React Query hooks
 function SupportProviderInner({
   children,
   apiUrl,
@@ -214,5 +213,10 @@ export function useSupport() {
   const availableHumanAgents = context.website?.availableHumanAgents || [];
   const availableAIAgents = context.website?.availableAIAgents || [];
 
-  return { ...context, availableHumanAgents, availableAIAgents };
+  return {
+    ...context,
+    availableHumanAgents,
+    availableAIAgents,
+    visitor: context.website?.visitor,
+  };
 }

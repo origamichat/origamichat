@@ -20,7 +20,7 @@ export function useDefaultMessages({
       defaultMessages.map((message, index) => {
         const messageId = `default-message-${index}`;
         return {
-          content: message.content,
+          bodyMd: message.content,
           type: MessageType.TEXT,
           id: messageId,
           createdAt: new Date(),

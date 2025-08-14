@@ -1,7 +1,7 @@
 import type React from "react";
+import { ArticlesPage } from "./pages/articles";
 import { ConversationPage } from "./pages/conversation";
 import { ConversationHistoryPage } from "./pages/conversation-history";
-import { FAQPage } from "./pages/faq";
 import { HomePage } from "./pages/home";
 import { useSupportNavigation } from "./store/support-store";
 
@@ -28,10 +28,22 @@ export const SupportRouter: React.FC<{
 
   switch (current.page) {
     case "HOME":
-      return <HomePage onStartConversation={() => {}} />;
+      return (
+        <HomePage
+          addFiles={addFiles}
+          error={error}
+          files={files}
+          isSubmitting={isSubmitting}
+          message={message}
+          onStartConversation={() => {}}
+          removeFile={removeFile}
+          setMessage={setMessage}
+          submit={submit}
+        />
+      );
 
-    case "FAQ":
-      return <FAQPage />;
+    case "ARTICLES":
+      return <ArticlesPage />;
 
     case "CONVERSATION":
       // TypeScript knows current.params exists and has conversationId here
@@ -55,7 +67,19 @@ export const SupportRouter: React.FC<{
       return <ConversationHistoryPage />;
 
     default: {
-      return <HomePage onStartConversation={() => {}} />;
+      return (
+        <HomePage
+          addFiles={addFiles}
+          error={error}
+          files={files}
+          isSubmitting={isSubmitting}
+          message={message}
+          onStartConversation={() => {}}
+          removeFile={removeFile}
+          setMessage={setMessage}
+          submit={submit}
+        />
+      );
     }
   }
 };

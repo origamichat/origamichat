@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
     <div className={cn("relative z-10 h-14 overflow-hidden", className)}>
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-co-background to-transparent" />
       <div className="pointer-events-none absolute inset-0 z-0 h-24 bg-gradient-to-b from-co-background via-co-background to-transparent" />
-      <div className="absolute inset-0 z-10 flex h-16 items-center justify-between px-3">
+      <div className="absolute inset-0 z-10 flex h-16 items-center justify-between px-4">
         <div className="flex flex-1 items-center">
           {onGoBack && (
             <Button

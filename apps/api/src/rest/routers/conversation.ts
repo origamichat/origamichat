@@ -132,7 +132,11 @@ conversationRouter.openapi(
         organizationId: organization.id,
         websiteId: website.id,
         conversationId: conversation.id,
-        messages: body.defaultMessages,
+        messages: body.defaultMessages.map((msg) => ({
+          ...msg,
+          type: msg.type ?? "text",
+          visibility: msg.visibility ?? "public",
+        })),
       });
     }
 

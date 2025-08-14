@@ -22,7 +22,7 @@ export function Avatar({
       )}
     >
       {image && <AvatarImage alt={name} src={image} />}
-      <AvatarFallback className="text-xs" name={name} />
+      <AvatarFallback className="font-medium text-xs" name={name} />
     </AvatarPrimitive>
   );
 }

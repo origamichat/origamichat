@@ -175,6 +175,8 @@ websiteRouter.openapi(
           visitor: {
             id: visitorData.id,
             createdAt: visitorData.createdAt.toISOString(),
+            name: visitorData.name,
+            email: visitorData.email,
           },
         },
         publicWebsiteResponseSchema
