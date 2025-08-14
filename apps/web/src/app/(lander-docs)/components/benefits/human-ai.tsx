@@ -40,7 +40,7 @@ const chatSequence: ChatSequenceItem[] = [
     type: "message",
     message: {
       id: "1",
-      content: "Hi! I see a blank page after onboarding, can you help?",
+      bodyMd: "Hi! I see a blank page after onboarding, can you help?",
       type: MessageType.TEXT,
       visitorId: "1",
       conversationId: "1",
@@ -67,7 +67,7 @@ const chatSequence: ChatSequenceItem[] = [
     message: {
       id: "2",
       conversationId: "1",
-      content:
+      bodyMd:
         "Hi! I see an error in the logs. This looks urgent sorry for that, let me connect you with Anthony.",
       type: MessageType.TEXT,
       aiAgentId: "cossistant",
@@ -93,7 +93,7 @@ const chatSequence: ChatSequenceItem[] = [
     type: "message",
     message: {
       id: "3",
-      content: "Created a ticket to track this. Thanks!",
+      bodyMd: "Created a ticket to track this. Thanks!",
       type: MessageType.TEXT,
       aiAgentId: "cossistant",
       createdAt: new Date(),
@@ -137,7 +137,7 @@ const chatSequence: ChatSequenceItem[] = [
     type: "message",
     message: {
       id: "4",
-      content: "Hi! I'm working on a fix, should be up in a few minutes! 🙏",
+      bodyMd: "Hi! I'm working on a fix, should be up in a few minutes! 🙏",
       type: MessageType.TEXT,
       aiAgentId: null,
       createdAt: new Date(),
@@ -163,7 +163,7 @@ const chatSequence: ChatSequenceItem[] = [
     type: "message",
     message: {
       id: "5",
-      content: "Anything else I can help with?",
+      bodyMd: "Anything else I can help with?",
       type: MessageType.TEXT,
       aiAgentId: null,
       createdAt: new Date(),
