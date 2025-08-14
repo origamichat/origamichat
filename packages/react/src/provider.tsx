@@ -210,5 +210,9 @@ export function useSupport() {
       "useSupport must be used within a cossistant SupportProvider"
     );
   }
-  return context;
+
+  const availableHumanAgents = context.website?.availableHumanAgents || [];
+  const availableAIAgents = context.website?.availableAIAgents || [];
+
+  return { ...context, availableHumanAgents, availableAIAgents };
 }

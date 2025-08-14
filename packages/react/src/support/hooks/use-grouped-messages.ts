@@ -40,8 +40,12 @@ const getSenderIdAndType = (
     return { senderId: message.userId, senderType: SenderType.TEAM_MEMBER };
   }
 
-  // Fallback - should not happen with proper data
-  throw new Error("Message has no sender ID");
+  // Fallback for default messages that might not have sender IDs yet
+  // Use the message ID as a temporary sender ID to prevent errors
+  return {
+    senderId: message.id || "default-sender",
+    senderType: SenderType.TEAM_MEMBER, // Default to team member for welcome messages
+  };
 };
 
 // Helper function to group messages by sender

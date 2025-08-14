@@ -1,6 +1,6 @@
 import type { Message as MessageType } from "@cossistant/types";
 import * as React from "react";
-import { useRenderElement } from "../hooks/use-render-element";
+import { useRenderElement } from "../utils/use-render-element";
 
 export interface MessageGroupRenderProps {
   isVisitor: boolean;

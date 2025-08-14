@@ -8,7 +8,7 @@ import {
 
 export const MessageSchema = z.object({
   id: z.string(),
-  content: z.string(),
+  bodyMd: z.string(),
   type: z.enum([MessageType.TEXT, MessageType.IMAGE, MessageType.FILE]),
   userId: z.string().nullable(),
   aiAgentId: z.string().nullable(),
@@ -27,8 +27,9 @@ export const ConversationSchema = z.object({
   title: z.string().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  userId: z.string(),
-  organizationId: z.string().optional(),
+  visitorId: z.string(),
+  websiteId: z.string(),
+  organizationId: z.string(),
   status: z
     .enum([
       ConversationStatus.OPEN,
@@ -37,7 +38,6 @@ export const ConversationSchema = z.object({
       ConversationStatus.PENDING,
     ])
     .default(ConversationStatus.OPEN),
-  unreadCount: z.number().default(0),
   lastMessage: MessageSchema.optional(),
 });
 

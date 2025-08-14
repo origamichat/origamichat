@@ -44,7 +44,7 @@ export default function Playground() {
   return (
     <>
       <div className="flex min-h-screen bg-background-200 p-20">
-        <div className="w-1/3 border border-primary/10 border-dashed p-6">
+        <div className="w-full border border-primary/10 border-dashed p-6 md:w-1/3">
           <h1 className="flex items-center gap-2 font-f37-stout text-xl">
             <Logo />
             Dev playground

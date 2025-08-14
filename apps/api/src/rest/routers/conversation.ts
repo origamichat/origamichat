@@ -1,85 +1,165 @@
-import { getConversationsByVisitor } from "@api/db/queries/conversation";
+import { getVisitor } from "@api/db/queries";
+import { upsertConversation } from "@api/db/queries/conversation";
+import { sendMessages } from "@api/db/queries/message";
 import { validateResponse } from "@api/utils/validate-response";
 import {
-	listConversationsQuerySchema,
-	listConversationsResponseSchema,
-} from "@cossistant/types";
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+  createConversationRequestSchema,
+  createConversationResponseSchema,
+} from "@cossistant/types/api/conversation";
+import type { Message } from "@cossistant/types/schemas";
+import { OpenAPIHono, z } from "@hono/zod-openapi";
 import type { RestContext } from "../types";
 
 export const conversationRouter = new OpenAPIHono<RestContext>();
 
 conversationRouter.openapi(
-	createRoute({
-		method: "get",
-		path: "/",
-		summary: "List conversations for current visitor",
-		request: {
-			query: listConversationsQuerySchema,
-		},
-		responses: {
-			200: {
-				description: "Conversations list",
-				content: {
-					"application/json": {
-						schema: listConversationsResponseSchema,
-					},
-				},
-			},
-			400: { description: "Bad Request" },
-			404: { description: "Not Found" },
-			500: { description: "Server Error" },
-		},
-		tags: ["Conversations"],
-	}),
-	async (c) => {
-		const db = c.get("db");
-		const website = c.get("website");
+  {
+    method: "post",
+    path: "/create",
+    summary: "Create a conversation with or without initial messages",
+    description:
+      "Create a conversation, accepts a conversation id or not and a set of default messages.",
+    tags: ["Conversation", "Create"],
+    request: {
+      body: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: createConversationRequestSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Message created",
+        content: {
+          "application/json": {
+            schema: createConversationResponseSchema,
+          },
+        },
+      },
+      400: {
+        description: "Invalid request",
+        content: {
+          "application/json": {
+            schema: z.object({ error: z.string() }),
+          },
+        },
+      },
+    },
+    security: [
+      {
+        "Public API Key": [],
+      },
+      {
+        "Private API Key": [],
+      },
+    ],
+    parameters: [
+      {
+        name: "Authorization",
+        in: "header",
+        description:
+          "Private API key in Bearer token format. Use this for server-to-server authentication. Format: `Bearer sk_[live|test]_...`",
+        required: false,
+        schema: {
+          type: "string",
+          pattern: "^Bearer sk_(live|test)_[a-f0-9]{64}$",
+          example:
+            "Bearer sk_test_1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+        },
+      },
+      {
+        name: "X-Public-Key",
+        in: "header",
+        description:
+          "Public API key for browser-based authentication. Can only be used from whitelisted domains. Format: `pk_[live|test]_...`",
+        required: false,
+        schema: {
+          type: "string",
+          pattern: "^pk_(live|test)_[a-f0-9]{64}$",
+          example:
+            "pk_test_1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+        },
+      },
+      {
+        name: "X-Visitor-Id",
+        in: "header",
+        description: "Visitor ID from localStorage.",
+        required: false,
+        schema: {
+          type: "string",
+          pattern: "^[0-9A-HJKMNP-TV-Z]{26}$",
+          example: "01JG000000000000000000000",
+        },
+      },
+    ],
+  },
+  async (c) => {
+    const db = c.get("db");
+    const website = c.get("website");
+    const organization = c.get("organization");
 
-		if (!db) {
-			return c.json({ error: "Database unavailable" }, 500);
-		}
-		if (!website) {
-			return c.json({ error: "Website not found" }, 404);
-		}
+    const unsafeBody = await c.req.json();
+    const visitorIdHeader = c.req.header("X-Visitor-Id");
 
-		const visitorId = c.req.header("X-Visitor-Id");
-		if (!visitorId) {
-			return c.json({ error: "Missing X-Visitor-Id header" }, 400);
-		}
+    const { success, data: body } =
+      createConversationRequestSchema.safeParse(unsafeBody);
 
-		const page = Number(c.req.query("page") ?? 1);
-		const limit = Number(c.req.query("limit") ?? 20);
+    if (!success) {
+      return c.json({ error: "Invalid request" }, 400);
+    }
 
-		const { items, total } = await getConversationsByVisitor(db, {
-			websiteId: website.id,
-			visitorId,
-			page,
-			limit,
-		});
+    const visitor = await getVisitor(db, {
+      visitorId: body.visitorId || visitorIdHeader,
+      externalVisitorId: body.externalVisitorId,
+    });
 
-		return c.json(
-			validateResponse(
-				{
-					conversations: items.map((it) => ({
-						id: it.id,
-						title: it.title ?? undefined,
-						createdAt: it.createdAt,
-						updatedAt: it.updatedAt,
-						userId: visitorId,
-						organizationId: it.organizationId,
-						status: it.status,
-						unreadCount: 0,
-					})),
-					pagination: {
-						page,
-						limit,
-						total,
-						hasMore: page * limit < total,
-					},
-				},
-				listConversationsResponseSchema
-			)
-		);
-	}
+    if (!visitor) {
+      return c.json(
+        {
+          error:
+            "Visitor not found, please pass a valid visitorId or externalVisitorId",
+        },
+        400
+      );
+    }
+
+    const conversation = await upsertConversation(db, {
+      organizationId: organization.id,
+      websiteId: website.id,
+      visitorId: visitor.id,
+      conversationId: body.conversationId,
+    });
+
+    let initialMessages: Message[] = [];
+
+    if (body.defaultMessages.length > 0) {
+      initialMessages = await sendMessages(db, {
+        organizationId: organization.id,
+        websiteId: website.id,
+        conversationId: conversation.id,
+        messages: body.defaultMessages,
+      });
+    }
+
+    return c.json(
+      validateResponse(
+        {
+          initialMessages,
+          conversation: {
+            id: conversation.id,
+            organizationId: conversation.organizationId,
+            createdAt: conversation.createdAt,
+            updatedAt: conversation.updatedAt,
+            visitorId: conversation.visitorId,
+            websiteId: conversation.websiteId,
+            status: conversation.status,
+          },
+        },
+        createConversationResponseSchema
+      )
+    );
+  }
 );

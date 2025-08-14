@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-co-background to-transparent" />
       <div className="pointer-events-none absolute inset-0 z-0 h-24 bg-gradient-to-b from-co-background via-co-background to-transparent" />
       <div className="absolute inset-0 z-10 flex h-16 items-center justify-between px-3">
-        <div className="flex items-center">
+        <div className="flex flex-1 items-center">
           {onGoBack && (
             <Button
               onClick={onGoBack}
@@ -35,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
           )}
           {children}
         </div>
-        <div className="flex items-center gap-2">{actions}</div>
+        {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
     </div>
   );

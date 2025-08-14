@@ -31,7 +31,7 @@ export function AvatarStack({
           +{remainingHumanAgentsCount}
         </div>
       )}
-      <div className="flex size-11 items-center justify-center rounded-full border-3 border-co-background bg-co-background-300">
+      <div className="flex size-11 items-center justify-center rounded-full border-3 border-co-background bg-co-background-200 dark:bg-co-background-500">
         <CossistantLogo className="size-5" />
       </div>
     </div>

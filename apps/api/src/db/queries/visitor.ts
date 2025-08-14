@@ -1,52 +1,64 @@
 import type { Database } from "@api/db";
 import { visitor } from "@api/db/schema";
 import { generateULID } from "@api/utils/db/ids";
-import { and, eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
-// Get or create visitor for a website
-export async function getOrCreateVisitor(
-	db: Database,
-	params: {
-		websiteId: string;
-		organizationId: string;
-		visitorId?: string | null;
-	}
+export async function upsertVisitor(
+  db: Database,
+  params: {
+    websiteId: string;
+    organizationId: string;
+    visitorId?: string | null;
+  }
 ) {
-	// If visitor ID is provided, try to find existing visitor
-	if (params.visitorId) {
-		const existingVisitor = await db.query.visitor.findFirst({
-			where: and(
-				eq(visitor.id, params.visitorId),
-				eq(visitor.websiteId, params.websiteId)
-			),
-		});
+  const visitorId = params.visitorId ?? generateULID();
 
-		if (existingVisitor) {
-			// Update last connected timestamp
-			await db
-				.update(visitor)
-				.set({
-					lastConnectedAt: new Date(),
-					updatedAt: new Date(),
-				})
-				.where(eq(visitor.id, params.visitorId));
+  const [newVisitor] = await db
+    .insert(visitor)
+    .values({
+      id: visitorId,
+      websiteId: params.websiteId,
+      organizationId: params.organizationId,
+      lastConnectedAt: new Date(),
+    })
+    .onConflictDoUpdate({
+      target: visitor.id,
+      set: {
+        lastConnectedAt: new Date(),
+      },
+    })
+    .returning();
 
-			return existingVisitor;
-		}
-	}
+  return newVisitor;
+}
 
-	// No valid visitor found, create new one
-	const newVisitorId = generateULID();
-	const [newVisitor] = await db
-		.insert(visitor)
-		.values({
-			id: newVisitorId,
-			identifier: newVisitorId, // Using ULID as identifier
-			websiteId: params.websiteId,
-			organizationId: params.organizationId,
-			lastConnectedAt: new Date(),
-		})
-		.returning();
+export async function getVisitor(
+  db: Database,
+  params: {
+    visitorId?: string | null;
+    externalVisitorId?: string | null;
+  }
+) {
+  if (!(params.visitorId || params.externalVisitorId)) {
+    return;
+  }
 
-	return newVisitor;
+  const query = params.visitorId
+    ? eq(visitor.id, params.visitorId)
+    : params.externalVisitorId
+      ? eq(visitor.externalId, params.externalVisitorId)
+      : null;
+
+  // Safety net, means we didn't
+  if (!query) {
+    return;
+  }
+
+  const _visitor = await db.query.visitor
+    .findFirst({
+      where: query,
+    })
+    .execute();
+
+  return _visitor;
 }
