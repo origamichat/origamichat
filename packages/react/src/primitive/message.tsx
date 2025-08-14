@@ -8,7 +8,7 @@ export interface MessageRenderProps {
   isAI: boolean;
   isHuman: boolean;
   timestamp: Date;
-  content: string;
+  bodyMd: string;
   senderType: "visitor" | "ai" | "human";
 }
 
@@ -34,7 +34,7 @@ export const Message = React.forwardRef<HTMLDivElement, MessageProps>(
       isAI,
       isHuman,
       timestamp: new Date(message.createdAt),
-      content: message.content,
+      bodyMd: message.bodyMd,
       senderType,
     };
 
@@ -84,7 +84,7 @@ export interface MessageContentProps
   children?: React.ReactNode | ((content: string) => React.ReactNode);
   asChild?: boolean;
   className?: string;
-  content?: string;
+  bodyMd?: string;
   renderMarkdown?: boolean;
 }
 
@@ -97,7 +97,7 @@ export const MessageContent = React.forwardRef<
       children,
       className,
       asChild = false,
-      content = "",
+      bodyMd = "",
       renderMarkdown = true,
       ...props
     },
@@ -105,16 +105,16 @@ export const MessageContent = React.forwardRef<
   ) => {
     const messageContent = React.useMemo(() => {
       if (typeof children === "function") {
-        return children(content);
+        return children(bodyMd);
       }
       if (children) {
         return children;
       }
-      if (renderMarkdown && content) {
-        return <MemoizedMarkdownBlock content={content} />;
+      if (renderMarkdown && bodyMd) {
+        return <MemoizedMarkdownBlock content={bodyMd} />;
       }
-      return content;
-    }, [children, content, renderMarkdown]);
+      return bodyMd;
+    }, [children, bodyMd, renderMarkdown]);
 
     return useRenderElement(
       "div",
