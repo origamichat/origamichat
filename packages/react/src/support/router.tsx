@@ -6,80 +6,80 @@ import { HomePage } from "./pages/home";
 import { useSupportNavigation } from "./store/support-store";
 
 export const SupportRouter: React.FC<{
-  message: string;
-  files: File[];
-  isSubmitting: boolean;
-  error: Error | null;
-  setMessage: (message: string) => void;
-  addFiles: (files: File[]) => void;
-  removeFile: (index: number) => void;
-  submit: () => void;
+	message: string;
+	files: File[];
+	isSubmitting: boolean;
+	error: Error | null;
+	setMessage: (message: string) => void;
+	addFiles: (files: File[]) => void;
+	removeFile: (index: number) => void;
+	submit: () => void;
 }> = ({
-  message,
-  files,
-  isSubmitting,
-  error,
-  setMessage,
-  addFiles,
-  removeFile,
-  submit,
+	message,
+	files,
+	isSubmitting,
+	error,
+	setMessage,
+	addFiles,
+	removeFile,
+	submit,
 }) => {
-  const { current } = useSupportNavigation();
+	const { current } = useSupportNavigation();
 
-  switch (current.page) {
-    case "HOME":
-      return (
-        <HomePage
-          addFiles={addFiles}
-          error={error}
-          files={files}
-          isSubmitting={isSubmitting}
-          message={message}
-          onStartConversation={() => {}}
-          removeFile={removeFile}
-          setMessage={setMessage}
-          submit={submit}
-        />
-      );
+	switch (current.page) {
+		case "HOME":
+			return (
+				<HomePage
+					addFiles={addFiles}
+					error={error}
+					files={files}
+					isSubmitting={isSubmitting}
+					message={message}
+					onStartConversation={() => {}}
+					removeFile={removeFile}
+					setMessage={setMessage}
+					submit={submit}
+				/>
+			);
 
-    case "ARTICLES":
-      return <ArticlesPage />;
+		case "ARTICLES":
+			return <ArticlesPage />;
 
-    case "CONVERSATION":
-      // TypeScript knows current.params exists and has conversationId here
-      return (
-        <ConversationPage
-          addFiles={addFiles}
-          conversationId={current.params.conversationId}
-          error={error}
-          events={[]}
-          files={files}
-          isSubmitting={isSubmitting}
-          message={message}
-          messages={[]}
-          removeFile={removeFile}
-          setMessage={setMessage}
-          submit={submit}
-        />
-      );
+		case "CONVERSATION":
+			// TypeScript knows current.params exists and has conversationId here
+			return (
+				<ConversationPage
+					addFiles={addFiles}
+					conversationId={current.params.conversationId}
+					error={error}
+					events={[]}
+					files={files}
+					isSubmitting={isSubmitting}
+					message={message}
+					messages={[]}
+					removeFile={removeFile}
+					setMessage={setMessage}
+					submit={submit}
+				/>
+			);
 
-    case "CONVERSATION_HISTORY":
-      return <ConversationHistoryPage />;
+		case "CONVERSATION_HISTORY":
+			return <ConversationHistoryPage />;
 
-    default: {
-      return (
-        <HomePage
-          addFiles={addFiles}
-          error={error}
-          files={files}
-          isSubmitting={isSubmitting}
-          message={message}
-          onStartConversation={() => {}}
-          removeFile={removeFile}
-          setMessage={setMessage}
-          submit={submit}
-        />
-      );
-    }
-  }
+		default: {
+			return (
+				<HomePage
+					addFiles={addFiles}
+					error={error}
+					files={files}
+					isSubmitting={isSubmitting}
+					message={message}
+					onStartConversation={() => {}}
+					removeFile={removeFile}
+					setMessage={setMessage}
+					submit={submit}
+				/>
+			);
+		}
+	}
 };

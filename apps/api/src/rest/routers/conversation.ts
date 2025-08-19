@@ -18,11 +18,11 @@ export const conversationRouter = new OpenAPIHono<RestContext>();
 conversationRouter.openapi(
 	{
 		method: "post",
-		path: "/create",
+		path: "/",
 		summary: "Create a conversation with or without initial messages",
 		description:
 			"Create a conversation, accepts a conversation id or not and a set of default messages.",
-		tags: ["Conversation", "Create"],
+		tags: ["Conversations"],
 		request: {
 			body: {
 				required: true,
@@ -146,7 +146,6 @@ conversationRouter.openapi(
 					initialMessages,
 					conversation: {
 						id: conversation.id,
-						organizationId: conversation.organizationId,
 						createdAt: conversation.createdAt,
 						updatedAt: conversation.updatedAt,
 						visitorId: conversation.visitorId,

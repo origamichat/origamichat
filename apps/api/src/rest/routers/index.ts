@@ -12,11 +12,11 @@ const routers = new OpenAPIHono();
 
 // Public routes (no auth required)
 routers.use(...publicMiddleware);
-routers.route("/organization", organizationRouter);
+routers.route("/organizations", organizationRouter);
 
 // API routes that require API key authentication
-routers.use("/website", ...protectedPublicApiKeyMiddleware);
-routers.route("/website", websiteRouter);
+routers.use("/websites", ...protectedPublicApiKeyMiddleware);
+routers.route("/websites", websiteRouter);
 routers.use("/messages", ...protectedPublicApiKeyMiddleware);
 routers.route("/messages", messagesRouter);
 routers.use("/conversations", ...protectedPublicApiKeyMiddleware);
