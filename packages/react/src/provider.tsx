@@ -1,10 +1,12 @@
 "use client";
 
 import type { CossistantClient } from "@cossistant/core";
+import type { ListConversationsResponse } from "@cossistant/types/api/conversation";
 import type { PublicWebsiteResponse, SenderType } from "@cossistant/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
 import { useClient } from "./hooks/use-rest-client";
+import { useConversations } from "./hooks/use-conversations";
 import { useWebsiteData } from "./hooks/use-website-data";
 import { WebSocketProvider } from "./support";
 
@@ -31,6 +33,9 @@ export interface DefaultMessage {
 
 export interface CossistantContextValue {
 	website: PublicWebsiteResponse | null;
+	conversations: ListConversationsResponse["conversations"] | null;
+	conversationsLoading: boolean;
+	conversationsError: Error | null;
 	defaultMessages: DefaultMessage[];
 	quickOptions: string[];
 	setDefaultMessages: (messages: DefaultMessage[]) => void;
@@ -67,6 +72,7 @@ function SupportProviderInner({
 	const [_quickOptions, _setQuickOptions] = React.useState<string[]>(
 		quickOptions || []
 	);
+	const [isClientPrimed, setIsClientPrimed] = React.useState(false);
 
 	// Update state when props change (for initial values from provider)
 	React.useEffect(() => {
@@ -83,6 +89,14 @@ function SupportProviderInner({
 
 	const { client, error: clientError } = useClient(publicKey, apiUrl, wsUrl);
 	const { website, isLoading, error: websiteError } = useWebsiteData(client);
+	const { 
+		conversations, 
+		isLoading: conversationsLoading, 
+		error: conversationsError 
+	} = useConversations(client, { 
+		limit: 5, 
+		enabled: !!website && !!website.visitor && isClientPrimed
+	});
 
 	const error = clientError || websiteError;
 
@@ -91,6 +105,9 @@ function SupportProviderInner({
 		if (client && website) {
 			// @ts-expect-error internal priming: safe in our library context
 			client.restClient?.setWebsiteContext?.(website.id, website.visitor?.id);
+			setIsClientPrimed(true);
+		} else {
+			setIsClientPrimed(false);
 		}
 	}, [client, website]);
 
@@ -112,6 +129,9 @@ function SupportProviderInner({
 	const value = React.useMemo<CossistantContextValue>(
 		() => ({
 			website,
+			conversations,
+			conversationsLoading,
+			conversationsError,
 			unreadCount,
 			setUnreadCount: setUnreadCountStable,
 			isLoading,
@@ -125,6 +145,9 @@ function SupportProviderInner({
 		}),
 		[
 			website,
+			conversations,
+			conversationsLoading,
+			conversationsError,
 			unreadCount,
 			isLoading,
 			error,

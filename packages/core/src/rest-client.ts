@@ -1,6 +1,10 @@
 import type {
 	CreateConversationRequestBody,
 	CreateConversationResponseBody,
+	ListConversationsRequest,
+	ListConversationsResponse,
+	GetConversationRequest,
+	GetConversationResponse,
 } from "@cossistant/types/api/conversation";
 import type { Conversation, Message } from "@cossistant/types/schemas";
 import {
@@ -9,7 +13,7 @@ import {
 	type PublicWebsiteResponse,
 } from "./types";
 import { generateConversationId } from "./utils";
-import { getVisitorId, setVisitorId } from "./visitor-tracker";
+import { getVisitorId, setVisitorId, getExistingVisitorId } from "./visitor-tracker";
 
 export class CossistantRestClient {
 	private config: CossistantConfig;
@@ -82,11 +86,21 @@ export class CossistantRestClient {
 		// Make the request with visitor ID if we have one stored
 		const headers: Record<string, string> = {};
 
-		// If we already know the website ID, try to get the visitor ID
+		// First, check if we already know the website ID and have a visitor ID for it
 		if (this.websiteId) {
 			const storedVisitorId = getVisitorId(this.websiteId);
 			if (storedVisitorId) {
 				headers["X-Visitor-Id"] = storedVisitorId;
+			}
+		} else {
+			// We don't know the website ID yet, but check if we have any existing visitor
+			// This prevents creating duplicate visitors on page refresh
+			const existingVisitor = getExistingVisitorId(this.publicKey);
+			if (existingVisitor) {
+				headers["X-Visitor-Id"] = existingVisitor.visitorId;
+				// Pre-populate our local state
+				this.websiteId = existingVisitor.websiteId;
+				this.visitorId = existingVisitor.visitorId;
 			}
 		}
 
@@ -209,5 +223,109 @@ export class CossistantRestClient {
 		}
 
 		this.config = { ...this.config, ...config };
+	}
+
+	async listConversations(
+		params: Partial<ListConversationsRequest> = {}
+	): Promise<ListConversationsResponse> {
+		// Get visitor ID from storage if we have the website ID
+		const visitorId = this.websiteId ? getVisitorId(this.websiteId) : undefined;
+
+		if (!visitorId && !params.externalVisitorId) {
+			throw new Error("Visitor ID or external visitor ID is required");
+		}
+
+		// Create query parameters
+		const queryParams = new URLSearchParams();
+		
+		if (params.visitorId || visitorId) {
+			queryParams.set("visitorId", params.visitorId || visitorId!);
+		}
+		
+		if (params.externalVisitorId) {
+			queryParams.set("externalVisitorId", params.externalVisitorId);
+		}
+		
+		if (params.page) {
+			queryParams.set("page", params.page.toString());
+		}
+		
+		if (params.limit) {
+			queryParams.set("limit", params.limit.toString());
+		}
+		
+		if (params.status) {
+			queryParams.set("status", params.status);
+		}
+		
+		if (params.orderBy) {
+			queryParams.set("orderBy", params.orderBy);
+		}
+		
+		if (params.order) {
+			queryParams.set("order", params.order);
+		}
+
+		// Add visitor ID header if available
+		const headers: Record<string, string> = {};
+		if (visitorId) {
+			headers["X-Visitor-Id"] = visitorId;
+		}
+
+		const response = await this.request<{
+			conversations: Array<{
+				id: string;
+				title?: string;
+				createdAt: string;
+				updatedAt: string;
+				visitorId: string;
+				websiteId: string;
+				status: string;
+			}>;
+			pagination: {
+				page: number;
+				limit: number;
+				total: number;
+				totalPages: number;
+				hasMore: boolean;
+			};
+		}>(`/conversations?${queryParams.toString()}`, {
+			headers,
+		});
+
+		// Convert date strings to Date objects and ensure proper typing
+		return {
+			conversations: response.conversations.map((conv) => ({
+				...conv,
+				createdAt: new Date(conv.createdAt),
+				updatedAt: new Date(conv.updatedAt),
+			})) as Conversation[],
+			pagination: response.pagination,
+		};
+	}
+
+	async getConversation(
+		params: GetConversationRequest
+	): Promise<GetConversationResponse> {
+		const response = await this.request<{
+			conversation: {
+				id: string;
+				title?: string;
+				createdAt: string;
+				updatedAt: string;
+				visitorId: string;
+				websiteId: string;
+				status: string;
+			};
+		}>(`/conversations/${params.conversationId}`);
+
+		// Convert date strings to Date objects and ensure proper typing
+		return {
+			conversation: {
+				...response.conversation,
+				createdAt: new Date(response.conversation.createdAt),
+				updatedAt: new Date(response.conversation.updatedAt),
+			} as Conversation,
+		};
 	}
 }

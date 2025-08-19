@@ -3,8 +3,8 @@ import type {
   Message as MessageType,
   SenderType,
 } from "@cossistant/types";
-import type React from "react";
-import { useSupport } from "../..";
+import React from "react";
+import { useConversation, useSupport } from "../..";
 import { AvatarStack } from "../components/avatar-stack";
 import { Header } from "../components/header";
 import { MessageList } from "../components/message-list";
@@ -40,8 +40,25 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
   messages = [],
   events = [],
 }) => {
-  const { website, availableAIAgents, availableHumanAgents } = useSupport();
+  const { website, availableAIAgents, availableHumanAgents, client } = useSupport();
   const { navigate } = useSupportNavigation();
+  
+  // Fetch conversation data
+  const { 
+    conversation, 
+    isLoading: conversationLoading, 
+    error: conversationError 
+  } = useConversation(client, conversationId);
+
+  // Console log conversation data for debugging
+  React.useEffect(() => {
+    if (conversation) {
+      console.log("Conversation data fetched:", conversation);
+    }
+    if (conversationError) {
+      console.error("Error fetching conversation:", conversationError);
+    }
+  }, [conversation, conversationError]);
 
   const goHome = () => {
     navigate({

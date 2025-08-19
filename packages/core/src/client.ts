@@ -1,6 +1,10 @@
 import type {
 	CreateConversationRequestBody,
 	CreateConversationResponseBody,
+	ListConversationsRequest,
+	ListConversationsResponse,
+	GetConversationRequest,
+	GetConversationResponse,
 } from "@cossistant/types/api/conversation";
 import type { RealtimeEvent } from "@cossistant/types/realtime-events";
 import { CossistantRestClient } from "./rest-client";
@@ -103,6 +107,18 @@ export class CossistantClient {
 		params?: Partial<CreateConversationRequestBody>
 	): Promise<CreateConversationResponseBody> {
 		return this.restClient.createConversation(params);
+	}
+
+	async listConversations(
+		params?: Partial<ListConversationsRequest>
+	): Promise<ListConversationsResponse> {
+		return this.restClient.listConversations(params);
+	}
+
+	async getConversation(
+		params: GetConversationRequest
+	): Promise<GetConversationResponse> {
+		return this.restClient.getConversation(params);
 	}
 
 	// Cleanup method

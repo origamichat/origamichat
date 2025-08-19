@@ -1,24 +1,34 @@
 import type { CossistantClient } from "@cossistant/core";
-import type { Conversation } from "@cossistant/types/schemas";
+import type { GetConversationResponse } from "@cossistant/types/api/conversation";
 import { useQuery } from "@tanstack/react-query";
+
+export interface UseConversationResult {
+	conversation: GetConversationResponse["conversation"] | null;
+	isLoading: boolean;
+	error: Error | null;
+}
 
 export function useConversation(
 	client: CossistantClient | null,
 	conversationId: string | null
-) {
-	return useQuery({
-		queryKey: ["conversation", conversationId],
+): UseConversationResult {
+	const { data, isLoading, error } = useQuery({
+		queryKey: ["conversation", client?.getConfiguration().publicKey, conversationId],
 		queryFn: async () => {
-			if (!(client && conversationId)) {
-				throw new Error("Client and conversation ID required");
+			if (!client || !conversationId) {
+				throw new Error("No client or conversation ID available");
 			}
-
-			// For now, return the cached data since we don't have a GET endpoint yet
-			// In the future, this would call: client.rest.getConversation(conversationId)
-			return null as Conversation | null;
+			return client.getConversation({ conversationId });
 		},
 		enabled: !!client && !!conversationId,
-		staleTime: 5 * 60 * 1000, // 5 minutes
-		gcTime: 10 * 60 * 1000, // 10 minutes
+		staleTime: 30 * 1000, // 30 seconds - individual conversations can change frequently
+		gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+		retry: false, // Don't retry on error to match previous behavior
 	});
+
+	return {
+		conversation: data?.conversation ?? null,
+		isLoading,
+		error: error as Error | null,
+	};
 }

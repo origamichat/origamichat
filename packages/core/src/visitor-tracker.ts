@@ -107,3 +107,47 @@ export function clearAllVisitorIds(): void {
 		// Silently fail - visitor tracking is not critical
 	}
 }
+
+/**
+ * Get any existing visitor ID from localStorage by matching the public key
+ * This is useful when we don't yet know the website ID but need to check for existing visitors
+ */
+export function getExistingVisitorId(publicKey: string): { websiteId: string; visitorId: string } | null {
+	if (!isLocalStorageAvailable()) {
+		return null;
+	}
+
+	try {
+		// Find all visitor keys in localStorage
+		const keys = Object.keys(localStorage).filter((key) =>
+			key.startsWith(STORAGE_KEY_PREFIX)
+		);
+
+		// Check each one to see if we have a valid visitor ID
+		for (const key of keys) {
+			const data = localStorage.getItem(key);
+			if (!data) continue;
+
+			try {
+				const parsed = JSON.parse(data);
+				// Validate that the visitor ID is a valid ULID
+				if (parsed.visitorId && isValidULID(parsed.visitorId) && parsed.websiteId) {
+					// We found a valid visitor ID - return it
+					// Note: In a multi-website scenario, you might want to match by public key
+					// For now, we'll return the first valid one found
+					return {
+						websiteId: parsed.websiteId,
+						visitorId: parsed.visitorId,
+					};
+				}
+			} catch {
+				// Invalid JSON, skip this entry
+				continue;
+			}
+		}
+
+		return null;
+	} catch {
+		return null;
+	}
+}
