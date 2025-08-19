@@ -88,7 +88,7 @@ export const visitor = pgTable(
 	"visitor",
 	{
 		id: ulidPrimaryKey("id"),
-		externalId: varchar("externalId", { length: 255 }),
+		externalId: varchar("externalId", { length: 255 }).unique(),
 		name: text("name"),
 		email: text("email"),
 		metadata: jsonb("metadata"),

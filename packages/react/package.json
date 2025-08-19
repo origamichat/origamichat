@@ -43,30 +43,20 @@
   "homepage": "https://cossistant.com",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "import": "./src/index.ts",
+      "require": "./src/index.ts",
+      "types": "./src/index.ts"
     },
     "./primitive": {
-      "import": {
-        "types": "./dist/primitive/index.d.ts",
-        "default": "./dist/primitive/index.js"
-      },
-      "require": {
-        "types": "./dist/primitive/index.d.cts",
-        "default": "./dist/primitive/index.cjs"
-      }
+      "import": "./src/primitive/index.ts",
+      "require": "./src/primitive/index.ts",
+      "types": "./src/primitive/index.ts"
     },
-    "./support.css": "./dist/support/support.css"
+    "./support.css": "./src/support/support.css"
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
   "sideEffects": false,
   "scripts": {
     "build": "tsup && bun run build:css",
