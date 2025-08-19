@@ -7,6 +7,7 @@ import { Header } from "../components/header";
 import Icon from "../components/icons";
 import { MultimodalInput } from "../components/multimodal-input";
 import { NavigationTab } from "../components/navigation-tab";
+import { TextEffect } from "../components/text-effect";
 import { Watermark } from "../components/watermark";
 
 export type HomePageProps = {
@@ -39,9 +40,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="flex h-full flex-col gap-0 overflow-hidden">
-      <Header>
-        <NavigationTab />
-      </Header>
+      <Header>{/* <NavigationTab /> */}</Header>
       <div className="flex flex-1 items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <AvatarStack
@@ -52,11 +51,15 @@ export const HomePage: React.FC<HomePageProps> = ({
           <p className="mb-4 text-co-primary/80 text-sm">
             {website?.name} support
           </p>
-          <h2 className="text-center font-co-sans text-2xl leading-normal">
-            Good morning{visitor?.name ? ` ${visitor.name}` : " Anthony"},
-            <br />
-            How can we help?
-          </h2>
+          <TextEffect
+            as="h2"
+            className="max-w-xs text-balance text-center font-co-sans text-2xl leading-normal"
+            delay={0.5}
+            preset="fade-in-blur"
+          >
+            Good morning{visitor?.name ? ` ${visitor.name}` : ""}, How can we
+            help?
+          </TextEffect>
 
           {quickOptions.length > 0 && (
             <div className="mt-6 inline-flex gap-2">

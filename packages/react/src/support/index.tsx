@@ -4,7 +4,7 @@ import "./support.css";
 
 import type React from "react";
 import { SupportConfig } from "../config";
-import type { DefaultMessage } from "../provider";
+import { type DefaultMessage, useSupport } from "../provider";
 import { SupportContent } from "./components/support-content";
 import { SupportConfigProvider } from "./context/config";
 
@@ -29,6 +29,12 @@ export function Support({
   defaultMessages,
   defaultOpen,
 }: SupportProps) {
+  const { website } = useSupport();
+
+  if (!website) {
+    return <></>;
+  }
+
   return (
     <>
       <SupportConfigProvider defaultOpen={defaultOpen} mode={mode}>
