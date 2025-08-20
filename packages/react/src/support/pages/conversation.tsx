@@ -5,6 +5,9 @@ import type {
 } from "@cossistant/types";
 import React from "react";
 import { useConversation, useSupport } from "../..";
+import { useMessages } from "../../hooks/use-messages";
+import { useSendMessage } from "../../hooks/use-send-message";
+import { PENDING_CONVERSATION_ID } from "../../utils/id";
 import { AvatarStack } from "../components/avatar-stack";
 import { Header } from "../components/header";
 import { MessageList } from "../components/message-list";
@@ -40,15 +43,39 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
   messages = [],
   events = [],
 }) => {
-  const { website, availableAIAgents, availableHumanAgents, client } = useSupport();
-  const { navigate } = useSupportNavigation();
+  const { website, availableAIAgents, availableHumanAgents, client, visitor, defaultMessages } = useSupport();
+  const { navigate, current } = useSupportNavigation();
   
-  // Fetch conversation data
+  // Determine if we have a real conversation or pending one
+  const hasRealConversation = conversationId !== PENDING_CONVERSATION_ID;
+  const realConversationId = hasRealConversation ? conversationId : null;
+  
+  // Get initial message from navigation params
+  const initialMessage = current.page === "CONVERSATION" ? current.params?.initialMessage : undefined;
+  
+  // Fetch conversation data only if we have a real conversation
   const { 
     conversation, 
     isLoading: conversationLoading, 
     error: conversationError 
-  } = useConversation(client, conversationId);
+  } = useConversation(client, realConversationId);
+  
+  // Fetch messages only if we have a real conversation
+  const {
+    data: fetchedMessages,
+    isLoading: messagesLoading,
+    error: messagesError
+  } = useMessages(client, realConversationId);
+  
+  // Send message hook with lazy conversation creation
+  const sendMessage = useSendMessage(client);
+
+  // Set initial message if provided and we don't have a real conversation yet
+  React.useEffect(() => {
+    if (initialMessage && !hasRealConversation && !message) {
+      setMessage(initialMessage);
+    }
+  }, [initialMessage, hasRealConversation, message, setMessage]);
 
   // Console log conversation data for debugging
   React.useEffect(() => {
@@ -59,6 +86,49 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
       console.error("Error fetching conversation:", conversationError);
     }
   }, [conversation, conversationError]);
+
+  // Handle message submission with lazy conversation creation
+  const handleSubmit = React.useCallback(() => {
+    if (!message.trim() && files.length === 0) return;
+    
+    sendMessage.mutate({
+      conversationId: realConversationId,
+      message: message.trim(),
+      files,
+      defaultMessages,
+      visitorId: visitor?.id,
+      onSuccess: (newConversationId, messageId) => {
+        // If we created a new conversation, navigate to it
+        if (!hasRealConversation && newConversationId !== PENDING_CONVERSATION_ID) {
+          navigate({
+            page: "CONVERSATION",
+            params: { conversationId: newConversationId },
+          });
+        }
+        // Clear the form
+        setMessage("");
+        // Clear files would be handled by the parent component
+      },
+      onError: (error) => {
+        console.error("Failed to send message:", error);
+      },
+    });
+  }, [
+    message,
+    files,
+    realConversationId,
+    hasRealConversation,
+    defaultMessages,
+    visitor?.id,
+    sendMessage,
+    navigate,
+    setMessage,
+  ]);
+
+  // Use our custom submit handler instead of the passed one
+  const actualMessages = fetchedMessages || messages;
+  const actualIsSubmitting = isSubmitting || sendMessage.isPending;
+  const actualError = error || messagesError;
 
   const goHome = () => {
     navigate({
@@ -86,19 +156,19 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
         availableHumanAgents={availableHumanAgents}
         className="min-h-0 flex-1"
         events={events}
-        messages={messages}
+        messages={actualMessages}
       />
 
       <div className="flex-shrink-0 px-2 pb-2">
         <MultimodalInput
-          disabled={isSubmitting}
-          error={error}
+          disabled={actualIsSubmitting}
+          error={actualError}
           files={files}
-          isSubmitting={isSubmitting}
+          isSubmitting={actualIsSubmitting}
           onChange={setMessage}
           onFileSelect={addFiles}
           onRemoveFile={removeFile}
-          onSubmit={submit}
+          onSubmit={handleSubmit}
           placeholder="Type your message..."
           value={message}
         />

@@ -1,6 +1,7 @@
-import React from "react";
+import type React from "react";
 import { useSupport } from "../..";
 import { useCreateConversation } from "../../hooks/use-create-conversation";
+import { PENDING_CONVERSATION_ID } from "../../utils/id";
 import { AvatarStack } from "../components/avatar-stack";
 import { Button } from "../components/button";
 import { Header } from "../components/header";
@@ -10,7 +11,7 @@ import { Watermark } from "../components/watermark";
 import { useSupportNavigation } from "../store/support-store";
 
 export type HomePageProps = {
-  onStartConversation: (message: string) => void;
+  onStartConversation: (initialMessage?: string) => void;
 
   message: string;
   files: File[];
@@ -38,58 +39,20 @@ export const HomePage: React.FC<HomePageProps> = ({
     availableHumanAgents,
     visitor,
     quickOptions,
-    client,
-    conversations,
-    conversationsLoading,
-    conversationsError,
+    //    conversations,
   } = useSupport();
   const { navigate } = useSupportNavigation();
 
-  const createConversation = useCreateConversation(client, {
-    onSuccess: (data) => {
-      // Navigate to conversation page with the new conversation ID
-      navigate({
-        page: "CONVERSATION",
-        params: { conversationId: data.conversation.id },
-      });
-    },
-    onError: (_error) => {
-      console.error("Failed to create conversation:", _error);
-    },
-  });
-
-  // Console log conversations data for debugging
-  React.useEffect(() => {
-    console.log("Conversations state:", {
-      conversations,
-      conversationsLoading,
-      conversationsError,
-      visitor: visitor?.id,
-      client: !!client,
-      website: !!website,
-    });
-
-    if (conversations) {
-      console.log("Conversations data fetched for visitor:", conversations);
-    }
-
-    if (conversationsError) {
-      console.error("Error fetching conversations:", conversationsError);
-    }
-  }, [
-    conversations,
-    conversationsLoading,
-    conversationsError,
-    visitor,
-    client,
-    website,
-  ]);
-
   const handleStartConversation = (initialMessage?: string) => {
-    // Create conversation with optional initial message
-    // For now, we'll pass empty defaultMessages since we don't have the full message creation flow yet
-    // The initial message will be sent after conversation creation
-    createConversation.mutate({ defaultMessages: [] });
+    // Navigate to conversation page
+    // The conversation will be created lazily when the first message is sent
+    navigate({
+      page: "CONVERSATION",
+      params: {
+        conversationId: PENDING_CONVERSATION_ID,
+        initialMessage,
+      },
+    });
   };
 
   // const defaultMessages = useDefaultMessages({ conversationId: "default" });
@@ -121,7 +84,6 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="mt-6 inline-flex gap-2">
               {quickOptions?.map((option) => (
                 <Button
-                  disabled={createConversation.isPending}
                   key={option}
                   onClick={() => handleStartConversation(option)}
                   size="default"
@@ -137,7 +99,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       <div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 px-6 pb-4">
         <Button
           className="relative w-full"
-          disabled={createConversation.isPending}
           onClick={() => handleStartConversation()}
           size="large"
           variant="outline"
@@ -147,9 +108,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             name="arrow-right"
             variant="default"
           />
-          {createConversation.isPending
-            ? "Creating conversation..."
-            : "Ask us a question"}
+          Ask us a question
         </Button>
         <Watermark />
       </div>
