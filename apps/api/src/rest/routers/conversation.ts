@@ -21,8 +21,12 @@ import {
 import type { Message } from "@cossistant/types/schemas";
 import { OpenAPIHono, z } from "@hono/zod-openapi";
 import type { RestContext } from "../types";
+import { protectedPublicApiKeyMiddleware } from "../middleware";
 
 export const conversationRouter = new OpenAPIHono<RestContext>();
+
+// Apply middleware to all routes in this router
+conversationRouter.use("/*", ...protectedPublicApiKeyMiddleware);
 
 conversationRouter.openapi(
   {
@@ -367,9 +371,33 @@ conversationRouter.openapi(
             "pk_test_1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
         },
       },
+      {
+        name: "X-Visitor-Id",
+        in: "header",
+        description: "Visitor ID from localStorage.",
+        required: false,
+        schema: {
+          type: "string",
+          pattern: "^[0-9A-HJKMNP-TV-Z]{26}$",
+          example: "01JG000000000000000000000",
+        },
+      },
     ],
   },
   async (c) => {
+    // Debug: Check what's in the context
+    console.log("[DEBUG] GET /conversations/{id} - Context check:", {
+      hasDb: !!c.get("db"),
+      hasWebsite: !!c.get("website"),
+      hasOrganization: !!c.get("organization"),
+      hasApiKey: !!c.get("apiKey"),
+      headers: {
+        authorization: c.req.header("Authorization"),
+        publicKey: c.req.header("X-Public-Key"),
+        visitorId: c.req.header("X-Visitor-Id"),
+      }
+    });
+
     const { db, website, organization } = await safelyExtractRequestData(c);
 
     // Validate path params manually for now

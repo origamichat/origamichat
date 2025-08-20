@@ -307,6 +307,15 @@ export class CossistantRestClient {
 	async getConversation(
 		params: GetConversationRequest
 	): Promise<GetConversationResponse> {
+		// Get visitor ID from storage if we have the website ID
+		const visitorId = this.websiteId ? getVisitorId(this.websiteId) : undefined;
+
+		// Add visitor ID header if available
+		const headers: Record<string, string> = {};
+		if (visitorId) {
+			headers["X-Visitor-Id"] = visitorId;
+		}
+
 		const response = await this.request<{
 			conversation: {
 				id: string;
@@ -317,7 +326,9 @@ export class CossistantRestClient {
 				websiteId: string;
 				status: string;
 			};
-		}>(`/conversations/${params.conversationId}`);
+		}>(`/conversations/${params.conversationId}`, {
+			headers,
+		});
 
 		// Convert date strings to Date objects and ensure proper typing
 		return {

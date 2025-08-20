@@ -44,6 +44,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     conversationsError,
   } = useSupport();
   const { navigate } = useSupportNavigation();
+
   const createConversation = useCreateConversation(client, {
     onSuccess: (data) => {
       // Navigate to conversation page with the new conversation ID
@@ -67,15 +68,22 @@ export const HomePage: React.FC<HomePageProps> = ({
       client: !!client,
       website: !!website,
     });
-    
+
     if (conversations) {
       console.log("Conversations data fetched for visitor:", conversations);
     }
-    
+
     if (conversationsError) {
       console.error("Error fetching conversations:", conversationsError);
     }
-  }, [conversations, conversationsLoading, conversationsError, visitor, client, website]);
+  }, [
+    conversations,
+    conversationsLoading,
+    conversationsError,
+    visitor,
+    client,
+    website,
+  ]);
 
   const handleStartConversation = (initialMessage?: string) => {
     // Create conversation with optional initial message
@@ -132,6 +140,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           disabled={createConversation.isPending}
           onClick={() => handleStartConversation()}
           size="large"
+          variant="outline"
         >
           <Icon
             className="-translate-y-1/2 absolute top-1/2 right-4 transition-transform duration-200 group-hover/btn:translate-x-0.5"
