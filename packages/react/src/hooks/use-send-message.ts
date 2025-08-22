@@ -1,17 +1,20 @@
 import type { CossistantClient, CossistantRestClient } from "@cossistant/core";
 import { generateConversationId, generateMessageId } from "@cossistant/core";
+import { MessageType, MessageVisibility } from "@cossistant/types";
 import type { CreateConversationResponseBody } from "@cossistant/types/api/conversation";
 import type { Conversation, Message } from "@cossistant/types/schemas";
-import { MessageType, MessageVisibility, SenderType } from "@cossistant/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { DefaultMessage } from "../provider";
-import { defaultMessagesToCreateMessages, defaultMessagesToMessages } from "../utils/message-converter";
+import {
+	type QueryClient,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
+import { PENDING_CONVERSATION_ID } from "../utils/id";
 
 export interface SendMessageOptions {
 	conversationId?: string | null;
 	message: string;
 	files?: File[];
-	defaultMessages?: DefaultMessage[];
+	defaultMessages?: Message[];
 	visitorId?: string;
 	onSuccess?: (conversationId: string, messageId: string) => void;
 	onError?: (error: Error) => void;
@@ -21,18 +24,170 @@ interface SendMessageResult {
 	conversationId: string;
 	messageId: string;
 	conversation?: CreateConversationResponseBody["conversation"];
+	initialMessages?: CreateConversationResponseBody["initialMessages"];
 }
 
-/**
- * Hook for sending messages with lazy conversation creation.
- * Creates a conversation only when the first message is sent.
- */
+interface OptimisticContext {
+	optimisticConversationId: string;
+	optimisticMessageId: string;
+	wasNewConversation: boolean;
+}
+
+// Helper function to create a new message
+function createMessage(
+	id: string,
+	content: string,
+	conversationId: string,
+	visitorId?: string
+): Message {
+	const now = new Date();
+	return {
+		id,
+		bodyMd: content,
+		type: MessageType.TEXT,
+		userId: null,
+		aiAgentId: null,
+		visitorId: visitorId || null,
+		conversationId,
+		createdAt: now,
+		updatedAt: now,
+		deletedAt: null,
+		visibility: MessageVisibility.PUBLIC,
+	};
+}
+
+// Helper function to create an optimistic conversation
+function createOptimisticConversation(
+	id: string,
+	visitorId?: string
+): Conversation {
+	const now = new Date();
+	return {
+		id,
+		title: undefined,
+		createdAt: now,
+		updatedAt: now,
+		visitorId: visitorId || "",
+		websiteId: "",
+		status: "open",
+	};
+}
+
+// Helper function to handle optimistic updates for new conversation
+function addOptimisticConversation(
+	queryClient: QueryClient,
+	conversation: Conversation,
+	messages: Message[]
+): void {
+	// Add optimistic conversation
+	queryClient.setQueryData<Conversation>(
+		["conversation", conversation.id],
+		conversation
+	);
+
+	// Add to conversations list
+	queryClient.setQueryData<Conversation[]>(["conversations"], (old) => [
+		...(old || []),
+		conversation,
+	]);
+
+	// Add all messages
+	queryClient.setQueryData<Message[]>(["messages", conversation.id], messages);
+}
+
+// Helper function to handle optimistic update for existing conversation
+function addOptimisticMessage(
+	queryClient: QueryClient,
+	conversationId: string,
+	message: Message
+): void {
+	queryClient.setQueryData<Message[]>(["messages", conversationId], (old) => [
+		...(old || []),
+		message,
+	]);
+}
+
+// Helper function to rollback optimistic updates
+function rollbackOptimisticUpdates(
+	queryClient: QueryClient,
+	context: OptimisticContext,
+	defaultMessages: Message[] = []
+): void {
+	if (context.wasNewConversation) {
+		// Reset pending conversation messages to default
+		queryClient.setQueryData<Message[]>(
+			["messages", PENDING_CONVERSATION_ID],
+			defaultMessages
+		);
+	} else {
+		// Remove just the optimistic message
+		queryClient.setQueryData<Message[]>(
+			["messages", context.optimisticConversationId],
+			(old) => old?.filter((m) => m.id !== context.optimisticMessageId) || []
+		);
+	}
+}
+
+// Helper function to update with server data after successful creation
+function updateWithServerData(
+	queryClient: QueryClient,
+	data: SendMessageResult,
+	context: OptimisticContext
+): void {
+	if (context.wasNewConversation && data.conversation) {
+		// Update conversation with server data
+		queryClient.setQueryData<Conversation>(
+			["conversation", data.conversationId],
+			data.conversation
+		);
+
+		// Update conversations list
+		queryClient.setQueryData<Conversation[]>(["conversations"], (old) => {
+			if (!data.conversation) {
+				return old || [];
+			}
+			if (!old) {
+				return [data.conversation];
+			}
+
+			// Replace optimistic conversation with real one
+			const index = old.findIndex(
+				(c) => c.id === context.optimisticConversationId
+			);
+			if (index >= 0) {
+				const updated = [...old];
+				updated[index] = data.conversation;
+				return updated;
+			}
+			return [...old, data.conversation];
+		});
+
+		// Update messages with the actual messages from the server
+		if (data.initialMessages) {
+			queryClient.setQueryData<Message[]>(
+				["messages", data.conversationId],
+				data.initialMessages
+			);
+		}
+	} else {
+		// For existing conversations, just invalidate to refetch
+		queryClient.invalidateQueries({
+			queryKey: ["messages", data.conversationId],
+		});
+	}
+}
+
 export function useSendMessage(
 	client: CossistantClient | CossistantRestClient | null
 ) {
 	const queryClient = useQueryClient();
 
-	return useMutation<SendMessageResult, Error, SendMessageOptions>({
+	return useMutation<
+		SendMessageResult,
+		Error,
+		SendMessageOptions,
+		OptimisticContext
+	>({
 		mutationFn: async ({
 			conversationId,
 			message,
@@ -47,193 +202,106 @@ export function useSendMessage(
 			// If no conversation exists, create one with the initial messages
 			if (!conversationId) {
 				const newConversationId = generateConversationId();
-				
-				// Combine default messages with the user's message
-				const allDefaultMessages: DefaultMessage[] = [
-					...defaultMessages,
-					{
-						content: message,
-						senderType: SenderType.VISITOR,
-						senderId: visitorId,
-					},
-				];
+				const userMessageId = generateMessageId();
 
-				// Create conversation with all initial messages
-				const createMessages = defaultMessagesToCreateMessages(
-					allDefaultMessages,
+				// Create user message
+				const userMessage = createMessage(
+					userMessageId,
+					message,
 					newConversationId,
 					visitorId
 				);
 
+				// Combine default messages with the user's message
+				const allMessages: Message[] = [...defaultMessages, userMessage];
+
 				const response = await client.createConversation({
 					conversationId: newConversationId,
-					defaultMessages: createMessages,
+					defaultMessages: allMessages,
 				});
 
 				return {
 					conversationId: response.conversation.id,
-					messageId: createMessages[createMessages.length - 1].id || generateMessageId(),
+					messageId: userMessageId,
 					conversation: response.conversation,
+					initialMessages: response.initialMessages,
 				};
 			}
 
-			// If conversation exists, send the message via WebSocket or REST
-			// For now, we'll return a placeholder since the actual message sending
-			// logic will need to be implemented based on your WebSocket/REST setup
+			// For existing conversation, just return the IDs
+			// The actual message sending would happen separately
 			const messageId = generateMessageId();
-			
-			// TODO: Implement actual message sending via WebSocket or REST API
-			// This would typically involve:
-			// 1. Sending via WebSocket if connected
-			// 2. Falling back to REST API if WebSocket is not available
-			// 3. Handling file uploads if files are present
-			
+
 			return {
 				conversationId,
 				messageId,
 			};
 		},
-		onMutate: async ({ conversationId, message, defaultMessages = [], visitorId }) => {
+		onMutate: async ({
+			conversationId,
+			message,
+			defaultMessages = [],
+			visitorId,
+		}) => {
 			// Generate IDs for optimistic updates
-			const optimisticConversationId = conversationId || generateConversationId();
+			const optimisticConversationId =
+				conversationId || generateConversationId();
 			const optimisticMessageId = generateMessageId();
-			const now = new Date();
 
-			// If creating a new conversation, add it optimistically
-			if (!conversationId) {
-				// Add optimistic conversation
-				const optimisticConversation: Conversation = {
-					id: optimisticConversationId,
-					title: undefined,
-					createdAt: now,
-					updatedAt: now,
-					visitorId: visitorId || "",
-					websiteId: "",
-					status: "open",
-				};
-
-				queryClient.setQueryData<Conversation>(
-					["conversation", optimisticConversationId],
-					optimisticConversation
-				);
-
-				// Add to conversations list
-				queryClient.setQueryData<Conversation[]>(["conversations"], (old) => [
-					...(old || []),
-					optimisticConversation,
-				]);
-
-				// Add all messages (default + user message) optimistically
-				const allMessages: Message[] = [
-					...defaultMessagesToMessages(defaultMessages, optimisticConversationId, visitorId),
-					{
-						id: optimisticMessageId,
-						bodyMd: message,
-						type: MessageType.TEXT,
-						userId: null,
-						aiAgentId: null,
-						visitorId: visitorId || null,
-						conversationId: optimisticConversationId,
-						createdAt: now,
-						updatedAt: now,
-						deletedAt: null,
-						visibility: MessageVisibility.PUBLIC,
-					},
-				];
-
-				queryClient.setQueryData<Message[]>(
-					["messages", optimisticConversationId],
-					allMessages
-				);
-			} else {
+			if (conversationId) {
 				// Just add the new message to existing conversation
-				const newMessage: Message = {
-					id: optimisticMessageId,
-					bodyMd: message,
-					type: MessageType.TEXT,
-					userId: null,
-					aiAgentId: null,
-					visitorId: visitorId || null,
+				const newMessage = createMessage(
+					optimisticMessageId,
+					message,
 					conversationId,
-					createdAt: now,
-					updatedAt: now,
-					deletedAt: null,
-					visibility: MessageVisibility.PUBLIC,
-				};
+					visitorId
+				);
 
+				addOptimisticMessage(queryClient, conversationId, newMessage);
+			} else {
+				// For pending conversations, we just update the pending messages optimistically
+				// We don't create the actual conversation until we get server response
+				const userMessage = createMessage(
+					optimisticMessageId,
+					message,
+					optimisticConversationId,
+					visitorId
+				);
+
+				// Update the pending conversation messages
+				const allMessages: Message[] = [...defaultMessages, userMessage];
 				queryClient.setQueryData<Message[]>(
-					["messages", conversationId],
-					(old) => [...(old || []), newMessage]
+					["messages", PENDING_CONVERSATION_ID],
+					allMessages
 				);
 			}
 
-			return { 
-				optimisticConversationId, 
+			return {
+				optimisticConversationId,
 				optimisticMessageId,
-				wasNewConversation: !conversationId 
+				wasNewConversation: !conversationId,
 			};
 		},
 		onSuccess: (data, variables, context) => {
-			// Update with real IDs from server
-			if (context?.wasNewConversation && data.conversation) {
-				// Update conversation with server data
-				queryClient.setQueryData<Conversation>(
-					["conversation", data.conversationId],
-					data.conversation
-				);
-
-				// Update conversations list
-				queryClient.setQueryData<Conversation[]>(["conversations"], (old) => {
-					if (!old) return [data.conversation!];
-					
-					// Replace optimistic conversation with real one
-					const index = old.findIndex(
-						(c) => c.id === context.optimisticConversationId
-					);
-					if (index >= 0) {
-						const updated = [...old];
-						updated[index] = data.conversation!;
-						return updated;
-					}
-					return [...old, data.conversation!];
-				});
+			// Only update if we have valid context
+			if (!context) {
+				variables.onSuccess?.(data.conversationId, data.messageId);
+				return;
 			}
 
-			// Invalidate messages to ensure they're in sync
-			queryClient.invalidateQueries({
-				queryKey: ["messages", data.conversationId],
-			});
+			// Update with server data
+			updateWithServerData(queryClient, data, context);
 
+			// Call user's success callback
 			variables.onSuccess?.(data.conversationId, data.messageId);
 		},
 		onError: (error, variables, context) => {
-			// Rollback optimistic updates
-			if (context?.optimisticConversationId) {
-				if (context.wasNewConversation) {
-					// Remove optimistic conversation
-					queryClient.removeQueries({
-						queryKey: ["conversation", context.optimisticConversationId],
-					});
-					
-					// Remove from conversations list
-					queryClient.setQueryData<Conversation[]>(
-						["conversations"],
-						(old) => old?.filter((c) => c.id !== context.optimisticConversationId) || []
-					);
-					
-					// Remove optimistic messages
-					queryClient.removeQueries({
-						queryKey: ["messages", context.optimisticConversationId],
-					});
-				} else {
-					// Remove just the optimistic message
-					queryClient.setQueryData<Message[]>(
-						["messages", variables.conversationId!],
-						(old) => old?.filter((m) => m.id !== context.optimisticMessageId) || []
-					);
-				}
+			// Only rollback if we have valid context
+			if (context) {
+				rollbackOptimisticUpdates(queryClient, context, variables.defaultMessages);
 			}
 
+			// Call user's error callback
 			variables.onError?.(error);
 		},
 	});

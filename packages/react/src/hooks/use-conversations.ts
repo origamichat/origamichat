@@ -13,10 +13,14 @@ export function useConversations(
 	client: CossistantClient | null,
 	params: { limit?: number; enabled?: boolean } = {}
 ): UseConversationsResult {
-	const isEnabled = !!client && (params.enabled !== false);
-	
+	const isEnabled = !!client && params.enabled !== false;
+
 	const { data, isLoading, error } = useQuery({
-		queryKey: ["conversations", client?.getConfiguration().publicKey, params.limit || 5],
+		queryKey: [
+			"conversations",
+			client?.getConfiguration().publicKey,
+			params.limit || 5,
+		],
 		queryFn: async () => {
 			if (!client) {
 				throw new Error("No client available");

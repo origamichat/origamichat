@@ -1,0 +1,1 @@
+ALTER TABLE "message" DROP COLUMN "mentions_index";

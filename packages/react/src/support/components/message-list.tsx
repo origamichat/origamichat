@@ -46,7 +46,7 @@ export const MessageList: React.FC<MessageListProps> = ({
 		<PrimitiveMessageList
 			autoScroll={true}
 			className={cn(
-				"overflow-y-auto scroll-smooth px-4 py-6",
+				"overflow-y-auto scroll-smooth px-3 py-6",
 				"scrollbar-thin scrollbar-thumb-co-background-300 scrollbar-track-transparent",
 				"h-full w-full",
 				className

@@ -1,0 +1,1 @@
+ALTER TABLE "message" ALTER COLUMN "body_md" SET DATA TYPE text USING (body_md::text);

@@ -148,7 +148,7 @@ websiteRouter.openapi(
     });
 
     const availableHumanAgents = organizationMembers.map((humanAgent) => ({
-      id: humanAgent.id,
+      id: humanAgent.user.id,
       name: humanAgent.user.name,
       email: humanAgent.user.email,
       image: humanAgent.user.image,

@@ -1,10 +1,10 @@
 import type {
 	CreateConversationRequestBody,
 	CreateConversationResponseBody,
-	ListConversationsRequest,
-	ListConversationsResponse,
 	GetConversationRequest,
 	GetConversationResponse,
+	ListConversationsRequest,
+	ListConversationsResponse,
 } from "@cossistant/types/api/conversation";
 import type { RealtimeEvent } from "@cossistant/types/realtime-events";
 import { CossistantRestClient } from "./rest-client";

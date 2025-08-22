@@ -1,10 +1,10 @@
+import { useDefaultMessages } from "@cossistant/react/hooks/use-default-messages";
 import type {
   ConversationEvent,
   Message as MessageType,
-  SenderType,
 } from "@cossistant/types";
 import React from "react";
-import { useConversation, useSupport } from "../..";
+import { useSupport } from "../..";
 import { useMessages } from "../../hooks/use-messages";
 import { useSendMessage } from "../../hooks/use-send-message";
 import { PENDING_CONVERSATION_ID } from "../../utils/id";
@@ -13,7 +13,6 @@ import { Header } from "../components/header";
 import { MessageList } from "../components/message-list";
 import { MultimodalInput } from "../components/multimodal-input";
 import { useSupportNavigation } from "../store";
-import { cn } from "../utils";
 
 interface ConversationPageProps {
   conversationId: string;
@@ -25,7 +24,6 @@ interface ConversationPageProps {
   addFiles: (files: File[]) => void;
   removeFile: (index: number) => void;
   submit: () => void;
-
   messages?: MessageType[];
   events: ConversationEvent[];
 }
@@ -43,54 +41,42 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
   messages = [],
   events = [],
 }) => {
-  const { website, availableAIAgents, availableHumanAgents, client, visitor, defaultMessages } = useSupport();
-  const { navigate, current } = useSupportNavigation();
-  
+  const { website, availableAIAgents, availableHumanAgents, client, visitor } =
+    useSupport();
+  const { navigate } = useSupportNavigation();
+
   // Determine if we have a real conversation or pending one
   const hasRealConversation = conversationId !== PENDING_CONVERSATION_ID;
   const realConversationId = hasRealConversation ? conversationId : null;
-  
-  // Get initial message from navigation params
-  const initialMessage = current.page === "CONVERSATION" ? current.params?.initialMessage : undefined;
-  
+  const defaultMessages = useDefaultMessages({
+    conversationId: conversationId,
+  });
+
   // Fetch conversation data only if we have a real conversation
-  const { 
-    conversation, 
-    isLoading: conversationLoading, 
-    error: conversationError 
-  } = useConversation(client, realConversationId);
-  
-  // Fetch messages only if we have a real conversation
+  // const {
+  //   conversation,
+  //   // isLoading: conversationLoading,
+  //   error: conversationError,
+  // } = useConversation(client, realConversationId);
+
+  // Fetch messages - for pending conversations, we use defaultMessages
   const {
     data: fetchedMessages,
-    isLoading: messagesLoading,
-    error: messagesError
-  } = useMessages(client, realConversationId);
-  
-  // Send message hook with lazy conversation creation
+    // isLoading: messagesLoading,
+    error: messagesError,
+  } = useMessages({
+    client,
+    conversationId: conversationId,
+    defaultMessages,
+  });
+
   const sendMessage = useSendMessage(client);
 
-  // Set initial message if provided and we don't have a real conversation yet
-  React.useEffect(() => {
-    if (initialMessage && !hasRealConversation && !message) {
-      setMessage(initialMessage);
-    }
-  }, [initialMessage, hasRealConversation, message, setMessage]);
-
-  // Console log conversation data for debugging
-  React.useEffect(() => {
-    if (conversation) {
-      console.log("Conversation data fetched:", conversation);
-    }
-    if (conversationError) {
-      console.error("Error fetching conversation:", conversationError);
-    }
-  }, [conversation, conversationError]);
-
-  // Handle message submission with lazy conversation creation
   const handleSubmit = React.useCallback(() => {
-    if (!message.trim() && files.length === 0) return;
-    
+    if (!message.trim() && files.length === 0) {
+      return;
+    }
+
     sendMessage.mutate({
       conversationId: realConversationId,
       message: message.trim(),
@@ -99,18 +85,20 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
       visitorId: visitor?.id,
       onSuccess: (newConversationId, messageId) => {
         // If we created a new conversation, navigate to it
-        if (!hasRealConversation && newConversationId !== PENDING_CONVERSATION_ID) {
+        if (
+          !hasRealConversation &&
+          newConversationId !== PENDING_CONVERSATION_ID
+        ) {
           navigate({
             page: "CONVERSATION",
             params: { conversationId: newConversationId },
           });
         }
-        // Clear the form
+
         setMessage("");
-        // Clear files would be handled by the parent component
       },
-      onError: (error) => {
-        console.error("Failed to send message:", error);
+      onError: (_error) => {
+        console.error("Failed to send message:", _error);
       },
     });
   }, [
@@ -159,7 +147,7 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
         messages={actualMessages}
       />
 
-      <div className="flex-shrink-0 px-2 pb-2">
+      <div className="flex-shrink-0 p-1">
         <MultimodalInput
           disabled={actualIsSubmitting}
           error={actualError}

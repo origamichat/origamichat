@@ -1,12 +1,23 @@
 import type { CossistantClient } from "@cossistant/core";
 import type { Message } from "@cossistant/types/schemas";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { PENDING_CONVERSATION_ID } from "../utils/id";
 
-export function useMessages(
-	client: CossistantClient | null,
-	conversationId: string | null
-) {
+interface UseMessagesParams {
+	client: CossistantClient | null;
+	conversationId: string | null;
+	defaultMessages?: Message[];
+}
+
+export function useMessages({
+	client,
+	conversationId,
+	defaultMessages = [],
+}: UseMessagesParams) {
 	const queryClient = useQueryClient();
+
+	const hasRealConversation =
+		Boolean(conversationId) && conversationId !== PENDING_CONVERSATION_ID;
 
 	return useQuery({
 		queryKey: ["messages", conversationId],
@@ -15,7 +26,12 @@ export function useMessages(
 				throw new Error("Client and conversation ID required");
 			}
 
-			// For now, return empty array or cached data
+			// For pending conversations, return default messages
+			if (!hasRealConversation) {
+				return defaultMessages;
+			}
+
+			// For real conversations, return cached data or fetch from server
 			// In the future, this would call: client.rest.getMessages(conversationId)
 			const cached = queryClient.getQueryData<Message[]>([
 				"messages",
@@ -23,9 +39,10 @@ export function useMessages(
 			]);
 			return cached || [];
 		},
-		enabled: !!client && !!conversationId,
-		staleTime: 1 * 60 * 1000, // 1 minute
-		gcTime: 5 * 60 * 1000, // 5 minutes
+		enabled: Boolean(client && conversationId),
+		staleTime: 1 * 60 * 1000,
+		gcTime: 5 * 60 * 1000,
+		placeholderData: defaultMessages,
 	});
 }
 

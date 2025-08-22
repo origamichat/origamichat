@@ -7,7 +7,10 @@ import { createJSONStorage, persist } from "zustand/middleware";
 export type NavigationState =
 	| { page: "HOME"; params?: undefined }
 	| { page: "ARTICLES"; params?: undefined }
-	| { page: "CONVERSATION"; params: { conversationId: string; initialMessage?: string } }
+	| {
+			page: "CONVERSATION";
+			params: { conversationId: string; initialMessage?: string };
+	  }
 	| { page: "CONVERSATION_HISTORY"; params?: undefined };
 
 export type SUPPORT_PAGES = NavigationState["page"];

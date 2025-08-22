@@ -37,7 +37,7 @@ export const MessageGroup: React.FC<MessageGroupProps> = ({
 
 	return (
 		<PrimitiveMessageGroup messages={messages}>
-			{({ isVisitor, isAI, isHuman, senderType, senderId }) => (
+			{({ isVisitor, isAI }) => (
 				<motion.div
 					animate={{ opacity: 1, y: 0 }}
 					className={cn(

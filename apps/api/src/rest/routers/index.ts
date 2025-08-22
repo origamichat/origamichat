@@ -5,9 +5,9 @@ import { organizationRouter } from "./organization";
 import { websiteRouter } from "./website";
 
 const routers = new OpenAPIHono()
-  .route("/organizations", organizationRouter)
-  .route("/websites", websiteRouter)
-  .route("/messages", messagesRouter)
-  .route("/conversations", conversationRouter);
+	.route("/organizations", organizationRouter)
+	.route("/websites", websiteRouter)
+	.route("/messages", messagesRouter)
+	.route("/conversations", conversationRouter);
 
 export { routers };

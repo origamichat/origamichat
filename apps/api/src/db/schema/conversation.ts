@@ -3,7 +3,6 @@ import {
 	ConversationParticipationStatus,
 	ConversationPriority,
 	ConversationStatus,
-	type MentionEntityType,
 	MessageType,
 	MessageVisibility,
 } from "@cossistant/types";
@@ -11,7 +10,6 @@ import {
 	type InferInsertModel,
 	type InferSelectModel,
 	relations,
-	sql,
 } from "drizzle-orm";
 import {
 	index,
@@ -141,10 +139,6 @@ export const message = pgTable(
 	{
 		id: ulidPrimaryKey("id"),
 		bodyMd: text("body_md").notNull().default(""),
-		mentionsIndex: jsonb("mentions_index")
-			.$type<Array<{ type: MentionEntityType; id: string; count: number }>>()
-			.notNull()
-			.default(sql`'[]'::jsonb`),
 		type: messageTypeEnum("type").default(MessageType.TEXT).notNull(),
 		// One of userId or aiAgentId should be present (enforced at application level)
 		userId: ulidNullableReference("user_id").references(() => user.id, {

@@ -1,12 +1,12 @@
 "use client";
 
 import type { CossistantClient } from "@cossistant/core";
-import type { ListConversationsResponse } from "@cossistant/types/api/conversation";
 import type { PublicWebsiteResponse, SenderType } from "@cossistant/types";
+import type { ListConversationsResponse } from "@cossistant/types/api/conversation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
-import { useClient } from "./hooks/use-rest-client";
 import { useConversations } from "./hooks/use-conversations";
+import { useClient } from "./hooks/use-rest-client";
 import { useWebsiteData } from "./hooks/use-website-data";
 import { WebSocketProvider } from "./support";
 
@@ -89,13 +89,13 @@ function SupportProviderInner({
 
 	const { client, error: clientError } = useClient(publicKey, apiUrl, wsUrl);
 	const { website, isLoading, error: websiteError } = useWebsiteData(client);
-	const { 
-		conversations, 
-		isLoading: conversationsLoading, 
-		error: conversationsError 
-	} = useConversations(client, { 
-		limit: 5, 
-		enabled: !!website && !!website.visitor && isClientPrimed
+	const {
+		conversations,
+		isLoading: conversationsLoading,
+		error: conversationsError,
+	} = useConversations(client, {
+		limit: 5,
+		enabled: !!website && !!website.visitor && isClientPrimed,
 	});
 
 	const error = clientError || websiteError;
