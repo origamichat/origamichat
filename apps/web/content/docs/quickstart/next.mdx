@@ -1,16 +1,45 @@
 ---
 title: Next.js
-description: Setup with Next.js.
+description: Start using Cossistant with Next.js.
 ---
 
-## init
+<Steps>
 
-Use the `init` command to initialize configuration and dependencies for a new next project.
+### Create project
 
-The `init` command installs dependencies, adds the `cn` util and configures CSS variables for the project.
+First install `@cossistant/next` into your next project.
 
 ```bash
-npx @cossistant/cli@latest init
+npm install @cossistant/next
 ```
 
 ## Usage
+
+Cossistant manages all the boring stuff for you:
+
+- Real-time conversations
+- Visitor tracking
+- Events
+- Bugs
+
+To do that properly, you need to add Cossistant provider in your root `layout.tsx`
+
+```tsx {1,11} showLineNumbers title="app/layout.tsx"
+import { SupportProvider } from "@cossistant/next";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html>
+      <body>
+        <SupportProvider>{children}</SupportProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+</Steps>

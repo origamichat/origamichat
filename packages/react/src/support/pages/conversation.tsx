@@ -1,17 +1,17 @@
-import { useDefaultMessages } from "@cossistant/react/hooks/use-default-messages";
+import { useDefaultMessages } from "@cossistant/react/support/hooks/use-default-messages";
 import type {
   ConversationEvent,
   Message as MessageType,
 } from "@cossistant/types";
 import React from "react";
 import { useSupport } from "../..";
-import { useMessages } from "../../hooks/use-messages";
-import { useSendMessage } from "../../hooks/use-send-message";
 import { PENDING_CONVERSATION_ID } from "../../utils/id";
 import { AvatarStack } from "../components/avatar-stack";
 import { Header } from "../components/header";
 import { MessageList } from "../components/message-list";
 import { MultimodalInput } from "../components/multimodal-input";
+import { useMessages } from "../hooks/use-messages";
+import { useSendMessage } from "../hooks/use-send-message";
 import { useSupportNavigation } from "../store";
 
 interface ConversationPageProps {
@@ -49,7 +49,7 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
   const hasRealConversation = conversationId !== PENDING_CONVERSATION_ID;
   const realConversationId = hasRealConversation ? conversationId : null;
   const defaultMessages = useDefaultMessages({
-    conversationId: conversationId,
+    conversationId,
   });
 
   // Fetch conversation data only if we have a real conversation
@@ -66,7 +66,7 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
     error: messagesError,
   } = useMessages({
     client,
-    conversationId: conversationId,
+    conversationId,
     defaultMessages,
   });
 

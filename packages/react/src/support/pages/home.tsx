@@ -1,6 +1,5 @@
 import type React from "react";
 import { useSupport } from "../..";
-import { useCreateConversation } from "../../hooks/use-create-conversation";
 import { PENDING_CONVERSATION_ID } from "../../utils/id";
 import { AvatarStack } from "../components/avatar-stack";
 import { Button } from "../components/button";
@@ -8,110 +7,111 @@ import { Header } from "../components/header";
 import Icon from "../components/icons";
 import { TextEffect } from "../components/text-effect";
 import { Watermark } from "../components/watermark";
+import { useCreateConversation } from "../hooks/use-create-conversation";
 import { useSupportNavigation } from "../store/support-store";
 
 export type HomePageProps = {
-	onStartConversation: (initialMessage?: string) => void;
+  onStartConversation: (initialMessage?: string) => void;
 
-	message: string;
-	files: File[];
-	error: Error | null;
-	setMessage: (message: string) => void;
-	addFiles: (files: File[]) => void;
-	removeFile: (index: number) => void;
-	submit: () => void;
-	isSubmitting: boolean;
+  message: string;
+  files: File[];
+  error: Error | null;
+  setMessage: (message: string) => void;
+  addFiles: (files: File[]) => void;
+  removeFile: (index: number) => void;
+  submit: () => void;
+  isSubmitting: boolean;
 };
 
 export const HomePage: React.FC<HomePageProps> = ({
-	onStartConversation,
-	message,
-	files,
-	isSubmitting,
-	error,
-	setMessage,
-	addFiles,
-	removeFile,
-	submit,
+  onStartConversation,
+  message,
+  files,
+  isSubmitting,
+  error,
+  setMessage,
+  addFiles,
+  removeFile,
+  submit,
 }) => {
-	const {
-		website,
-		availableHumanAgents,
-		visitor,
-		quickOptions,
-		//    conversations,
-	} = useSupport();
-	const { navigate } = useSupportNavigation();
+  const {
+    website,
+    availableHumanAgents,
+    visitor,
+    quickOptions,
+    //    conversations,
+  } = useSupport();
+  const { navigate } = useSupportNavigation();
 
-	const handleStartConversation = (initialMessage?: string) => {
-		// Navigate to conversation page
-		// The conversation will be created lazily when the first message is sent
-		navigate({
-			page: "CONVERSATION",
-			params: {
-				conversationId: PENDING_CONVERSATION_ID,
-				initialMessage,
-			},
-		});
-	};
+  const handleStartConversation = (initialMessage?: string) => {
+    // Navigate to conversation page
+    // The conversation will be created lazily when the first message is sent
+    navigate({
+      page: "CONVERSATION",
+      params: {
+        conversationId: PENDING_CONVERSATION_ID,
+        initialMessage,
+      },
+    });
+  };
 
-	// const defaultMessages = useDefaultMessages({ conversationId: "default" });
+  // const defaultMessages = useDefaultMessages({ conversationId: "default" });
 
-	return (
-		<div className="flex h-full flex-col gap-0 overflow-hidden">
-			<Header>{/* <NavigationTab /> */}</Header>
-			<div className="flex flex-1 items-center justify-center">
-				<div className="flex flex-col items-center gap-2">
-					<AvatarStack
-						aiAgents={website?.availableAIAgents || []}
-						className="size-14"
-						humanAgents={availableHumanAgents}
-					/>
-					<p className="mb-4 text-co-primary/80 text-sm">
-						{website?.name} support
-					</p>
-					<TextEffect
-						as="h2"
-						className="max-w-xs text-balance text-center font-co-sans text-2xl leading-normal"
-						delay={0.5}
-						preset="fade-in-blur"
-					>
-						Good morning{visitor?.name ? ` ${visitor.name}` : ""}, How can we
-						help?
-					</TextEffect>
+  return (
+    <div className="flex h-full flex-col gap-0 overflow-hidden">
+      <Header>{/* <NavigationTab /> */}</Header>
+      <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <AvatarStack
+            aiAgents={website?.availableAIAgents || []}
+            className="size-14"
+            humanAgents={availableHumanAgents}
+          />
+          <p className="mb-4 text-co-primary/80 text-sm">
+            {website?.name} support
+          </p>
+          <TextEffect
+            as="h2"
+            className="max-w-xs text-balance text-center font-co-sans text-2xl leading-normal"
+            delay={0.5}
+            preset="fade-in-blur"
+          >
+            Good morning{visitor?.name ? ` ${visitor.name}` : ""}, How can we
+            help?
+          </TextEffect>
 
-					{quickOptions.length > 0 && (
-						<div className="mt-6 inline-flex gap-2">
-							{quickOptions?.map((option) => (
-								<Button
-									key={option}
-									onClick={() => handleStartConversation(option)}
-									size="default"
-									variant="outline"
-								>
-									{option}
-								</Button>
-							))}
-						</div>
-					)}
-				</div>
-			</div>
-			<div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 px-6 pb-4">
-				<Button
-					className="relative w-full"
-					onClick={() => handleStartConversation()}
-					size="large"
-					variant="outline"
-				>
-					<Icon
-						className="-translate-y-1/2 absolute top-1/2 right-4 transition-transform duration-200 group-hover/btn:translate-x-0.5"
-						name="arrow-right"
-						variant="default"
-					/>
-					Ask us a question
-				</Button>
-				<Watermark />
-			</div>
-		</div>
-	);
+          {quickOptions.length > 0 && (
+            <div className="mt-6 inline-flex gap-2">
+              {quickOptions?.map((option) => (
+                <Button
+                  key={option}
+                  onClick={() => handleStartConversation(option)}
+                  size="default"
+                  variant="outline"
+                >
+                  {option}
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 px-6 pb-4">
+        <Button
+          className="relative w-full"
+          onClick={() => handleStartConversation()}
+          size="large"
+          variant="outline"
+        >
+          <Icon
+            className="-translate-y-1/2 absolute top-1/2 right-4 transition-transform duration-200 group-hover/btn:translate-x-0.5"
+            name="arrow-right"
+            variant="default"
+          />
+          Ask us a question
+        </Button>
+        <Watermark />
+      </div>
+    </div>
+  );
 };

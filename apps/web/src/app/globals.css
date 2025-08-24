@@ -65,6 +65,15 @@
 	--cossistant-yellow: hsla(58, 92%, 70%, 1);
 	--cossistant-blue: hsla(218, 91%, 68%, 1);
 	--cossistant-orange: hsla(19, 99%, 65%, 1);
+
+	--surface: var(--background-100);
+	--surface-foreground: var(--foreground);
+	--code: var(--surface);
+	--code-foreground: var(--surface-foreground);
+	--code-highlight: oklch(0.96 0 0);
+	--code-number: oklch(0.56 0 0);
+	--selection: oklch(0.145 0 0);
+	--selection-foreground: oklch(1 0 0);
 }
 
 .dark {
@@ -111,6 +120,15 @@
 	--cossistant-yellow: hsla(58, 92%, 79%, 1);
 	--cossistant-blue: hsla(218, 91%, 78%, 1);
 	--cossistant-orange: hsla(19, 99%, 50%, 1);
+
+	--surface: var(--background-200);
+	--surface-foreground: var(--background-200);
+	--code: var(--surface);
+	--code-foreground: var(--surface-foreground);
+	--code-highlight: oklch(0.27 0 0);
+	--code-number: oklch(0.72 0 0);
+	--selection: oklch(0.922 0 0);
+	--selection-foreground: oklch(0.205 0 0);
 }
 
 @theme inline {
@@ -157,6 +175,14 @@
 	--color-cossistant-yellow: var(--cossistant-yellow);
 	--color-cossistant-blue: var(--cossistant-blue);
 	--color-cossistant-orange: var(--cossistant-orange);
+
+	/* custom code colors */
+	--color-code: var(--code);
+	--color-code-foreground: var(--code-foreground);
+	--color-code-highlight: var(--code-highlight);
+	--color-code-number: var(--code-number);
+	--color-selection: var(--selection);
+	--color-selection-foreground: var(--selection-foreground);
 }
 
 @layer base {
@@ -239,5 +265,148 @@
 	.dot-bounce-3 {
 		animation: bounce-dot 1.4s infinite;
 		animation-delay: 0.32s;
+	}
+}
+
+@utility step {
+	counter-increment: step;
+	@apply relative;
+
+	&:before {
+		@apply text-muted-foreground right-0 mr-2 hidden size-7 items-center justify-center rounded-full text-center -indent-px font-mono text-sm font-medium md:absolute;
+		content: counter(step);
+	}
+}
+
+@utility extend-touch-target {
+	@media (pointer: coarse) {
+		@apply relative touch-manipulation after:absolute after:-inset-2;
+	}
+}
+
+@layer components {
+	.steps {
+		&:first-child {
+			@apply !mt-0;
+		}
+
+		&:first-child > h3:first-child {
+			@apply !mt-0;
+		}
+
+		> h3 {
+			@apply !mt-16;
+		}
+
+		> h3 + p {
+			@apply !mt-2;
+		}
+	}
+
+	[data-rehype-pretty-code-figure] {
+		background-color: var(--color-background-200);
+		color: var(--color-code-foreground);
+		border-radius: var(--radius-lg);
+		border-width: 0px;
+		border-color: var(--border);
+		margin-top: calc(var(--spacing) * 6);
+		overflow: hidden;
+		font-size: var(--text-sm);
+		outline: none;
+		position: relative;
+		@apply md:-mx-1;
+
+		&:has([data-rehype-pretty-code-title]) [data-slot="copy-button"] {
+			/* biome-ignore lint/nursery/noImportantStyles: ok */
+			top: calc(var(--spacing) * 1.5) !important;
+		}
+	}
+
+	[data-rehype-pretty-code-title] {
+		border-bottom: color-mix(in oklab, var(--border) 30%, transparent);
+		border-bottom-width: 1px;
+		border-bottom-style: solid;
+		padding-block: calc(var(--spacing) * 2.5);
+		padding-inline: calc(var(--spacing) * 4);
+		font-size: var(--text-sm);
+		font-family: var(--font-mono);
+		color: var(--color-code-foreground);
+	}
+
+	[data-line-numbers] {
+		display: grid;
+		min-width: 100%;
+		white-space: pre;
+		border: 0;
+		background: transparent;
+		padding: 0;
+		counter-reset: line;
+		box-decoration-break: clone;
+	}
+
+	[data-line-numbers] [data-line]::before {
+		font-size: var(--text-sm);
+		counter-increment: line;
+		content: counter(line);
+		display: inline-block;
+		width: calc(var(--spacing) * 16);
+		padding-right: calc(var(--spacing) * 6);
+		text-align: right;
+		color: var(--color-code-number);
+		background-color: var(--color-code);
+		position: sticky;
+		left: 0;
+	}
+
+	[data-line-numbers] [data-highlighted-line][data-line]::before {
+		background-color: var(--color-code-highlight);
+	}
+
+	[data-line] {
+		padding-top: calc(var(--spacing) * 0.5);
+		padding-bottom: calc(var(--spacing) * 0.5);
+		min-height: calc(var(--spacing) * 1);
+		width: 100%;
+		display: inline-block;
+	}
+
+	[data-line] span {
+		color: var(--shiki-light);
+
+		@variant dark {
+			/* biome-ignore lint/suspicious/noDuplicateProperties: ok */
+			/* biome-ignore lint/nursery/noImportantStyles: ok */
+			color: var(--shiki-dark) !important;
+		}
+	}
+
+	[data-highlighted-line],
+	[data-highlighted-chars] {
+		position: relative;
+		background-color: var(--color-code-highlight);
+	}
+
+	[data-highlighted-line] {
+		&:after {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 2px;
+			height: 100%;
+			content: "";
+			background-color: color-mix(
+				in oklab,
+				var(--muted-foreground) 50%,
+				transparent
+			);
+		}
+	}
+
+	[data-highlighted-chars] {
+		border-radius: var(--radius-sm);
+		padding-inline: 0.3rem;
+		padding-block: 0.1rem;
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
 	}
 }

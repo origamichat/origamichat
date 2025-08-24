@@ -1,4 +1,9 @@
 {
   "root": false,
-  "pages": ["what", "how", "mentions"]
+  "title": "Get Started",
+  "pages": [
+    "index",
+    "what",
+    "how"
+  ]
 }
