@@ -66,7 +66,6 @@
 	--cossistant-blue: hsla(218, 91%, 68%, 1);
 	--cossistant-orange: hsla(19, 99%, 65%, 1);
 
-	--surface: var(--background-100);
 	--surface-foreground: var(--foreground);
 	--code: var(--surface);
 	--code-foreground: var(--surface-foreground);
@@ -121,8 +120,8 @@
 	--cossistant-blue: hsla(218, 91%, 78%, 1);
 	--cossistant-orange: hsla(19, 99%, 50%, 1);
 
-	--surface: var(--background-200);
-	--surface-foreground: var(--background-200);
+	--surface: oklch(0.2 0 0);
+	--surface-foreground: oklch(0.708 0 0);
 	--code: var(--surface);
 	--code-foreground: var(--surface-foreground);
 	--code-highlight: oklch(0.27 0 0);
@@ -304,9 +303,8 @@
 	}
 
 	[data-rehype-pretty-code-figure] {
-		background-color: var(--color-background-200);
 		color: var(--color-code-foreground);
-		border-radius: var(--radius-lg);
+		border-radius: 1px;
 		border-width: 0px;
 		border-color: var(--border);
 		margin-top: calc(var(--spacing) * 6);
@@ -403,7 +401,7 @@
 	}
 
 	[data-highlighted-chars] {
-		border-radius: var(--radius-sm);
+		border-radius: 1px;
 		padding-inline: 0.3rem;
 		padding-block: 0.1rem;
 		font-family: var(--font-mono);

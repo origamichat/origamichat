@@ -168,7 +168,15 @@ export const mdxComponents = {
     );
   },
   figure: ({ className, ...props }: React.ComponentProps<"figure">) => {
-    return <figure className={cn("bg-background-200", className)} {...props} />;
+    return (
+      <figure
+        className={cn(
+          "border border-primary/10 border-dashed bg-background-100/50 dark:bg-background-300",
+          className
+        )}
+        {...props}
+      />
+    );
   },
   figcaption: ({
     className,
@@ -215,7 +223,7 @@ export const mdxComponents = {
       return (
         <code
           className={cn(
-            "relative rounded bg-background-200 px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] outline-none",
+            "relative rounded bg-background-200 px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] outline-none dark:bg-background-300",
             className
           )}
           {...props}
