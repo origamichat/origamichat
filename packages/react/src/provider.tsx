@@ -94,7 +94,7 @@ function SupportProviderInner({
     isLoading: conversationsLoading,
     error: conversationsError,
   } = useConversations(client, {
-    limit: 5,
+    limit: 2,
     enabled: !!website && !!website.visitor && isClientPrimed,
   });
 

@@ -6,6 +6,12 @@ import type {
   ListConversationsRequest,
   ListConversationsResponse,
 } from "@cossistant/types/api/conversation";
+import type {
+  GetMessagesRequest,
+  GetMessagesResponse,
+  SendMessageRequest,
+  SendMessageResponse,
+} from "@cossistant/types/api/message";
 import type { Conversation, Message } from "@cossistant/types/schemas";
 import {
   CossistantAPIError,
@@ -342,6 +348,112 @@ export class CossistantRestClient {
         createdAt: new Date(response.conversation.createdAt),
         updatedAt: new Date(response.conversation.updatedAt),
       } as Conversation,
+    };
+  }
+
+  async getConversationMessages(
+    params: GetMessagesRequest
+  ): Promise<GetMessagesResponse> {
+    // Get visitor ID from storage if we have the website ID
+    const visitorId = this.websiteId ? getVisitorId(this.websiteId) : undefined;
+
+    // Create query parameters
+    const queryParams = new URLSearchParams();
+    queryParams.set("conversationId", params.conversationId);
+
+    if (params.limit) {
+      queryParams.set("limit", params.limit.toString());
+    }
+
+    if (params.cursor) {
+      queryParams.set("cursor", params.cursor);
+    }
+
+    // Add visitor ID header if available
+    const headers: Record<string, string> = {};
+    if (visitorId) {
+      headers["X-Visitor-Id"] = visitorId;
+    }
+
+    const response = await this.request<{
+      messages: Array<{
+        id: string;
+        bodyMd: string;
+        type: string;
+        userId: string | null;
+        aiAgentId: string | null;
+        visitorId: string | null;
+        conversationId: string;
+        organizationId: string;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string | null;
+        visibility: string;
+      }>;
+      nextCursor?: string;
+      hasNextPage: boolean;
+    }>(`/messages?${queryParams.toString()}`, {
+      headers,
+    });
+
+    // Convert date strings to Date objects and ensure proper typing
+    return {
+      messages: response.messages.map((msg) => ({
+        ...msg,
+        type: msg.type as Message["type"],
+        visibility: msg.visibility as Message["visibility"],
+        createdAt: new Date(msg.createdAt),
+        updatedAt: new Date(msg.updatedAt),
+        deletedAt: msg.deletedAt ? new Date(msg.deletedAt) : null,
+      })) as Message[],
+      nextCursor: response.nextCursor,
+      hasNextPage: response.hasNextPage,
+    };
+  }
+
+  async sendMessage(params: SendMessageRequest): Promise<SendMessageResponse> {
+    // Get visitor ID from storage if we have the website ID
+    const visitorId = this.websiteId ? getVisitorId(this.websiteId) : undefined;
+
+    // Add visitor ID header if available
+    const headers: Record<string, string> = {};
+    if (visitorId) {
+      headers["X-Visitor-Id"] = visitorId;
+    }
+
+    const response = await this.request<{
+      message: {
+        id: string;
+        bodyMd: string;
+        type: string;
+        userId: string | null;
+        aiAgentId: string | null;
+        visitorId: string | null;
+        conversationId: string;
+        organizationId: string;
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string | null;
+        visibility: string;
+      };
+    }>("/messages", {
+      method: "POST",
+      body: JSON.stringify(params),
+      headers,
+    });
+
+    // Convert date strings to Date objects and ensure proper typing
+    return {
+      message: {
+        ...response.message,
+        type: response.message.type as Message["type"],
+        visibility: response.message.visibility as Message["visibility"],
+        createdAt: new Date(response.message.createdAt),
+        updatedAt: new Date(response.message.updatedAt),
+        deletedAt: response.message.deletedAt
+          ? new Date(response.message.deletedAt)
+          : null,
+      } as Message,
     };
   }
 }

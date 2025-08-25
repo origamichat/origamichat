@@ -19,7 +19,7 @@ export function useConversations(
     queryKey: [
       "conversations",
       client?.getConfiguration().publicKey,
-      params.limit || 5,
+      params.limit || 3,
     ],
     queryFn: async () => {
       if (!client) {
@@ -27,7 +27,7 @@ export function useConversations(
       }
 
       return client.listConversations({
-        limit: params.limit || 5,
+        limit: params.limit || 3,
         orderBy: "updatedAt",
         order: "desc",
       });

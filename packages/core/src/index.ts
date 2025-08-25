@@ -1,15 +1,11 @@
-// Main client exports
-
-// Type exports from shared types package
 export type {
-	CossistantConfig,
-	CossistantError,
-	Message,
-	PublicWebsiteResponse,
+  CossistantConfig,
+  CossistantError,
+  Message,
+  PublicWebsiteResponse,
 } from "@cossistant/types";
 
-// Schema exports for runtime validation
-export { ConversationSchema, MessageSchema } from "@cossistant/types";
+export { conversationSchema, messageSchema } from "@cossistant/types";
 export { CossistantClient, CossistantClient as default } from "./client";
 export { CossistantRestClient } from "./rest-client";
 // Core-specific exports
@@ -17,13 +13,13 @@ export { CossistantAPIError } from "./types";
 // Utility exports
 export { generateConversationId, generateMessageId } from "./utils";
 export {
-	clearAllVisitorIds,
-	clearVisitorId,
-	getVisitorId,
-	setVisitorId,
+  clearAllVisitorIds,
+  clearVisitorId,
+  getVisitorId,
+  setVisitorId,
 } from "./visitor-tracker";
 export {
-	CossistantWebSocketClient,
-	type CossistantWebSocketConfig,
-	type WebSocketEventHandlers,
+  CossistantWebSocketClient,
+  type CossistantWebSocketConfig,
+  type WebSocketEventHandlers,
 } from "./websocket-client";

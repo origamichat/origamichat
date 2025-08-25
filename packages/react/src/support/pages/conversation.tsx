@@ -28,7 +28,7 @@ interface ConversationPageProps {
   events: ConversationEvent[];
 }
 
-export const ConversationPage: React.FC<ConversationPageProps> = ({
+export const ConversationPage = ({
   conversationId,
   message,
   files,
@@ -40,7 +40,7 @@ export const ConversationPage: React.FC<ConversationPageProps> = ({
   submit,
   messages = [],
   events = [],
-}) => {
+}: ConversationPageProps) => {
   const { website, availableAIAgents, availableHumanAgents, client, visitor } =
     useSupport();
   const { navigate } = useSupportNavigation();

@@ -2,7 +2,7 @@ import type { Database } from "@api/db";
 import { message } from "@api/db/schema";
 import { generateULID } from "@api/utils/db/ids";
 import type { CreateMessageSchema } from "@cossistant/types";
-import { desc, eq, and, lt } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 
 export async function sendMessages(
   db: Database,
@@ -60,18 +60,18 @@ export async function getMessages(
   }
 ) {
   const limit = params.limit ?? 50;
-  
+
   // Build where clause
   const whereConditions = [
     eq(message.organizationId, params.organizationId),
     eq(message.conversationId, params.conversationId),
   ];
-  
+
   // Add cursor condition if provided
   if (params.cursor) {
     whereConditions.push(lt(message.id, params.cursor));
   }
-  
+
   // Fetch messages with pagination
   const messages = await db
     .select()
@@ -79,19 +79,19 @@ export async function getMessages(
     .where(and(...whereConditions))
     .orderBy(desc(message.createdAt))
     .limit(limit + 1); // Fetch one extra to determine if there's a next page
-  
+
   // Determine if there's a next page
   const hasNextPage = messages.length > limit;
   const nextCursor = hasNextPage ? messages[limit - 1].id : undefined;
-  
+
   // Remove the extra item if present
   if (hasNextPage) {
     messages.pop();
   }
-  
+
   // Reverse to get chronological order (oldest first)
   messages.reverse();
-  
+
   return {
     messages,
     nextCursor,

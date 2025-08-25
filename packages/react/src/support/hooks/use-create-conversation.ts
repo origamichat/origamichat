@@ -4,8 +4,12 @@ import type {
   CreateConversationRequestBody,
   CreateConversationResponseBody,
 } from "@cossistant/types/api/conversation";
-import type { Conversation, Message } from "@cossistant/types/schemas";
+import type { Conversation } from "@cossistant/types/schemas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  setInitialMessagesInCache,
+  type PaginatedMessagesCache,
+} from "../utils/message-cache";
 
 export interface UseCreateConversationOptions {
   onSuccess?: (data: CreateConversationResponseBody) => void;
@@ -89,9 +93,9 @@ export function useCreateConversation(
 
       // Set initial messages if any
       if (data.initialMessages.length > 0) {
-        queryClient.setQueryData<Message[]>(
+        queryClient.setQueryData<PaginatedMessagesCache>(
           ["messages", data.conversation.id],
-          data.initialMessages
+          setInitialMessagesInCache(data.initialMessages)
         );
       }
 

@@ -7,45 +7,19 @@ import { Header } from "../components/header";
 import Icon from "../components/icons";
 import { TextEffect } from "../components/text-effect";
 import { Watermark } from "../components/watermark";
-import { useCreateConversation } from "../hooks/use-create-conversation";
 import { useSupportNavigation } from "../store/support-store";
 
-export type HomePageProps = {
-  onStartConversation: (initialMessage?: string) => void;
-
-  message: string;
-  files: File[];
-  error: Error | null;
-  setMessage: (message: string) => void;
-  addFiles: (files: File[]) => void;
-  removeFile: (index: number) => void;
-  submit: () => void;
-  isSubmitting: boolean;
-};
-
-export const HomePage: React.FC<HomePageProps> = ({
-  onStartConversation,
-  message,
-  files,
-  isSubmitting,
-  error,
-  setMessage,
-  addFiles,
-  removeFile,
-  submit,
-}) => {
+export const HomePage = () => {
   const {
     website,
     availableHumanAgents,
     visitor,
     quickOptions,
-    //    conversations,
+    conversations,
   } = useSupport();
   const { navigate } = useSupportNavigation();
 
-  const handleStartConversation = (initialMessage?: string) => {
-    // Navigate to conversation page
-    // The conversation will be created lazily when the first message is sent
+  const handleStartConversation = (initialMessage?: string) => () =>
     navigate({
       page: "CONVERSATION",
       params: {
@@ -53,12 +27,19 @@ export const HomePage: React.FC<HomePageProps> = ({
         initialMessage,
       },
     });
-  };
+
+  const handleOpenConversation = (conversationId: string) => () =>
+    navigate({
+      page: "CONVERSATION",
+      params: {
+        conversationId,
+      },
+    });
 
   // const defaultMessages = useDefaultMessages({ conversationId: "default" });
 
   return (
-    <div className="flex h-full flex-col gap-0 overflow-hidden">
+    <div className="relative flex h-full flex-col gap-10 overflow-y-auto">
       <Header>{/* <NavigationTab /> */}</Header>
       <div className="flex flex-1 items-center justify-center">
         <div className="flex flex-col items-center gap-2">
@@ -84,8 +65,9 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="mt-6 inline-flex gap-2">
               {quickOptions?.map((option) => (
                 <Button
+                  className="rounded-full"
                   key={option}
-                  onClick={() => handleStartConversation(option)}
+                  onClick={handleStartConversation(option)}
                   size="default"
                   variant="outline"
                 >
@@ -96,21 +78,47 @@ export const HomePage: React.FC<HomePageProps> = ({
           )}
         </div>
       </div>
-      <div className="flex flex-shrink-0 flex-col items-center justify-center gap-4 px-6 pb-4">
+      <div className="flex flex-shrink-0 flex-col items-center justify-center gap-2 px-6 pb-4">
+        {(conversations?.length || 0) > 0 && (
+          <div className="flex w-full flex-col rounded border border-co-border/50">
+            {conversations?.map((conversation) => (
+              <Button
+                className="relative flex w-full justify-start gap-4 rounded-none border-0 border-co-border/50 border-b pl-0 first-of-type:rounded-t last-of-type:rounded-b last-of-type:border-b-0"
+                key={conversation.id}
+                onClick={handleOpenConversation(conversation.id)}
+                size="large"
+                variant="secondary"
+              >
+                <div className="flex flex-col items-start justify-start">
+                  <span>Conversation title</span>
+                  <span className="font-normal text-co-primary/50 text-xs">
+                    Conversation title
+                  </span>
+                </div>
+                <Icon
+                  className="-translate-y-1/2 absolute top-1/2 right-4 size-3 text-co-primary/60 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:text-co-primary"
+                  name="arrow-right"
+                  variant="default"
+                />
+              </Button>
+            ))}
+          </div>
+        )}
+
         <Button
-          className="relative w-full"
-          onClick={() => handleStartConversation()}
+          className="relative w-full justify-between"
+          onClick={handleStartConversation()}
           size="large"
-          variant="outline"
+          variant="secondary"
         >
           <Icon
-            className="-translate-y-1/2 absolute top-1/2 right-4 transition-transform duration-200 group-hover/btn:translate-x-0.5"
+            className="-translate-y-1/2 absolute top-1/2 right-4 size-3 text-co-primary/60 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:text-co-primary"
             name="arrow-right"
             variant="default"
           />
           Ask us a question
         </Button>
-        <Watermark />
+        <Watermark className="mt-4 mb-2" />
       </div>
     </div>
   );
