@@ -3,6 +3,7 @@ import { useSupport } from "../..";
 import { PENDING_CONVERSATION_ID } from "../../utils/id";
 import { AvatarStack } from "../components/avatar-stack";
 import { Button } from "../components/button";
+import { ConversationButtonLink } from "../components/conversation-button-link";
 import { Header } from "../components/header";
 import Icon from "../components/icons";
 import { TextEffect } from "../components/text-effect";
@@ -82,25 +83,11 @@ export const HomePage = () => {
         {(conversations?.length || 0) > 0 && (
           <div className="flex w-full flex-col rounded border border-co-border/50">
             {conversations?.map((conversation) => (
-              <Button
-                className="relative flex w-full justify-start gap-4 rounded-none border-0 border-co-border/50 border-b pl-0 first-of-type:rounded-t last-of-type:rounded-b last-of-type:border-b-0"
+              <ConversationButtonLink
+                conversation={conversation}
                 key={conversation.id}
                 onClick={handleOpenConversation(conversation.id)}
-                size="large"
-                variant="secondary"
-              >
-                <div className="flex flex-col items-start justify-start">
-                  <span>Conversation title</span>
-                  <span className="font-normal text-co-primary/50 text-xs">
-                    Conversation title
-                  </span>
-                </div>
-                <Icon
-                  className="-translate-y-1/2 absolute top-1/2 right-4 size-3 text-co-primary/60 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:text-co-primary"
-                  name="arrow-right"
-                  variant="default"
-                />
-              </Button>
+              />
             ))}
           </div>
         )}
